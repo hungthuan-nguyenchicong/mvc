@@ -1,2 +1,2 @@
 # mvc
-MVC co ban
+MVC co ban phari khoong
