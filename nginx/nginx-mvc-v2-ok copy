@@ -1,0 +1,72 @@
+server {
+    listen 80; # Nginx lắng nghe trên cổng 80 (HTTP)
+	#listen [::]:80 default_server;
+	server_name localhost;
+    #server_name your_domain.com www.your_domain.com; # Thay thế bằng tên miền của bạn
+
+    root /var/www/html/mvc/public; # Thay thế bằng đường dẫn đến thư mục gốc của dự án PHP của bạn
+    index index.php index.html index.htm; # Đảm bảo index.php được ưu tiên
+
+    # Log file cho server block này
+    #access_log /var/log/nginx/your_domain.com_access.log;
+    #error_log /var/log/nginx/your_domain.com_error.log warn;
+
+    # Cấu hình location cho các yêu cầu không có đuôi .php
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+        # Nếu yêu cầu không tìm thấy file hoặc thư mục, nó sẽ được chuyển hướng đến index.php
+        # Đây là cấu hình phổ biến cho các Framework PHP (Laravel, Symfony, CodeIgniter,...)
+    }
+
+    # Cấu hình location để xử lý các file .php
+    location ~ \.php$ {
+        # Đảm bảo file tồn tại để tránh các lỗ hổng bảo mật (ví dụ: truy cập /uploads/image.jpg/not_a_php.php)
+        try_files $uri =404;
+
+        # Địa chỉ của PHP-FPM
+        # Có thể là một Unix socket (phổ biến và hiệu quả hơn)
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock; # Thay đổi 'php8.1-fpm.sock' tùy thuộc vào phiên bản PHP của bạn
+
+        # Hoặc một địa chỉ IP và cổng (nếu PHP-FPM chạy trên một máy chủ khác hoặc trên cổng TCP)
+        # fastcgi_pass 127.0.0.1:9000;
+
+        # Bao gồm các tham số FastCGI mặc định
+        include fastcgi_params;
+
+        # Quan trọng: Thiết lập SCRIPT_FILENAME để PHP-FPM biết file PHP nào cần thực thi
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+        # Các tham số FastCGI khác (tùy chọn nhưng hữu ích)
+        #fastcgi_param PATH_INFO $fastcgi_path_info;
+        #fastcgi_param MAPPING /path/to/your/app/:/app/; # Ví dụ nếu bạn sử dụng Docker hoặc cấu hình phức tạp
+
+        # Các tham số khác để tăng hiệu suất hoặc sửa lỗi
+        fastcgi_read_timeout 300; # Tăng thời gian chờ đọc từ PHP-FPM
+    }
+
+    # Ngăn chặn truy cập các file ẩn (bắt đầu bằng .)
+    location ~ /\. {
+        deny all;
+    }
+
+    # Ngăn chặn truy cập các file cấu hình của Nginx
+    location ~ /(conf|nginx) {
+        deny all;
+    }
+
+    # Ngăn chặn truy cập các file nhạy cảm khác (ví dụ: .env, .git, Composer.json)
+    location ~ /\.(env|git|svn|htacccess|htpasswd|json|yml|yaml)$ {
+        deny all;
+    }
+
+    # Cấu hình cho trang lỗi tùy chỉnh
+    ; error_page 404 /404.html;
+    ; location = /404.html {
+    ;     internal;
+    ; }
+
+    ; error_page 500 502 503 504 /50x.html;
+    ; location = /50x.html {
+    ;     internal;
+    ; }
+}
