@@ -53,6 +53,7 @@
                 this.form.reset();
                 location.href = '/admin/';
             } else {
+                this.form.reset();
                 this.errorDiv.textContent = 'Tên đăng nhập hoặc mật khẩu không đúng';
             }
         }

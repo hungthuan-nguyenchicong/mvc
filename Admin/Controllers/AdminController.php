@@ -1,7 +1,7 @@
 <?php
 
 class AdminController {
-    private $AdminModel;
+    private $adminModel;
 
     public function index() {
         View::admin('admin', 'index');
@@ -21,8 +21,8 @@ class AdminController {
                 ];
     
                 Model::admin('AdminModel');
-                $this->AdminModel = new AdminModel();
-                if ($this->AdminModel->validateLogin($login['username'], $login['password'])) {
+                $this->adminModel = new AdminModel();
+                if ($this->adminModel->validateLogin($login['username'], $login['password'])) {
                     $response['status'] = 'success';
                 }
 
