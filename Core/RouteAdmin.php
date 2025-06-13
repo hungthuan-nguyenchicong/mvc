@@ -22,6 +22,9 @@ class RouteAdmin {
                     case '/admin/login/':
                         $this->AdminController->login();
                         break;
+                    case '/admin/logout/':
+                        $this->AdminController->logout();
+                        break;
                     default:
                         http_response_code(404);
                         // exit;

@@ -4,7 +4,11 @@ class AdminController {
     private $adminModel;
 
     public function index() {
-        View::admin('admin', 'index');
+        if (!Session::get('admin')) {
+            header('Location: /admin/login/');
+        } else {
+            View::admin('admin', 'index');
+        }
     }
 
     public function login() {
@@ -23,6 +27,7 @@ class AdminController {
                 Model::admin('AdminModel');
                 $this->adminModel = new AdminModel();
                 if ($this->adminModel->validateLogin($login['username'], $login['password'])) {
+                    Session::set('admin', true);
                     $response['status'] = 'success';
                 }
 
@@ -35,6 +40,12 @@ class AdminController {
             View::admin('admin', 'login');
             exit;
         }
+    }
+
+    public function logout() {
+        Session::destroy();
+        header('Location: /admin/login/');
+        exit;
     }
 }
 ?>
