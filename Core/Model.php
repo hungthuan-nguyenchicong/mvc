@@ -15,7 +15,7 @@ class Model {
     }
 
     public static function admin(string $modelName): bool {
-        return self::load('./../../Admin', $modelName);
+        return self::load(root().'Admin', $modelName);
     }
 }
 
