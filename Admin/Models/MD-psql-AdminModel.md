@@ -16,7 +16,8 @@ CREATE TABLE users (
 // insert users
 
 INSERT INTO users (username, password) VALUES ('admin', 'your_super_secret_password');
-// password_hash --> adminModel
+// password_hash --> adminModel ->> echo password_hash('admin passw', PASSWORD_DEFAULT);
+
 INSERT INTO users (username, password) VALUES ('admin', '$2y$10$pKgnRonxAf5WcyIAOCRyce0hNXKc/aMfudLjdTzvV4EGwUXc1Xyhu');
 
 // xem hang
