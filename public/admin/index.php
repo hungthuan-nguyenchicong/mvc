@@ -1,6 +1,7 @@
 <?php
 require_once './../functions.php';
 require_once './../../Core/Session.php';
+require_once root().'Core/CSRF.php';
 require_once root().'Core/Database.php';
 require_once './../../Core/Model.php';
 require_once './../../Core/View.php';

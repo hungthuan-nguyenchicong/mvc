@@ -1,7 +1,9 @@
+<?php $csrfInput = CSRF::input(); ?>
 <h3>Login</h3>
 <form id="login">
     <input type="text" name="username" placeholder="User Name" autocomplete="username" required>
     <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+    <?=$csrfInput ?>
     <button type="submit">Login</button>
     <div class="error"></div>
 </form>
@@ -49,7 +51,10 @@
                 body: formData,
             });
             const result = await response.json();
-            if (result.status === 'success') {
+            if (result.status === 'csrf') {
+                this.form.reset();
+                this.errorDiv.textContent = 'Đứng phá nữa đi chỗ khác chơi';
+            } else if (result.status === 'success') {
                 this.form.reset();
                 location.href = '/admin/';
             } else {
