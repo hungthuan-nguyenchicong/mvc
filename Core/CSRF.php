@@ -12,7 +12,7 @@ class CSRF {
     }
 
     private static function validateCsrf($csrf): bool {
-        if (Session::get('csrf') && Session::get('csrf') === $csrf) {
+        if (Session::get('csrf') === $csrf) {
             Session::destroy('csrf');
             return true;
         } else {
