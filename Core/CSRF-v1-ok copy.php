@@ -7,23 +7,12 @@ class CSRF {
         return $csrf;
     }
 
-    // Thay đổi hàm getCsrf()
-    private static function getCsrf(): string {
-        // Kiểm tra xem token CSRF đã tồn tại trong session chưa
-        if (Session::get('csrf')) {
-            // Nếu có, trả về token hiện có
-            return Session::get('csrf');
-        }
-        // Nếu chưa có, tạo token mới và lưu vào session
-        return self::setCsrf();
-    }
-
     public static function input() {
-        return '<input type="hidden" name="csrf" value="'.self::getCsrf().'">';
+        return '<input type="hidden" name="csrf" value="'.self::setCsrf().'">';
     }
 
     public static function apiCsrf(): string {
-        $csrf = self::getCsrf();
+        $csrf = self::setCsrf();
         return $csrf;
     }
 

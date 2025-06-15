@@ -3,7 +3,7 @@
 <form id="login">
     <input type="text" name="username" placeholder="User Name" autocomplete="username" required>
     <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
-    <input type="text" name="capcha" placeholder="Capcha" reauired>
+    <?=$csrfInput ?>
     <button type="submit">Login</button>
     <div class="error"></div>
 </form>
@@ -45,9 +45,7 @@
         }
 
         async sendAdminController_login() {
-            const csrf = await this.getCsrf();
             const formData = new FormData(this.form);
-            formData.append('csrf', csrf);
             const response = await fetch('/admin/login/', {
                 method: 'POST',
                 body: formData,
@@ -62,23 +60,6 @@
             } else {
                 this.form.reset();
                 this.errorDiv.textContent = 'Tên đăng nhập hoặc mật khẩu không đúng';
-            }
-        }
-
-        async getCsrf() {
-            try {
-                const capchaInput = this.form.querySelector('input[name="capcha"]');
-                const capchaValue = capchaInput.value;
-                // Construct the URL with the capcha as a query parameter
-                const response = await fetch(`/admin/api-csrf/?capcha=${encodeURIComponent(capchaValue)}`, {
-                    method: 'GET', // Method remains GET
-                    // No 'body' for GET requests when sending data via URL parameters
-                });
-                const result = await response.json();
-                return result.csrf;
-            } catch (error) {
-                console.error(error);
-                return null;
             }
         }
     }

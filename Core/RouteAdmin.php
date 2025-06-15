@@ -19,6 +19,9 @@ class RouteAdmin {
                     case '/admin/':
                         $this->AdminController->index();
                         break;
+                    case '/admin/api-csrf/':
+                        $this->AdminController->apiCsrf();
+                        break;
                     case '/admin/login/':
                         $this->AdminController->login();
                         break;
