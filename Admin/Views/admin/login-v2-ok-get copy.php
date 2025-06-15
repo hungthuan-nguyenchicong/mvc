@@ -1,8 +1,9 @@
+<?php $csrfInput = CSRF::input(); ?>
 <h3>Login</h3>
 <form id="login">
     <input type="text" name="username" placeholder="User Name" autocomplete="username" required>
     <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
-    <input type="text" name="capcha" placeholder="Capcha" required>
+    <input type="text" name="capcha" placeholder="Capcha" reauired>
     <button type="submit">Login</button>
     <div class="error"></div>
 </form>
@@ -69,18 +70,10 @@
                 const capchaInput = this.form.querySelector('input[name="capcha"]');
                 const capchaValue = capchaInput.value;
                 // Construct the URL with the capcha as a query parameter
-                // const response = await fetch(`/admin/api-csrf/?capcha=${encodeURIComponent(capchaValue)}`, {
-                //     method: 'GET', // Method remains GET
-                //     // No 'body' for GET requests when sending data via URL parameters
-                // });
-                // post
-                const formData = new FormData();
-                formData.append('capcha', capchaValue);
-
-                const response = await fetch('/admin/api-login-csrf/', {
-                    method: 'POST',
-                    body: formData,
-                })
+                const response = await fetch(`/admin/api-csrf/?capcha=${encodeURIComponent(capchaValue)}`, {
+                    method: 'GET', // Method remains GET
+                    // No 'body' for GET requests when sending data via URL parameters
+                });
                 const result = await response.json();
                 return result.csrf;
             } catch (error) {

@@ -11,10 +11,23 @@ class AdminController {
         }
     }
 
+    public function apiLoginCsrf() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $capcha = $_POST['capcha'];
+            if ($capcha === '12345') {
+                $csrf = CSRF::apiCsrf();
+            } else {
+                $csrf = 'dc42099b1e2f439ee4fe9b6ca9645cd129145fe81a745240cadcf5909f15c000';
+            }
+            header('Content-Type: application/json');
+            echo json_encode(['csrf' => $csrf]);
+            exit;
+        }
+    }
+
     public function apiCsrf() {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $capcha = $_GET['capcha'];
-            if ($capcha === '12345') {
+            if (Session::get('admin')) {
                 $csrf = CSRF::apiCsrf();
             } else {
                 $csrf = 'dc42099b1e2f439ee4fe9b6ca9645cd129145fe81a745240cadcf5909f15c000';
