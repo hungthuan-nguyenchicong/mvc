@@ -19,11 +19,11 @@ class RouteAdmin {
                     case '/admin/':
                         $this->AdminController->index();
                         break;
-                    case '/admin/api-login-csrf/':
-                        $this->AdminController->apiLoginCsrf();
+                    case '/admin/csrf-login/':
+                        $this->AdminController->csrfLogin();
                         break;
-                    case '/admin/api-csrf/':
-                        $this->AdminController->apiCsrf();
+                    case '/admin/csrf/':
+                        $this->AdminController->csrf();
                         break;
                     case '/admin/login/':
                         $this->AdminController->login();

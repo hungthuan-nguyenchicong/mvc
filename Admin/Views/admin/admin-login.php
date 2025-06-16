@@ -77,7 +77,7 @@
                 const formData = new FormData();
                 formData.append('capcha', capchaValue);
 
-                const response = await fetch('/admin/api-login-csrf/', {
+                const response = await fetch('/admin/csrf-login/', {
                     method: 'POST',
                     body: formData,
                 })

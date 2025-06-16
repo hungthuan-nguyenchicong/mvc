@@ -13,7 +13,7 @@ class AdminController {
         }
     }
 
-    public function apiLoginCsrf() {
+    public function csrfLogin() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $capcha = $_POST['capcha'];
             if ($capcha === '12345') {
@@ -27,7 +27,7 @@ class AdminController {
         }
     }
 
-    public function apiCsrf() {
+    public function csrf() {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (Session::get('admin')) {
                 $csrf = CSRF::apiCsrf();
@@ -61,7 +61,6 @@ class AdminController {
                         Session::set('admin', true);
                         $response['status'] = 'success';
                     }
-    
                 }
             } else {
                 $response['status'] = 'csrf';
