@@ -11,7 +11,7 @@
         </ul>
     </div>
     <div class="main-content">
-        abc
+        <?php new LoadContent(); ?>
     </div>
 </div>
 

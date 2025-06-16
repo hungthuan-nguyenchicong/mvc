@@ -1,11 +1,12 @@
 <?php
 require_once './../functions.php';
-require_once './../../Core/Session.php';
+require_once root().'Core/Session.php';
 require_once root().'Core/CSRF.php';
 require_once root().'Core/Database.php';
-require_once './../../Core/Model.php';
-require_once './../../Core/View.php';
-require_once './../../Core/RouteAdmin.php';
+require_once root().'Core/Model.php';
+require_once root().'Core/LoadContent.php';
+require_once root().'Core/View.php';
+require_once root().'Core/RouteAdmin.php';
 
 // test
 

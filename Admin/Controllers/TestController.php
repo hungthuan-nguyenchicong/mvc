@@ -16,6 +16,11 @@ class TestController {
             throw new Exception('testDatabase failed: '.$e->getMessage());
         }
     }
+
+    public function show($id, $limit = 1) {
+        echo 'show id: '. $id ;
+        echo '<br>show limit: '. $limit ;
+    }
 }
 
 ?>
