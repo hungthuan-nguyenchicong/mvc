@@ -163,3 +163,7 @@ CREATE TABLE test3 (
     id SERIAL PRIMARY KEY,
     test VARCHAR(100) NULL
 );
+
+## xoa bang
+
+DROP TABLE test2;

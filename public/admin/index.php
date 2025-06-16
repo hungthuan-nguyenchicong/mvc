@@ -9,5 +9,5 @@ require_once './../../Core/RouteAdmin.php';
 
 // test
 
-require_once root(). 'public/test-database.php';
+// require_once root(). 'public/test-database.php';
 ?>

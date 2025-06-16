@@ -4,10 +4,12 @@ class AdminController {
     private $adminModel;
 
     public function index() {
-        if (!Session::get('admin')) {
-            header('Location: /admin/login/');
+        if (Session::get('admin')) {
+            View::admin('admin', 'admin-index');
+            exit;
         } else {
-            View::admin('admin', 'index');
+            header('Location: /admin/login/');
+            exit;
         }
     }
 
@@ -69,7 +71,7 @@ class AdminController {
             echo json_encode($response);
             exit;
         } else {
-            View::admin('admin', 'login');
+            View::admin('admin', 'admin-login');
             exit;
         }
     }
