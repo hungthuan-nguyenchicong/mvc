@@ -38,6 +38,7 @@ server {
 
         # Nếu file PHP hợp lệ, chuyển yêu cầu đến PHP-FPM
         fastcgi_pass unix:/var/run/php/php8.3-fpm.sock; # Thay đổi 'php8.3-fpm.sock' tùy thuộc vào phiên bản PHP của bạn
+        fastcgi_index  index.php;
         include fastcgi_params;
         # Đặt SCRIPT_FILENAME để PHP-FPM biết file nào cần thực thi.
         # $document_root là /var/www/html/mvc/public
