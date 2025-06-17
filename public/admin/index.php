@@ -2,6 +2,7 @@
 require_once './../functions.php';
 require_once root().'Core/Session.php';
 require_once root().'Core/CSRF.php';
+require_once root().'Core/Config.php';
 require_once root().'Core/Database.php';
 require_once root().'Core/Model.php';
 require_once root().'Core/LoadContent.php';

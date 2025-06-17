@@ -1,13 +1,22 @@
 <?php
-$host = 'localhost';
-$dbname = 'mvcdb';
-$user = 'cong';
-$password = 'Cong12345';
+class Config {
+    private static $host = 'localhost';
+    private static $dbname = 'mvcdb';
+    private static $user = 'cong';
+    private static $password = 'Cong12345';
 
-return [
-    'dsn' => "pgsql:host=$host;dbname=$dbname",
-    'user' => $user,
-    'password' => $password,
-];
+    /**
+     * Returns the database configuration array.
+     *
+     * @return array
+     */
+    public static function getDbConfig(): array {
+        return [
+            'dsn' => "pgsql:host=" . self::$host . ";dbname=" . self::$dbname,
+            'user' => self::$user,
+            'password' => self::$password,
+        ];
+    }
+}
 
 ?>

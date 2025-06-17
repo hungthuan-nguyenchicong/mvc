@@ -4,12 +4,17 @@ class Database {
     private $pdo;
     private static $instance = null;
 
-    private function __construct($config) {
+    /**
+     * Private constructor to prevent direct instantiation.
+     *
+     * @param array $config The database configuration.
+     */
+    private function __construct(array $config) {
         try {
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_TIMEOUT => 5,
+                PDO::ATTR_TIMEOUT => 5, // Connection timeout in seconds
             ];
 
             $this->pdo = new PDO(
@@ -19,35 +24,52 @@ class Database {
                 $options
             );
         } catch (PDOException $e) {
-            error_log('Database connection failed: '.$e->getMessage());
-            throw new Exception($e->getMessage());
+            error_log('Database connection failed: ' . $e->getMessage());
+            // It's good to re-throw or throw a custom exception here
+            // to allow the calling code to handle it gracefully.
+            throw new Exception("Could not connect to the database.");
         }
     }
 
-    private static function getInstance($config = null) {
+    /**
+     * Get the single instance of the Database connection.
+     *
+     * @return Database
+     * @throws Exception If the Config class or its method is not found, or configuration is invalid.
+     */
+    public static function getInstance(): Database {
         if (self::$instance === null) {
-            if ($config === null) {
-                $configFile = root(). 'Core/Config.php';
-                if (is_file($configFile)) {
-                    $config = require_once $configFile;
-                } else {
-                    error_log('Config file not found: '. $configFile);
-                    throw new Exception('Config file not found:');
-                }
+            // Get the configuration using the static method from the Config class
+            $config = Config::getDbConfig();
+
+            // Basic validation for the config array
+            if (!isset($config['dsn'], $config['user'], $config['password'])) {
+                error_log('Invalid database configuration provided.');
+                throw new Exception('Invalid database configuration.');
             }
+
             self::$instance = new Database($config);
         }
         return self::$instance;
     }
 
-    public static function getPDO() {
+    /**
+     * Get the PDO object for database operations.
+     *
+     * @return PDO
+     * @throws Exception If the PDO object is null (connection failed).
+     */
+    public static function getPDO(): PDO {
         $instance = self::getInstance();
-        if ($instance === null || $instance->pdo === null) {
-            error_log('PDO object is null');
-            throw new Exception('PDO object is null');
+        if ($instance->pdo === null) {
+            // This case should ideally be caught by the constructor's try-catch,
+            // but it's a good defensive check.
+            error_log('PDO object is null after instance creation attempt.');
+            throw new Exception('Database connection not established.');
         }
         return $instance->pdo;
     }
 }
+
 
 ?>
