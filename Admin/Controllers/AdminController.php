@@ -6,7 +6,7 @@ class AdminController {
     public function index() {
         if (Session::get('admin')) {
             View::admin('admin', 'admin-index');
-            exit;
+            return true;
         } else {
             header('Location: /admin/login/');
             exit;

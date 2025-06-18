@@ -86,75 +86,31 @@
 
     class SidebarNav {
         constructor() {
-            this.linkItems = document.querySelectorAll('nav.sidebar-nav a');
+            this.linkItems = document.querySelectorAll ('nav.sidebar-nav a');
             this.clickLink();
-            // *** Thêm dòng này để xử lý trạng thái khi trang tải lần đầu hoặc sau reload ***
-            this.handleInitialLoad(); 
+
         }
 
         clickLink() {
             this.linkItems.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    // **Quan trọng:** Nếu bạn muốn trang reload, đừng dùng e.preventDefault();
-                    // e.preventDefault(); 
-                    
-                    // Xóa tất cả các class active/link-parent hiện có
-                    this.linkItems.forEach(item => {
-                        item.classList.remove('active');
-                        item.classList.remove('link-parent');
+                link.addEventListener('click', (e)=>{
+                    //e.preventDefault();
+                    this.linkItems.forEach(link =>{
+                        link.classList.remove('active');
+                        link.classList.remove('link-parent');
                     });
-                    
-                    // Thêm class 'active' cho liên kết hiện tại
-                    e.currentTarget.classList.add('active');
-
-                    // Nếu là sub-menu-link, thêm class 'link-parent' cho menu chính
                     if (e.currentTarget.classList.contains('sub-menu-link')) {
-                        const liParent = e.currentTarget.closest('ul').closest('li'); // Tìm li cha của menu chính
-                        if (liParent) {
-                            const linkParent = liParent.querySelector('a.main-menu-link');
-                            if (linkParent) {
-                                linkParent.classList.add('link-parent');
-                            }
-                        }
+                        const liParent = e.currentTarget.parentNode.parentNode.parentNode;
+                        const linkParent = liParent.querySelector('a');
+                        linkParent.classList.add('link-parent');
                     }
-                    
-                    // Sau khi click, trình duyệt sẽ tự động reload do href
-                    // Logic handleInitialLoad() sẽ lo phần active sau khi reload
+                    e.currentTarget.classList.toggle('active');
                 });
-            });
-        }
-
-        // *** Phương thức mới để xử lý trạng thái sidebar khi tải trang ***
-        handleInitialLoad() {
-            // Lấy toàn bộ URL hiện tại (bao gồm cả pathname và query string)
-            const currentUrl = window.location.pathname + window.location.search;
-            tt(`Current URL on load: ${currentUrl}`); // Để debug
-
-            this.linkItems.forEach(link => {
-                const linkHref = link.getAttribute('href');
-                
-                // So sánh href của liên kết với URL hiện tại
-                if (linkHref === currentUrl) {
-                    link.classList.add('active');
-                    tt(`Matched link: ${linkHref}`); // Để debug
-
-                    // Nếu liên kết khớp là sub-menu, thì cũng cần active parent của nó
-                    if (link.classList.contains('sub-menu-link')) {
-                        const liParent = link.closest('ul').closest('li');
-                        if (liParent) {
-                            const linkParent = liParent.querySelector('a.main-menu-link');
-                            if (linkParent) {
-                                linkParent.classList.add('link-parent');
-                                tt(`Activated parent for: ${linkHref}`); // Để debug
-                            }
-                        }
-                    }
-                }
             });
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', ()=>{
         new SidebarNav();
     });
 

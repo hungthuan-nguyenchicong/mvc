@@ -17,6 +17,10 @@ class TestController {
         }
     }
 
+    public function index() {
+        echo 'index page';
+    }
+
     public function show($id, $limit = 1) {
         echo 'show id: '. $id ;
         echo '<br>show limit: '. $limit ;
