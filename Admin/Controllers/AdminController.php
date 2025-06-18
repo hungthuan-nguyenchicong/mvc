@@ -6,7 +6,7 @@ class AdminController {
     public function index() {
         if (Session::get('admin')) {
             View::admin('admin', 'admin-index');
-            return true;
+            exit;
         } else {
             header('Location: /admin/login/');
             exit;
@@ -14,26 +14,31 @@ class AdminController {
     }
 
     public function js($slug = null) {
-        if ($slug) {
-            $fileName = root(). 'Admin/Views/' . $slug;
-            if (strpos($fileName, '.js')) {
-                if (is_file($fileName)) {
-                    header('Content-Type: application/javascript');
-                    readfile($fileName);
-                    exit;
+        if (Session::get('admin')) {
+            if ($slug) {
+                $fileName = root(). 'Admin/Views/' . $slug;
+                if (strpos($fileName, '.js')) {
+                    if (is_file($fileName)) {
+                        header('Content-Type: application/javascript');
+                        readfile($fileName);
+                        exit;
+                    } else {
+                        http_response_code(404);
+                        echo 'File.js not found';
+                        exit;
+                    }
                 } else {
                     http_response_code(404);
-                    echo 'File.js not found';
+                    echo 'File.js not found - add .js';
                     exit;
                 }
             } else {
-                http_response_code(404);
-                echo 'File.js not found - add .js';
+                http_response_code(400);
+                echo 'Missing slug parameter: $slug=FileName.js';
                 exit;
             }
         } else {
-            http_response_code(400);
-            echo 'Missing slug parameter: $slug=FileName.js';
+            header('Location: /admin/login/');
             exit;
         }
     }
