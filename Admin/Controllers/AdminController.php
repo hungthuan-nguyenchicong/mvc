@@ -13,6 +13,31 @@ class AdminController {
         }
     }
 
+    public function js($slug = null) {
+        if ($slug) {
+            $fileName = root(). 'Admin/Views/' . $slug;
+            if (strpos($fileName, '.js')) {
+                if (is_file($fileName)) {
+                    header('Content-Type: application/javascript');
+                    readfile($fileName);
+                    exit;
+                } else {
+                    http_response_code(404);
+                    echo 'File.js not found';
+                    exit;
+                }
+            } else {
+                http_response_code(404);
+                echo 'File.js not found - add .js';
+                exit;
+            }
+        } else {
+            http_response_code(400);
+            echo 'Missing slug parameter: $slug=FileName.js';
+            exit;
+        }
+    }
+
     public function csrfLogin() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $capcha = $_POST['capcha'];

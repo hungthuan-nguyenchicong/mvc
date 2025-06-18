@@ -19,6 +19,12 @@ class RouteAdmin {
                     case '/admin/':
                         $this->AdminController->index();
                         break;
+                    // case '/admin/js/':
+                    //     $this->AdminController->js();
+                    //     break;
+                    case (preg_match('/^\/admin\/js\/(.*\.js)$/', $this->uri, $matches) ? true : false):
+                        $this->AdminController->js($matches[1]);
+                        break;
                     case '/admin/csrf-login/':
                         $this->AdminController->csrfLogin();
                         break;

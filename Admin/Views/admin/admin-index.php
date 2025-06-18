@@ -22,10 +22,7 @@
         </nav>
     </aside>
     <div class="content-area">
-        <?php 
-        
-        require_once root().'Core/LoadContent.php';
-        new LoadContent(); ?>
+        <?php new LoadContent(); ?>
     </div>
 </main>
 <style>
@@ -128,7 +125,7 @@
         handleInitialLoad() {
             // Lấy toàn bộ URL hiện tại (bao gồm cả pathname và query string)
             const currentUrl = window.location.pathname + window.location.search;
-            tt(`Current URL on load: ${currentUrl}`); // Để debug
+            //tt(`Current URL on load: ${currentUrl}`); // Để debug
 
             this.linkItems.forEach(link => {
                 const linkHref = link.getAttribute('href');
@@ -136,7 +133,7 @@
                 // So sánh href của liên kết với URL hiện tại
                 if (linkHref === currentUrl) {
                     link.classList.add('active');
-                    tt(`Matched link: ${linkHref}`); // Để debug
+                    //tt(`Matched link: ${linkHref}`); // Để debug
 
                     // Nếu liên kết khớp là sub-menu, thì cũng cần active parent của nó
                     if (link.classList.contains('sub-menu-link')) {
@@ -145,7 +142,7 @@
                             const linkParent = liParent.querySelector('a.main-menu-link');
                             if (linkParent) {
                                 linkParent.classList.add('link-parent');
-                                tt(`Activated parent for: ${linkHref}`); // Để debug
+                                //tt(`Activated parent for: ${linkHref}`); // Để debug
                             }
                         }
                     }
