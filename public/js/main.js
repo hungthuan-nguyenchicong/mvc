@@ -1,4 +1,8 @@
-// public/js/main.js
-import {Router} from './router.js';
+// js/main.js
 
-const router = new Router();
+import {Router} from './router.js';
+// all function debugging
+const app = document.getElementById('app');
+
+const router = new Router(app);
+router.init();
