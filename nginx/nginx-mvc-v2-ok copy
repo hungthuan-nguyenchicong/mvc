@@ -45,31 +45,6 @@ server {
 
 	server_name _;
 
-	# Cấu hình để phục vụ favicon.ico
-    location = /favicon.ico {
-        # Đảm bảo đường dẫn đúng đến tệp favicon.ico
-        # alias /path/to/your/project/public/favicon.ico; # Sử dụng alias nếu favicon.ico không trực tiếp nằm trong thư mục root
-        # hoặc nếu favicon.ico nằm trong thư mục root:
-        try_files /favicon.ico =404;
-
-        # Cấu hình cache mạnh mẽ:
-        # expires 30d; # Cache trong 30 ngày
-        # hoặc Cache-Control để kiểm soát tốt hơn (modern approach)
-		expires 7d; # Cache trong 7 ngày
-        add_header Cache-Control "public, max-age=2592000, immutable"; # 2592000 giây = 30 ngày
-        # immutable: báo trình duyệt rằng tệp sẽ không thay đổi, không cần xác thực lại
-        access_log off; # Không ghi log truy cập cho favicon.ico để giảm tải log
-        log_not_found off; # Không ghi lỗi 404 nếu không tìm thấy
-    }
-
-    # Cấu hình cho các tệp tĩnh khác (như JS, CSS, hình ảnh)
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-        try_files $uri =404;
-        expires 7d; # Cache trong 7 ngày
-        add_header Cache-Control "public, max-age=604800, immutable"; # 604800 giây = 7 ngày
-        access_log off;
-    }
-
 	location / {
     try_files $uri $uri/ /index.html; # Phục vụ SPA
 	}

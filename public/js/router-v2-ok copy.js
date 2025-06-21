@@ -1,7 +1,7 @@
 // js/router.js
 // Removed all static imports for views like HomePage, AboutPage, etc.
 // They will be dynamically imported.
-// NotFoundPage will now also be dynamically imported when needed.
+import { NotFoundPage } from './views/notFound.js'; // Keep NotFoundPage static if it's always needed
 
 /**
  * @class Router
@@ -23,13 +23,9 @@ export class Router {
         // Bind 'this' context for event listeners
         this.handleRouteBound = this.handleRoute.bind(this);
 
-        // Define default route. NotFoundPage will be dynamically loaded.
+        // Define default and 404 error pages
         this.defaultRoute = 'home';
-
-        // NOTE: We no longer instantiate NotFoundPage here.
-        // We will store its path and class name, similar to other routes, for dynamic loading.
-        this.notFoundViewPath = './views/notFound.js';
-        this.notFoundViewClassName = 'NotFoundPage';
+        this.notFoundPage = new NotFoundPage(); // NotFoundPage can be imported statically if always present
     }
 
     /**
@@ -85,29 +81,6 @@ export class Router {
     }
 
     /**
-     * Displays a loading spinner while content is being fetched.
-     */
-    showLoadingSpinner() {
-        if (this.appElement) {
-            this.appElement.innerHTML = `
-                <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-                    <div class="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md w-full rounded-xl">
-                        <h1 class="text-3xl font-bold text-gray-800 mb-4">Đang tải nội dung...</h1>
-                        <div class="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                    </div>
-                </div>
-                <style>
-                    @keyframes spin {
-                        from { transform: rotate(0deg); }
-                        to { transform: rotate(360deg); }
-                    }
-                    .animate-spin { animation: spin 1s linear infinite; }
-                </style>
-            `;
-        }
-    }
-
-    /**
      * Handles the current URL hash, dynamically loads the view, and renders it.
      * This method is now asynchronous due to the use of 'await import()'.
      */
@@ -134,14 +107,25 @@ export class Router {
             }
         }
 
-        if (this.appElement) {
-            this.showLoadingSpinner(); // Show spinner while loading
-        }
-
         if (matchedRoute) {
             try {
+                // Display a loading message while the module is being fetched
+                // if (this.appElement) {
+                //     this.appElement.innerHTML = `
+                //         <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+                //             <div class="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md w-full">
+                //                 <h1 class="text-3xl font-bold text-gray-800 mb-4">Đang tải nội dung...</h1>
+                //                 <div class="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                //             </div>
+                //         </div>
+                //     `;
+                // }
+
                 console.log(`handleRoute: Dynamically importing view from "${matchedRoute.viewPath}"`);
+                // Dynamically import the module
                 const viewModule = await import(matchedRoute.viewPath);
+
+                // Get the specific View Class from the imported module
                 const ViewClass = viewModule[matchedRoute.ViewClassName];
 
                 if (ViewClass) {
@@ -150,71 +134,33 @@ export class Router {
                     content = page.render();
                     console.log(`handleRoute: View for "${matchedRoute.path}" rendered successfully.`);
                 } else {
-                    console.error(`handleRoute: Class "${matchedRoute.ViewClassName}" not found in module "${matchedRoute.viewPath}". Falling back to 404.`);
-                    // Fallback to 404 if class not found in module
-                    content = await this.renderNotFoundPage();
+                    console.error(`handleRoute: Class "${matchedRoute.ViewClassName}" not found in module "${matchedRoute.viewPath}".`);
+                    content = this.notFoundPage.render(); // Fallback to 404 if class not found in module
                 }
 
             } catch (error) {
                 console.error(`handleRoute: Error loading or rendering view for route "${hash}":`, error);
-                // Fallback to 404 page in case of a general loading/rendering error
-                content = await this.renderNotFoundPage(error); // Pass error for more detailed 404 if needed
+                // content = `
+                //     <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+                //         <div class="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md w-full">
+                //             <h1 class="text-4xl font-bold text-red-600 mb-4">Lỗi tải trang</h1>
+                //             <p class="text-gray-600 mb-4">Đã xảy ra sự cố khi tải nội dung trang này.</p>
+                //             <a href="#home" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-300 shadow-md">
+                //                 Về trang chủ
+                //             </a>
+                //         </div>
+                //     </div>
+                // `;
             }
         } else {
             console.log(`handleRoute: No route matched for "${hash}". Rendering 404 page.`);
-            // No route matched, dynamically load and render 404 page
-            content = await this.renderNotFoundPage();
+            content = this.notFoundPage.render();
         }
 
         if (this.appElement) {
             this.appElement.innerHTML = content;
         } else {
             console.error('handleRoute: App element is not defined, cannot render content.');
-        }
-    }
-
-    /**
-     * Dynamically loads and renders the NotFoundPage.
-     * @param {Error} [originalError] - Optional original error object for debugging.
-     * @returns {Promise<string>} The HTML content of the 404 page.
-     */
-    async renderNotFoundPage(originalError = null) {
-        try {
-            console.log(`renderNotFoundPage: Dynamically importing NotFoundPage from "${this.notFoundViewPath}"`);
-            const notFoundModule = await import(this.notFoundViewPath);
-            const NotFoundClass = notFoundModule[this.notFoundViewClassName];
-
-            if (NotFoundClass) {
-                console.log('renderNotFoundPage: Instantiating NotFoundPage.');
-                const notFoundPage = new NotFoundClass();
-                return notFoundPage.render();
-            } else {
-                console.error(`renderNotFoundPage: Class "${this.notFoundViewClassName}" not found in module "${this.notFoundViewPath}".`);
-                return `
-                    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-                        <div class="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md w-full rounded-xl">
-                            <h1 class="text-4xl font-bold text-red-600 mb-4">Lỗi nội bộ</h1>
-                            <p class="text-gray-600 mb-4">Không thể tải trang 404.</p>
-                            <a href="#home" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-300 shadow-md">
-                                Về trang chủ
-                            </a>
-                        </div>
-                    </div>
-                `;
-            }
-        } catch (error) {
-            console.error('renderNotFoundPage: Failed to dynamically load NotFoundPage:', error, 'Original error:', originalError);
-            return `
-                <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-                    <div class="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md w-full rounded-xl">
-                        <h1 class="text-4xl font-bold text-red-600 mb-4">Lỗi nghiêm trọng</h1>
-                        <p class="text-gray-600 mb-4">Không thể tải trang lỗi. Vui lòng thử lại sau.</p>
-                        <a href="#home" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-300 shadow-md">
-                            Về trang chủ
-                        </a>
-                    </div>
-                </div>
-            `;
         }
     }
 }

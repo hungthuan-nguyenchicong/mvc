@@ -1,8 +1,7 @@
 // js/main.js
 
 import { Router } from './router.js';
-// NotFoundPage is now dynamically loaded by the router, so no need to import it here.
-// import { NotFoundPage } from './views/notFound.js';
+//import { NotFoundPage } from './views/notFound.js'; // NotFoundPage can still be static if always needed
 
 /**
  * Main entry point for the application.
@@ -23,9 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
     router.addRoute('about', './views/about.js', 'AboutPage', 'about');
     console.log('main.js: Added "about" route for dynamic loading.');
 
+    router.addRoute('404', './views/notfound.js', 'NotFoundPage', '404');
+
     // Example of a dynamic route (uncomment if you created js/views/product.js)
     router.addRoute('products/:id', './views/product.js', 'ProductPage', 'productDetail');
     console.log('main.js: Added "products/:id" route for dynamic loading.');
+
 
     // Set a default route to navigate to if the URL hash is empty or unrecognized on initial load.
     router.defaultRoute = 'home';
