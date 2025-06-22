@@ -1,0 +1,560 @@
+## css impotr
+
+/* css/main.css */
+
+/* Import các file từ thư mục base trước */
+@import url("base/_reset.css");
+@import url("base/_variables.css");
+
+/* Sau đó import các components */
+@import url("components/_button.css");
+@import url("components/_card.css"); /* Giả sử bạn có file _card.css */
+
+/* Các kiểu CSS chung cho toàn bộ trang */
+body {
+    font-family: var(--font-family-base);
+    line-height: 1.6;
+    color: #333;
+    padding: calc(var(--spacing-unit) * 3);
+}
+
+h1 {
+    color: var(--primary-color);
+    margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+Chắc chắn rồi! Để cài đặt và sử dụng webpack serve --mode development trong WSL (Windows Subsystem for Linux), chúng ta sẽ thực hiện các bước sau. Đây là quy trình chuẩn để thiết lập môi trường phát triển frontend trong một môi trường Linux ảo hóa trên Windows, mang lại hiệu suất tốt và trải nghiệm quen thuộc cho các nhà phát triển.
+
+Bước 1: Cài đặt WSL và một bản phân phối Linux
+Nếu bạn chưa có WSL, bạn cần cài đặt nó trước.
+
+Mở PowerShell hoặc Command Prompt với quyền quản trị viên.
+Cài đặt WSL:
+Bash
+
+wsl --install
+Lệnh này sẽ cài đặt WSL và bản phân phối Ubuntu mặc định.
+Khởi động lại máy tính khi được yêu cầu.
+Hoàn tất cài đặt Ubuntu: Sau khi khởi động lại, Ubuntu sẽ tự động mở lên để bạn thiết lập tên người dùng và mật khẩu Linux.
+Bước 2: Cài đặt Node.js và npm (hoặc Yarn) trong WSL
+Webpack và các công cụ liên quan đều chạy trên Node.js.
+
+Mở WSL Terminal (tìm "Ubuntu" trong menu Start của Windows).
+Cập nhật các gói:
+Bash
+
+sudo apt update
+sudo apt upgrade
+Cài đặt Node.js và npm sử dụng NVM (Node Version Manager) - Rất được khuyến nghị: NVM giúp bạn dễ dàng chuyển đổi giữa các phiên bản Node.js khác nhau.
+Bash
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+Sau khi chạy lệnh này, đóng terminal và mở lại để NVM được khởi tạo. Sau đó, cài đặt phiên bản Node.js ổn định nhất:
+Bash
+
+nvm install --lts
+nvm use --lts
+node -v  # Kiểm tra phiên bản Node.js
+npm -v   # Kiểm tra phiên bản npm
+(Tùy chọn: Nếu bạn thích Yarn thay vì npm, bạn có thể cài đặt nó sau khi có Node.js: npm install -g yarn)
+Bước 3: Tạo thư mục dự án và khởi tạo npm
+Trong WSL Terminal, điều hướng đến nơi bạn muốn tạo dự án. Bạn có thể làm việc trong thư mục gốc của Linux (ví dụ: ~/my-project) hoặc truy cập các ổ đĩa Windows (ví dụ: /mnt/c/Users/YourWindowsUser/Documents/my-project). Làm việc trực tiếp trong hệ thống file Linux (~) thường có hiệu suất tốt hơn.
+Bash
+
+mkdir my-webpack-app
+cd my-webpack-app
+Khởi tạo dự án npm:
+Bash
+
+npm init -y
+Lệnh này sẽ tạo một file package.json cơ bản.
+Bước 4: Cài đặt Webpack và Webpack-Dev-Server
+Cài đặt Webpack và các gói cần thiết làm dev dependencies:
+Bash
+
+npm install webpack webpack-cli webpack-dev-server html-webpack-plugin --save-dev
+webpack: Core của Webpack.
+webpack-cli: Cung cấp giao diện dòng lệnh để chạy Webpack.
+webpack-dev-server: Máy chủ phát triển với tính năng live reloading/HMR.
+html-webpack-plugin: Tự động tạo file index.html và nhúng các bundle JS/CSS vào đó.
+Bước 5: Cấu hình Webpack
+Tạo một file webpack.config.js trong thư mục gốc của dự án của bạn.
+
+webpack.config.js:
+
+JavaScript
+
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  // 1. Chế độ phát triển (development mode)
+  // Bật các tối ưu hóa thân thiện với dev, ví dụ: code không bị minify, source maps dễ debug
+  mode: 'development', 
+
+  // 2. Điểm vào của ứng dụng (entry point)
+  // Webpack sẽ bắt đầu phân tích từ file này để xây dựng dependency graph
+  entry: './src/index.js', 
+
+  // 3. Cấu hình đầu ra (output)
+  // Nơi Webpack sẽ xuất các file bundle cuối cùng
+  output: {
+    filename: 'bundle.js', // Tên file JavaScript đã được bundle
+    path: path.resolve(__dirname, 'dist'), // Thư mục đầu ra (thường là 'dist' hoặc 'build')
+    clean: true, // Dọn dẹp thư mục 'dist' trước mỗi lần build
+  },
+
+  // 4. Cấu hình Development Server
+  // Các tùy chọn cho webpack-dev-server
+  devServer: {
+    static: './dist', // Phục vụ các file tĩnh từ thư mục 'dist'
+    port: 3000,      // Cổng mặc định mà dev server sẽ chạy (ví dụ: http://localhost:3000)
+    open: true,      // Tự động mở trình duyệt khi dev server khởi động
+    hot: true,       // Bật Hot Module Replacement (HMR) - khuyến nghị cho React/Vue
+    // compress: true, // Bật gzip compression cho các file được phục vụ
+  },
+
+  // 5. Loaders (Để xử lý các loại file khác ngoài JS)
+  module: {
+    rules: [
+      // Rule cho CSS/SCSS
+      {
+        test: /\.(css|scss|sass)$/,
+        use: [
+          'style-loader', // Chèn CSS vào DOM thông qua thẻ <style> (chỉ dùng trong dev)
+          'css-loader',   // Diễn giải @import và url() như import/require
+          'sass-loader',  // Biên dịch SCSS/Sass thành CSS (nếu dùng Sass)
+        ],
+      },
+      // Rule cho Babel (nếu bạn dùng cú pháp JS hiện đại, JSX, TypeScript, v.v.)
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'], // Chuyển đổi JS hiện đại về phiên bản cũ hơn
+            // Nếu dùng React: presets: ['@babel/preset-env', '@babel/preset-react']
+          },
+        },
+      },
+    ],
+  },
+
+  // 6. Plugins
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html', // File HTML nguồn để plugin sử dụng làm template
+      filename: 'index.html',     // Tên file HTML đầu ra
+      inject: 'body',             // Chèn script vào cuối thẻ body
+    }),
+  ],
+
+  // 7. Source maps (giúp debug dễ dàng hơn trong trình duyệt)
+  devtool: 'eval-source-map', // Hoặc 'source-map' cho production
+};
+Bước 6: Tạo các file nguồn
+Tạo thư mục src và các file cơ bản bên trong:
+
+src/index.html:
+
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Webpack App</title>
+</head>
+<body>
+    <div id="app"></div>
+    <h1>Hello from Webpack!</h1>
+    <p>This text will be styled by CSS and updated by JavaScript.</p>
+</body>
+</html>
+src/index.js:
+
+JavaScript
+
+import './styles.scss'; // Import file SCSS (nếu bạn dùng Sass)
+
+// Hoặc import CSS thuần: import './styles.css';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const appDiv = document.getElementById('app');
+    if (appDiv) {
+        appDiv.innerHTML = '<p>JavaScript content loaded!</p>';
+    }
+
+    console.log('App is running in development mode!');
+});
+src/styles.scss (Nếu bạn dùng Sass):
+
+SCSS
+
+$primary-color: #007bff;
+$font-stack: Helvetica, sans-serif;
+
+body {
+  font: 100% $font-stack;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f8f9fa;
+}
+
+h1 {
+  color: $primary-color;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#app {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+Nếu bạn không dùng Sass, bạn có thể tạo src/styles.css với nội dung CSS thuần túy.
+
+Bước 7: Cập nhật package.json
+Thêm script start vào file package.json của bạn.
+
+package.json:
+
+JSON
+
+{
+  "name": "my-webpack-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.x.x",          // Chỉ cần nếu dùng Babel
+    "@babel/preset-env": "^7.x.x",    // Chỉ cần nếu dùng Babel
+    "babel-loader": "^9.x.x",         // Chỉ cần nếu dùng Babel
+    "css-loader": "^6.x.x",
+    "html-webpack-plugin": "^5.x.x",
+    "sass": "^1.x.x",                 // Chỉ cần nếu dùng Sass
+    "sass-loader": "^14.x.x",         // Chỉ cần nếu dùng Sass
+    "style-loader": "^3.x.x",
+    "webpack": "^5.x.x",
+    "webpack-cli": "^5.x.x",
+    "webpack-dev-server": "^5.x.x"
+  }
+}
+(Lưu ý: Thay thế 7.x.x, 9.x.x, 6.x.x, 5.x.x, 14.x.x bằng phiên bản thực tế mà npm install đã cài đặt, hoặc bạn có thể chỉ cần chạy npm install và npm sẽ chọn phiên bản tương thích.)
+
+Bước 8: Chạy Development Server
+Trong WSL Terminal, đảm bảo bạn đang ở thư mục gốc của dự án (my-webpack-app).
+Chạy lệnh start:
+Bash
+
+npm start
+Webpack sẽ bắt đầu biên dịch ứng dụng của bạn và khởi động máy chủ phát triển. Terminal sẽ hiển thị thông báo về địa chỉ mà máy chủ đang chạy (thường là http://localhost:3000 hoặc một cổng khác nếu cổng 3000 đang bận). Trình duyệt của bạn cũng sẽ tự động mở tab mới tại địa chỉ đó.
+
+Bước 9: Kiểm tra Hot Module Replacement (HMR)
+Mở file src/index.js hoặc src/styles.scss trong trình chỉnh sửa code của bạn.
+Thực hiện một thay đổi nhỏ. Ví dụ, trong src/index.js, thay đổi chuỗi console.log hoặc trong src/styles.scss, thay đổi màu background-color.
+Lưu file.
+Quan sát trình duyệt: Bạn sẽ thấy các thay đổi được áp dụng ngay lập tức mà không cần tải lại toàn bộ trang (nhờ HMR) hoặc trang sẽ tự động tải lại (nếu HMR không áp dụng cho loại thay đổi đó hoặc bạn chưa bật HMR).
+Vậy là bạn đã hoàn tất việc cài đặt và sử dụng webpack serve --mode development trong môi trường WSL! Giờ đây bạn có một quy trình làm việc hiệu quả để phát triển các ứng dụng frontend của mình.
+
+Bạn đang đề xuất một cách tiếp cận rất thông minh và phổ biến để kết hợp Nginx (phục vụ PHP-FPM) với Webpack Dev Server trong môi trường phát triển!
+
+Câu trả lời là Có, bạn hoàn toàn có thể cấu hình Nginx để proxy các yêu cầu tới /css/ và /js/ (hoặc bất kỳ tiền tố đường dẫn nào khác) tới Webpack Dev Server đang chạy ở http://localhost:3000.
+
+Cách làm này cực kỳ hữu ích vì nó cho phép bạn truy cập ứng dụng của mình chỉ qua một cổng duy nhất (cổng của Nginx, thường là 80 hoặc 443), đồng thời vẫn tận hưởng các lợi ích của Webpack Dev Server như HMR và biên dịch nhanh trong quá trình phát triển.
+
+Cách Cấu Hình Nginx Proxy Pass tới Webpack Dev Server
+Bạn sẽ thêm các khối location vào file cấu hình Nginx của mình (ví dụ: nginx.conf hoặc một file cấu hình site cụ thể trong sites-available hoặc conf.d).
+
+Giả sử ứng dụng PHP của bạn đang chạy trên Nginx tại http://localhost, và Webpack Dev Server đang chạy tại http://localhost:3000.
+
+Nginx
+
+server {
+    listen 80; # Hoặc cổng khác mà Nginx của bạn đang nghe
+    server_name localhost; # Hoặc tên miền phát triển của bạn
+
+    root /var/www/html/your_php_project/public; # Thư mục public của dự án PHP của bạn
+
+    index index.php index.html index.htm;
+
+    # Cấu hình PHP-FPM (ví dụ)
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php8.x-fpm.sock; # Thay bằng sock của PHP-FPM của bạn
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+
+    # *** Cấu hình Proxy Pass tới Webpack Dev Server cho JS và CSS ***
+    # Các yêu cầu tới /js/ sẽ được chuyển hướng tới http://localhost:3000/js/
+    location /js/ {
+        proxy_pass http://localhost:3000/js/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # Tắt caching trong dev
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+    }
+
+    # Các yêu cầu tới /css/ sẽ được chuyển hướng tới http://localhost:3000/css/
+    location /css/ {
+        proxy_pass http://localhost:3000/css/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # Tắt caching trong dev
+        proxy_no_cache 1;
+        proxy_cache_bypass 1;
+    }
+
+    # Hoặc nếu bạn muốn tất cả các tài nguyên frontend (ảnh, font, v.v.)
+    # cũng được phục vụ từ Webpack Dev Server:
+    # location /static/ { # Ví dụ nếu Webpack output vào thư mục /static/
+    #     proxy_pass http://localhost:3000/static/;
+    #     proxy_set_header Host $host;
+    #     # ... các proxy_set_header khác
+    #     proxy_no_cache 1;
+    #     proxy_cache_bypass 1;
+    # }
+
+    # Cấu hình xử lý các đường dẫn còn lại (ví dụ, các route của PHP)
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+}
+Giải thích Cấu hình Nginx:
+location /js/ { ... } và location /css/ { ... }: Các khối này cho Nginx biết rằng bất kỳ yêu cầu nào bắt đầu bằng /js/ hoặc /css/ (ví dụ: http://localhost/js/bundle.js) sẽ không được tìm trong thư mục root cục bộ của Nginx.
+proxy_pass http://localhost:3000/js/;: Thay vào đó, Nginx sẽ chuyển tiếp (proxy) yêu cầu đó đến http://localhost:3000/js/ trên Webpack Dev Server. Webpack Dev Server sau đó sẽ phục vụ file tương ứng.
+proxy_set_header ...: Các dòng này là cần thiết để Webpack Dev Server (hoặc ứng dụng bên trong nó) nhận biết được Host ban đầu, IP thực của người dùng, v.v., điều này quan trọng cho một số ứng dụng hoặc debug.
+proxy_no_cache 1; và proxy_cache_bypass 1;: Rất quan trọng trong môi trường phát triển! Các dòng này đảm bảo rằng Nginx không cache các tài nguyên từ Webpack Dev Server. Điều này cho phép HMR và live reloading hoạt động chính xác, vì bạn muốn luôn nhận được phiên bản mới nhất của file khi nó thay đổi.
+Cấu hình Webpack Output cho publicPath
+Với cấu hình Nginx này, bạn có thể thay đổi publicPath trong webpack.config.js của mình để phù hợp với tiền tố đường dẫn mà Nginx đang proxy:
+
+JavaScript
+
+// webpack.config.js
+module.exports = {
+  // ...
+  output: {
+    filename: 'js/[name].js', // Hoặc bundle.js
+    path: path.resolve(__dirname, 'dist'),
+    clean: true,
+    publicPath: '/js/', // Webpack sẽ xuất các file JS với tiền tố /js/
+  },
+  // ...
+  module: {
+    rules: [
+      {
+        test: /\.(css|scss|sass)$/,
+        use: [
+          'style-loader', // Vẫn dùng style-loader cho dev
+          'css-loader',
+          'sass-loader',
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html',
+      inject: 'body',
+      // Các đường dẫn script và link trong index.html được tạo bởi HTMLWebpackPlugin
+      // sẽ tự động sử dụng publicPath đã định nghĩa
+    }),
+  ],
+  // ...
+};
+Nếu bạn tách CSS ra file riêng trong dev (ít phổ biến hơn HMR với style-loader), bạn sẽ cần một publicPath tương tự cho CSS.
+
+Lợi ích của phương pháp này:
+Đơn giản hóa URL: Bạn chỉ cần truy cập http://localhost (hoặc tên miền phát triển của bạn) trong trình duyệt, và Nginx sẽ tự động định tuyến các yêu cầu cho JS/CSS tới Webpack Dev Server.
+Mô phỏng môi trường Production: Cách này giúp môi trường phát triển của bạn gần giống với môi trường sản phẩm hơn, vì tất cả các yêu cầu đều đi qua cùng một máy chủ Nginx.
+Tránh CORS Issues: Vì tất cả tài nguyên được phục vụ từ cùng một "origin" (cổng của Nginx), bạn sẽ tránh được các vấn đề về CORS (Cross-Origin Resource Sharing) mà có thể xảy ra khi bạn tải HTML từ PHP trên cổng này và JS/CSS từ Webpack Dev Server trên cổng khác.
+Dễ dàng hơn cho Testing: Việc này cũng đơn giản hóa việc chạy các bài kiểm thử tự động vì bạn chỉ cần cấu hình chúng để truy cập một URL duy nhất.
+Đây là một thiết lập rất hiệu quả và được khuyến nghị cho các dự án tích hợp PHP/Nginx với các công cụ build frontend hiện đại như Webpack trong môi trường phát triển.
+
+Có, PHP có thể "biên dịch" (hoặc chính xác hơn là xử lý và gộp) CSS theo các lệnh @import url("components/_button.css");, nhưng điều này sẽ yêu cầu bạn tự viết code PHP để thực hiện logic đó, chứ không phải là một tính năng có sẵn của PHP như một trình duyệt hay một bộ tiền xử lý CSS.
+
+Cách PHP Biên Dịch @import CSS
+Để PHP làm được điều này, bạn cần tạo một script PHP làm nhiệm vụ:
+
+Đọc file CSS chính (ví dụ: main.css).
+Tìm kiếm tất cả các lệnh @import bên trong file đó.
+Đối với mỗi lệnh @import tìm thấy, đọc nội dung của file CSS được import.
+Thay thế lệnh @import bằng nội dung của file được import.
+Lặp lại quá trình này (đệ quy) nếu file được import lại chứa các lệnh @import khác.
+Cuối cùng, trả về toàn bộ nội dung CSS đã được gộp lại dưới dạng một file duy nhất.
+Đây là một ví dụ cơ bản về một script PHP có thể làm điều này. Lưu ý rằng ví dụ này không bao gồm xử lý lỗi mạnh mẽ hoặc các trường hợp phức tạp như @import có media queries.
+
+Ví dụ Code PHP để Xử lý @import CSS
+Giả sử cấu trúc thư mục của bạn như sau:
+
+public/
+├── index.php
+├── assets/
+│   ├── css/
+│   │   ├── main.css
+│   │   ├── base/
+│   │   │   ├── _reset.css
+│   │   │   └── _variables.css
+│   │   └── components/
+│   │       ├── _button.css
+│   │       └── _card.css
+└── css_compiler.php # Script PHP xử lý việc gộp CSS
+1. assets/css/main.css (File CSS chính của bạn):
+
+CSS
+
+/* assets/css/main.css */
+@import url("base/_reset.css");
+@import url("base/_variables.css");
+@import url("components/_button.css");
+@import url("components/_card.css");
+
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    color: #333;
+    padding: 24px;
+}
+
+h1 {
+    color: blue;
+    margin-bottom: 16px;
+}
+2. Các file CSS nhỏ hơn (như ví dụ trước):
+
+assets/css/base/_reset.css
+assets/css/base/_variables.css
+assets/css/components/_button.css
+assets/css/components/_card.css (ví dụ: p { color: green; })
+3. css_compiler.php (Script PHP để gộp CSS):
+
+PHP
+
+<?php
+// Tắt báo lỗi để không làm hỏng output CSS
+error_reporting(0);
+ini_set('display_errors', 0);
+
+// Thư mục gốc chứa tất cả các file CSS của bạn
+// Đảm bảo đường dẫn này chính xác và an toàn
+define('CSS_ROOT', __DIR__ . '/assets/css/');
+
+/**
+ * Hàm đệ quy để đọc và gộp nội dung CSS, xử lý các lệnh @import.
+ *
+ * @param string $filePath Đường dẫn tuyệt đối đến file CSS cần xử lý.
+ * @return string Nội dung CSS đã được gộp.
+ */
+function compileCss($filePath) {
+    if (!file_exists($filePath) || !is_readable($filePath)) {
+        // Trả về chuỗi rỗng hoặc log lỗi nếu file không tồn tại/không đọc được
+        error_log("CSS file not found or not readable: " . $filePath);
+        return '';
+    }
+
+    $content = file_get_contents($filePath);
+
+    // Regex để tìm các lệnh @import, ví dụ: @import url("path/to/file.css"); hoặc @import "path/to/file.css";
+    // Regex này cần đủ mạnh để bắt các trường hợp khác nhau của @import
+    $pattern = '/@import\s+(?:url\()?["\']([^"\']+\.css)["\']\)?\s*;?/i';
+
+    // Hàm callback để xử lý từng lệnh @import tìm thấy
+    $content = preg_replace_callback($pattern, function($matches) use ($filePath) {
+        $importedRelativePath = $matches[1];
+        // Lấy thư mục của file CSS hiện tại
+        $currentDir = dirname($filePath);
+        // Xây dựng đường dẫn tuyệt đối đến file được import
+        $importedFilePath = realpath($currentDir . '/' . $importedRelativePath);
+
+        // Kiểm tra an toàn: Đảm bảo file được import nằm trong thư mục CSS_ROOT hoặc các thư mục con của nó
+        if ($importedFilePath === false || strpos($importedFilePath, CSS_ROOT) !== 0) {
+            error_log("Security warning: Attempted to import file outside CSS_ROOT: " . $importedRelativePath);
+            return '/* Security blocked: ' . $importedRelativePath . ' */';
+        }
+
+        // Đệ quy gọi lại hàm để xử lý file được import
+        return compileCss($importedFilePath);
+    }, $content);
+
+    return $content;
+}
+
+// Lấy tên file CSS chính từ query string (ví dụ: css_compiler.php?file=main.css)
+$mainCssFile = $_GET['file'] ?? 'main.css'; // Mặc định là main.css nếu không có query
+
+// Kiểm tra an toàn cho tên file chính
+$mainCssPath = realpath(CSS_ROOT . $mainCssFile);
+if ($mainCssPath === false || strpos($mainCssPath, CSS_ROOT) !== 0) {
+    header("HTTP/1.0 403 Forbidden");
+    exit("Access denied.");
+}
+
+// Bắt đầu gộp và trả về nội dung CSS
+header("Content-Type: text/css");
+echo compileCss($mainCssPath);
+exit();
+?>
+4. public/index.php (File HTML để nhúng CSS):
+
+PHP
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHP CSS Compiler</title>
+    <link rel="stylesheet" href="css_compiler.php?file=main.css">
+</head>
+<body>
+    <h1>PHP Gộp CSS Thành Công!</h1>
+    <button class="btn">Thử nút</button>
+    <p>Nội dung này có thể được styling từ _card.css nếu được import.</p>
+</body>
+</html>
+Cách Sử Dụng và Lưu Ý
+Cấu hình Web Server: Đảm bảo máy chủ web của bạn (Nginx, Apache, PHP Built-in Server) được cấu hình để phục vụ file css_compiler.php và các file trong assets/.
+Chạy trên trình duyệt: Khi bạn truy cập http://your-domain/index.php (hoặc http://localhost:8000/index.php nếu dùng php -S), trình duyệt sẽ yêu cầu css_compiler.php?file=main.css. Script PHP sẽ chạy, gộp tất cả CSS và trả về một file CSS duy nhất.
+Ưu điểm của cách này (so với việc chỉ readfile từng file):
+Một yêu cầu HTTP duy nhất: Trình duyệt chỉ cần tải một file CSS duy nhất từ máy chủ của bạn, giảm số lượng request và cải thiện hiệu suất tải trang ban đầu so với việc trình duyệt tự xử lý nhiều @import.
+Tổ chức code: Vẫn cho phép bạn chia nhỏ các file CSS để dễ quản lý trong quá trình phát triển.
+Nhược điểm và Tại sao các Bundler vẫn tốt hơn:
+Thiếu tối ưu hóa: PHP script này chỉ đơn thuần gộp file. Nó không thực hiện:
+Minification: Xóa khoảng trắng, comment, rút gọn tên (làm giảm đáng kể kích thước file).
+Autoprefixing: Tự động thêm tiền tố trình duyệt (-webkit-, -moz-).
+Tree Shaking/PurgeCSS: Loại bỏ các quy tắc CSS không sử dụng.
+Source Maps: Tạo bản đồ để debug CSS dễ dàng hơn trong trình duyệt.
+Phức tạp khi mở rộng: Regex để xử lý @import có thể trở nên phức tạp với các trường hợp như @import url(...) screen; hoặc các comment/chuỗi chứa @import. Việc quản lý caching, lỗi... cũng sẽ cần nhiều code PHP hơn.
+Hiệu suất của PHP: PHP sẽ phải thực hiện công việc gộp này trên mỗi yêu cầu (nếu không có cache). Điều này có thể tốn tài nguyên máy chủ hơn so với một quy trình build một lần bằng Node.js/Webpack.
+Không phải công việc của PHP: Việc xử lý và tối ưu hóa tài sản frontend (CSS, JS) nằm ngoài vai trò chính của PHP. PHP giỏi trong việc xử lý logic nghiệp vụ, cơ sở dữ liệu và render HTML động.
+Khi nào nên cân nhắc sử dụng PHP để gộp CSS?
+Dự án cực kỳ nhỏ, không có budget để dùng Node.js/Webpack.
+Bạn có một môi trường PHP legacy và không thể giới thiệu Node.js.
+Chỉ cho mục đích phát triển rất đơn giản, sau đó sẽ chuyển sang bundle thực sự cho production.
+Lời khuyên cuối cùng: Mặc dù PHP có thể làm được điều này, nhưng nếu bạn đang hướng tới một dự án chuyên nghiệp, có quy mô và quan tâm đến hiệu suất, việc sử dụng các công cụ chuyên dụng như Sass (để biên dịch SCSS) và Webpack/Rollup/Parcel (để bundle) là lựa chọn vượt trội và được khuyến nghị.
