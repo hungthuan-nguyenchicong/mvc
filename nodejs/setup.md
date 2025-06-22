@@ -17,4 +17,15 @@ sudo apt install nodejs -y
 node -v
 npm -v
 
+npm create vite@latest admi-frontend
+cd admi-frontend 
+npm install
+npm run dev
+npm install -D sass-embedded
+npm install -D sass-embedded
+
+
+Inline HTML
+sidebar.innerHTML = /* html */ `
+
 
