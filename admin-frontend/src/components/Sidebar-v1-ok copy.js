@@ -21,14 +21,6 @@ export class Sidebar {
                     </ul>
                 </li>
                 <hr>
-                <li>
-                    <a href="/product" class="nav-link" data-link>Tất cả Sản Phẩm</a>
-                    <ul>
-                        <li><a href="/product/create" data-link>Thêm Mới</a></li>
-                        <li><a href="/category/product" data-link>Danh mục Sản phẩm</a></li>
-                    </ul>
-                </li>
-                <hr>
                 <li><a href="/settings" class="nav-link" data-link>Cài đặt</a></li>
                 <hr>
                 <li><a href="/logout" class="nav-link" data-link>Logout</a></li>
@@ -44,22 +36,16 @@ export class Sidebar {
             return;
         }
 
-        const navLinks = this.sidebarElement.querySelectorAll('a[data-link]');
+        const navLinks = this.sidebarElement.querySelectorAll('.nav-link');
 
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                const parentLink = e.currentTarget.parentNode.parentNode.previousElementSibling;
                 e.preventDefault();
-                history.pushState(null, null, e.currentTarget.getAttribute('href'));
-                // add active
+                // add acteve
                 navLinks.forEach(navLink => {
                     navLink.classList.remove('active');
-                    navLink.classList.remove('parent-active');
                 });
                 e.currentTarget.classList.add('active');
-                if (parentLink && parentLink.matches('a[data-link]')) {
-                    parentLink.classList.add('parent-active');
-                }
             });
         });
     }

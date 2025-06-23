@@ -3,30 +3,59 @@ aside {
     width: 25%;
     background-color: black;
     box-shadow: 2px 0 5px #898989;
+
     ul {
         list-style: none;
         padding: 0;
         margin: 0;
+
         hr {
             border: 1px solid #898989;
             margin: 2px 0;
         }
+
         li {
+            padding-left: 5px;
             a {
                 display: block;
                 color: white;
                 padding: 10px 15px;
                 text-decoration: none;
                 transition: background-color 0.3s ease;
+                position: relative; /* Quan trọng: Đảm bảo vị trí tương đối cho ::after */
             }
+
             a:hover {
                 background-color: #797979;
             }
+
             a.active {
                 background-color: #007bff;
-                border-left: 3px solid #ffc107;
+                border-left: 3px solid #07ff07;
+            }
+
+            a.parent-active {
+                // Background color cho liên kết cha đang active
+                // Bạn có thể đặt một màu khác hoặc làm nó đậm hơn màu active chính
+                background-color: #2f3133; // Một màu xanh đậm hơn một chút
+                color: white;
+                font-weight: bold;
+                padding-right: 25px; // Tạo không gian cho mũi tên
+
+                &::before { // Sử dụng '&::after' trong SCSS để nhắm vào pseudo-element của a.parent-active
+                    content: ''; /* CHỈ ĐỂ RỖNG HOẶC NULL */
+                    position: absolute;
+                    top: 50%;
+                    left: 0; // Đặt mũi tên sát cạnh phải của padding
+                    transform: translateY(-50%); // Dịch chuyển để căn giữa dọc
+                    width: 0;
+                    height: 0;
+                    border-top: 8px solid transparent;     // Chiều cao mũi tên
+                    border-bottom: 8px solid transparent;  // Chiều cao mũi tên
+                    border-left: 10px solid white;         // Chiều rộng mũi tên và màu sắc
+                    transition: transform 0.3s ease;       // Thêm chuyển động mượt mà
+                }
             }
         }
-        
     }
 }
