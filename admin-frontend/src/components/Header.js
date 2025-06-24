@@ -1,15 +1,15 @@
-// ./src/components/Header.js:
-import './Header.scss';
+// src/compoments/Header.js
+import './header.scss';
 export class Header {
-  constructor() {
-    // Khởi tạo các thuộc tính nếu cần
-  }
+    constructor() {
+        this.headerElement = null;
+    }
 
-  render() {
-    const header = document.createElement('header');
-    header.innerHTML = /* html */ `
-      <h1>Chào mừng bạn đến với trang quản trị</h1>
-    `;
-    return header;
-  }
+    render() {
+        this.headerElement = document.createElement('header');
+        this.headerElement.innerHTML = /* html */ `
+            <h1>Chào mừng bạn đến với trang quản trị</h1>
+        `;
+        return this.headerElement;
+    }
 }
