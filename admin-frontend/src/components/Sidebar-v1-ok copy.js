@@ -1,8 +1,5 @@
 // src/compoments/Sidebar.js
 import './sidebar.scss';
-function tt(t) {
-    console.log(t);
-}
 export class Sidebar {
     constructor() {
         this.sidebarElement = null;
@@ -40,35 +37,26 @@ export class Sidebar {
         return this.sidebarElement;
     }
 
-    clickLink(currentPath) {
-    //tt(currentPath); // Logs the current path, which is good for debugging
-    if (!this.sidebarElement) {
-        console.warn('no sidebarElement');
-        return;
-    }
-
-    if (!this.linkItems) {
-        this.linkItems = this.sidebarElement.querySelectorAll('a[data-link]');
-    }
-
-    // You need to initially set the active class based on currentPath
-    this.linkItems.forEach(link => {
-        // Check if the link's href matches the currentPath
-        if (link.getAttribute('href') === currentPath) {
-            tt(currentPath);
-            link.classList.add('active'); // Add 'active' class to the matching link
+    clickLink() {
+        if (!this.sidebarElement) {
+            console.warn('no sidebarElement');
+            return;
         }
+
+        if (!this.linkItems) {
+            this.linkItems = this.sidebarElement.querySelectorAll('a[data-link]');
+        }
+
         
-        // Your existing click listener for dynamically updating active class
-        // link.addEventListener('click', (e)=> {
-        //     e.preventDefault();
-        //     // 1. remove all 'active'
-        //     this.linkItems.forEach(linkItem => {
-        //         linkItem.classList.remove('active');
-        //     })
-        //     // 2. Add 'active' to the clicked link
-        //     e.currentTarget.classList.add('active');
-        // });
-    });
-}
+        this.linkItems.forEach(link => {
+            link.addEventListener('click', (e)=> {
+                e.preventDefault();
+                // 1. remove all 'active
+                this.linkItems.forEach(linkItem => {
+                    linkItem.classList.remove('active');
+                })
+                e.currentTarget.classList.add('active');
+            });
+        });
+    }
 }
