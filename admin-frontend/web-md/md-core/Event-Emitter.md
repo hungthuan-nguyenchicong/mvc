@@ -98,7 +98,7 @@ JavaScript
 constructor() {
     this.events = {}; // Stores event names and their registered listeners
 }
-Khi bạn tạo một EventEmitterthể hiện mới, nó constructorsẽ khởi tạo một đối tượng rỗng có tên là this.events.
+Khi bạn tạo một EventEmitterthể hiện mới, nó constructorsẽ khởi tạo một đối tượng rỗng có tên là  
 Đối tượng này eventssẽ hoạt động như một sổ đăng ký . Các khóa của nó sẽ là eventName(ví dụ: 'pathChanged', 'userLoggedIn', 'itemAdded') và mỗi giá trị sẽ là một mảng các hàm lắng nghe được đăng ký cho sự kiện cụ thể đó.
 2. on(eventName, listener)Phương pháp
 JavaScript
@@ -142,6 +142,278 @@ Tính mô-đun: Bạn có thể dễ dàng thêm, xóa hoặc sửa đổi các 
 Khả năng mở rộng: Khi ứng dụng của bạn phát triển, việc quản lý các phụ thuộc trực tiếp giữa nhiều thành phần trở nên rất phức tạp. Một trình phát sự kiện tập trung giao tiếp.
 Tính linh hoạt: Bạn có thể có nhiều trình lắng nghe cho một sự kiện hoặc một trình lắng nghe cho nhiều sự kiện.
 Trong ứng dụng của bạn, appEventshoạt động như trung tâm giao tiếp. RouterXuất bản pathChangedcác sự kiện và Sidebarđăng ký chúng, cho phép thanh bên cập nhật các liên kết đang hoạt động bất cứ khi nào URL thay đổi, bất kể URL thay đổi như thế nào (nhấp vào liên kết, nút quay lại, nhập URL trực tiếp).
+
+### src/core/Router.js
+// src/core/Router.js
+import { appEvents } from '../utils/EventEmitter.js'; // Import the event emitter
+
+/**
+ * Renders content into the 'content' div based on the given path.
+ * @param {string} path - The path to render content for.
+ */
+function renderContent(path) {
+    const contentDiv = document.getElementById('content');
+    if (!contentDiv) {
+        console.error("Router.js: No element with id 'content' found to render content.");
+        return;
+    }
+    // Use a switch statement to render different content based on the path
+    switch (path) {
+        case '/':
+            contentDiv.innerHTML = '<h1>Welcome to the Dashboard!</h1><p>This is your main dashboard view.</p>';
+            break;
+        case '/posts':
+            contentDiv.innerHTML = '<h1>All Posts</h1><p>Here you can view and manage all your blog posts.</p>';
+            break;
+        case '/post/create':
+            contentDiv.innerHTML = '<h1>Create New Post</h1><p>Use this form to write and publish a new post.</p>';
+            break;
+        case '/category/post':
+            contentDiv.innerHTML = '<h1>Post Categories</h1><p>Organize your posts into categories.</p>';
+            break;
+        case '/product':
+            contentDiv.innerHTML = '<h1>All Products</h1><p>Browse and manage your product catalog.</p>';
+            break;
+        case '/product/create':
+            contentDiv.innerHTML = '<h1>Create New Product</h1><p>Add a new product to your inventory.</p>';
+            break;
+        case '/category/product':
+            contentDiv.innerHTML = '<h1>Product Categories</h1><p>Define categories for your products.</p>';
+            break;
+        case '/settings':
+            contentDiv.innerHTML = '<h1>Settings</h1><p>Adjust application settings and preferences.</p>';
+            break;
+        case '/logout':
+            contentDiv.innerHTML = '<h1>Logging Out...</h1><p>You have been successfully logged out.</p>';
+            break;
+        default:
+            contentDiv.innerHTML = '<h1>404 - Page Not Found</h1><p>The page you are looking for does not exist.</p>';
+            break;
+    }
+}
+
+/**
+ * A utility function for logging messages to the console.
+ * @param {any} t - The message or data to log.
+ */
+function tt(t) {
+    console.log(t);
+}
+
+/**
+ * The Router class handles client-side routing, managing URL changes
+ * and rendering content accordingly without full page reloads.
+ */
+export class Router {
+    /**
+     * Initializes the Router with an empty routes array and sets
+     * the initial current path from the browser's location.
+     */
+    constructor() {
+        this.routes = [];
+        this.currentPath = window.location.pathname;
+        tt(`Router initialized with current path: ${this.currentPath}`); // Log initial path
+    }
+
+    /**
+     * Private method to update the current path property.
+     * This method is internal to the Router class.
+     * It also emits a 'pathChanged' event.
+     * @param {string} path - The new path to set.
+     * @returns {string} The updated current path.
+     */
+    #currentPathname(path) {
+        this.currentPath = path;
+        // Emit an event whenever the path changes internally
+        appEvents.emit('pathChanged', this.currentPath);
+        return this.currentPath;
+    }
+
+    /**
+     * Initializes the router by setting up event listeners for
+     * browser history changes (popstate) and link clicks.
+     */
+    init() {
+        // Listen for 'popstate' event (when user clicks back/forward in browser)
+        window.addEventListener('popstate', () => {
+            this.currentPath = window.location.pathname;
+            tt(`Path changed via popstate to: ${this.currentPath}`);
+            renderContent(this.currentPath); // Re-render content for the new history state
+            appEvents.emit('pathChanged', this.currentPath); // Emit event on popstate
+        });
+
+        // Listen for clicks on the entire document body
+        document.body.addEventListener('click', (e) => {
+            // Find the closest anchor tag with a 'data-link' attribute
+            const routeLink = e.target.closest('a[data-link]');
+            if (routeLink) {
+                e.preventDefault(); // Prevent default browser navigation
+                const path = routeLink.getAttribute('href'); // Get the href value
+
+                // Update the internal current path using the private helper method, which also emits an event
+                this.#currentPathname(path);
+
+                // Push the new state to the browser history, changing the URL
+                history.pushState(null, '', path);
+                
+                // Render content for the new path
+                renderContent(path);
+                tt(`Navigated to: ${path}`); // Log the navigation
+            }
+        });
+
+        // Initial content render when the page first loads
+        renderContent(this.currentPath);
+        tt(`Initial content rendered for path: ${this.currentPath}`); // Confirm initial render
+        appEvents.emit('pathChanged', this.currentPath); // Emit initial path
+    }
+}
+
+### src/components/Sidebar.js
+// src/components/Sidebar.js
+import './sidebar.scss';
+import { appEvents } from '../utils/EventEmitter.js'; // Import the event emitter
+
+function tt(t) {
+    console.log(t);
+}
+
+export class Sidebar {
+    constructor() {
+        this.sidebarElement = null;
+        this.linkItems = null;
+    }
+
+    render() {
+        this.sidebarElement = document.createElement('aside');
+        this.sidebarElement.innerHTML = /* html */ `
+            <nav class="sidebar">
+                <ul>
+                    <li><a href="/" class="nav-link" data-link>Dashboard</a></li>
+                    <hr>
+                    <li>
+                        <a href="/posts" class="nav-link" data-link>Tất cả Bài viết</a>
+                        <ul>
+                            <li><a href="/post/create" data-link>Thêm Mới</a></li>
+                            <li><a href="/category/post" data-link>Danh mục bài viết</a></li>
+                        </ul>
+                    </li>
+                    <hr>
+                    <li>
+                        <a href="/product" class="nav-link" data-link>Tất cả Sản Phẩm</a>
+                        <ul>
+                            <li><a href="/product/create" data-link>Thêm Mới</a></li>
+                            <li><a href="/category/product" data-link>Danh mục Sản phẩm</a></li>
+                        </ul>
+                    </li>
+                    <hr>
+                    <li><a href="/settings" class="nav-link" data-link>Cài đặt</a></li>
+                    <hr>
+                    <li><a href="/logout" class="nav-link" data-link>Logout</a></li>
+                </ul>
+            </nav>
+        `;
+        return this.sidebarElement;
+    }
+
+    /**
+     * Updates the 'active' class on sidebar links based on the provided path.
+     * @param {string} path - The path to mark as active.
+     */
+    _updateActiveClass(path) {
+        if (!this.linkItems) {
+            // Ensure linkItems are queried only once after render
+            this.linkItems = this.sidebarElement.querySelectorAll('a[data-link]');
+        }
+
+        this.linkItems.forEach(link => {
+            link.classList.remove('active'); // Remove active from all links first
+            if (link.getAttribute('href') === path) {
+                link.classList.add('active'); // Add active to the matching link
+            }
+        });
+        tt(`Sidebar: Active link updated to: ${path}`);
+    }
+
+    /**
+     * Initializes the sidebar's click listeners and subscribes to path changes.
+     * It receives the initial path to set the active link on load.
+     * @param {string} initialPath - The current path when the application loads.
+     */
+    clickLink(initialPath) {
+        if (!this.sidebarElement) {
+            console.warn('Sidebar: sidebarElement not rendered yet.');
+            return;
+        }
+
+        // Set the initial active link based on the path provided during initialization
+        this._updateActiveClass(initialPath);
+
+        // Attach click listeners to all sidebar links to manage active class locally
+        // (Router's click listener will handle history.pushState and renderContent)
+        this.linkItems.forEach(link => {
+            link.addEventListener('click', (e) => {
+                // The Router will handle the actual navigation and then emit 'pathChanged'
+                // This local click listener can simply log or do other UI things if needed,
+                // but the active state will be handled by the 'pathChanged' event.
+                // For a purely event-driven active state, you could remove this local logic.
+                // However, keeping it here immediately updates UI for clicks for snappier feel
+                // before the Router's event propagates.
+                
+                // If you want to ONLY rely on the event emitter for active state,
+                // remove the local active class toggling here.
+                // For now, we'll let the event handler be the single source of truth
+                // and simply ensure this click doesn't interfere.
+                // The _updateActiveClass will be called by the appEvents listener.
+            });
+        });
+
+        // Subscribe to path changes emitted by the Router
+        appEvents.on('pathChanged', (newPath) => {
+            this._updateActiveClass(newPath); // Update active class when path changes
+        });
+    }
+}
+
+### src/main.js
+
+// src/main.js
+import './main.scss';
+import { Header } from './components/Header.js'
+import { Sidebar } from "./components/Sidebar.js";
+import { Router } from './core/Router.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const app = document.getElementById('app');
+    if (!app) {
+        console.warn('No element with id="app" found. Cannot initialize application.');
+        return;
+    }
+
+    // Initialize and append Header
+    const headerInstance = new Header();
+    const headerElement = headerInstance.render();
+    app.appendChild(headerElement);
+
+    // Initialize and append Sidebar
+    const sidebarInstance = new Sidebar();
+    const sidebarElement = sidebarInstance.render();
+    app.appendChild(sidebarElement);
+
+    // Create and append content div (where router renders content)
+    const contentElement = document.createElement('div');
+    contentElement.id = 'content';
+    app.appendChild(contentElement);
+
+    // Initialize the Router
+    const routerInstance = new Router();
+    routerInstance.init();
+
+    // Initialize the Sidebar's click handlers and set its initial active state
+    // The Sidebar will now listen for path changes via appEvents
+    sidebarInstance.clickLink(routerInstance.currentPath);
+});
+
 
 ## đọc thêm ví dụ
 

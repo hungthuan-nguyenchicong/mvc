@@ -60,15 +60,15 @@ export class Sidebar {
         }
         
         // Your existing click listener for dynamically updating active class
-        // link.addEventListener('click', (e)=> {
-        //     e.preventDefault();
-        //     // 1. remove all 'active'
-        //     this.linkItems.forEach(linkItem => {
-        //         linkItem.classList.remove('active');
-        //     })
-        //     // 2. Add 'active' to the clicked link
-        //     e.currentTarget.classList.add('active');
-        // });
+        link.addEventListener('click', (e)=> {
+            e.preventDefault();
+            // 1. remove all 'active'
+            this.linkItems.forEach(linkItem => {
+                linkItem.classList.remove('active');
+            })
+            // 2. Add 'active' to the clicked link
+            e.currentTarget.classList.add('active');
+        });
     });
 }
 }
