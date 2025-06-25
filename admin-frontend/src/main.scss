@@ -1,4 +1,13 @@
 body {
+    margin: auto;
     box-sizing: border-box;
-    width: 100%;
+    max-width: 1280px;
+    .main {
+        display: flex;
+        margin-top: 10px;
+        #content {
+            width: 75%;
+            padding: 0 15px;
+        }
+    }
 }

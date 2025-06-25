@@ -17,17 +17,22 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const headerElement = headerInstance.render();
     app.appendChild(headerElement);
 
+    // main
+    const mainElement = document.createElement('div');
+    mainElement.classList.add('main');
+    app.appendChild(mainElement);
+
     // sidebar
     const sidebarInstance = new Sidebar();
+    const sidebarElement = sidebarInstance.render();
+    mainElement.appendChild(sidebarElement);
     sidebarInstance.init();
-    const sidebarHtml = sidebarInstance.sidebarElement;
-    app.appendChild(sidebarHtml);
     //sidebarInstance.clickLink();
 
     // content
     const contentElement = document.createElement('div');
     contentElement.id = 'content';
-    app.appendChild(contentElement);
+    mainElement.appendChild(contentElement);
 
     // router
     const routerInstance = new Router();

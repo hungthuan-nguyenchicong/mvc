@@ -10,7 +10,7 @@ export class Sidebar {
         this.sidebarElement = null;
         this.linkItems = null;
     }
-    render() {
+    #renderDom() {
         this.sidebarElement = document.createElement('aside');
         this.sidebarElement.innerHTML = /* html */ `
             <nav class="sidebar">
@@ -43,7 +43,7 @@ export class Sidebar {
     }
 
     init() {
-        //this.#renderDom();
+        this.#renderDom();
         if (!this.sidebarElement) {
             console.warn('no sidebar #renderDom');
             return;
