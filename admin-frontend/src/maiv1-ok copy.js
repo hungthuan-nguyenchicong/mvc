@@ -1,6 +1,6 @@
 // src/main.js
 import './main.scss';
-//import { appEvents } from './utils/EventEmitter.js';
+import { appEvents } from './utils/EventEmitter.js';
 import {Header} from './components/Header.js'
 import { Sidebar } from "./components/Sidebar.js";
 import { Router } from './core/Router.js';
@@ -19,9 +19,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     // sidebar
     const sidebarInstance = new Sidebar();
-    sidebarInstance.init();
-    const sidebarHtml = sidebarInstance.sidebarElement;
-    app.appendChild(sidebarHtml);
+    const sidebarElement = sidebarInstance.render();
+    app.appendChild(sidebarElement);
     //sidebarInstance.clickLink();
 
     // content
@@ -33,5 +32,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const routerInstance = new Router();
     routerInstance.init();
     // side add current path
-    //sidebarInstance.clickLink(routerInstance.currentPath);
+    sidebarInstance.clickLink(routerInstance.currentPath);
 });

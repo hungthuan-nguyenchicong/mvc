@@ -1,5 +1,5 @@
 // src/core/Router.js
-import { appEvents } from "../utils/EventEmitter.js";
+
 function renderContent(path) {
     const contentDiv = document.getElementById('content');
     if (!contentDiv) {
@@ -45,25 +45,19 @@ function renderContent(path) {
 // }
 export class Router {
     constructor() {
-        this.appEvents = appEvents;
         this.routes = [];
         this.currentPath = window.location.pathname;
     }
 
     #currentPathname (path) {
         this.currentPath = path;
-        // emit an event whenerver the path change internaly
-        this.appEvents.emit('pathChanged', this.currentPath);
         return this.currentPath;
     }
 
     init() {
-        //this.appEvents = appEvents;
         // Use 'popstate' instead of 'posttate' for history changes
         window.addEventListener('popstate', () => {
             this.currentPath = window.location.pathname;
-            // emit an event whenerver the path change internaly
-            this.appEvents.emit('pathChanged', this.currentPath);
             //tt(`Path changed via popstate to: ${this.currentPath}`);
             renderContent(this.currentPath); // Re-render content when history changes (e.g., back/forward button)
         });
@@ -79,8 +73,6 @@ export class Router {
                 //tt(path);
             }
         });
-        // emit an event whenerver the path change internaly
-        this.appEvents.emit('pathChanged', this.currentPath);
         // Initial render based on the current path when the page loads
         renderContent(this.currentPath);
         //tt(`Path default to: ${this.currentPath}`);

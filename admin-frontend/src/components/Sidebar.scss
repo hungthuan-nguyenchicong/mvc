@@ -27,7 +27,9 @@ aside {
                         background-color: #007bff;
                         border-left: 3px solid #07ff07;
                     }
-                    
+                    &.parent-active {
+                        border-left: 3px solid #bad813;
+                    }
                 }
             }
             ul {
