@@ -1,5 +1,6 @@
 // src/main.js
 import './main.scss';
+import { appEvents } from './utils/EventEmitter.js';
 import {Header} from './components/Header.js'
 import { Sidebar } from "./components/Sidebar.js";
 import { Router } from './core/Router.js';
