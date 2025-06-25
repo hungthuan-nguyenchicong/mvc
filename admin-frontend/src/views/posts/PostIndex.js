@@ -1,15 +1,21 @@
 // src/views/posts/PostIndex.js
 
-export class PostIndex {
+export default class PostIndex { // Use 'export default class' for simplicity
     constructor() {
-        this.postIndexElement = null;
+        console.log("PostIndex view constructed!");
     }
 
     render() {
-        this.postIndexElement = document.createElement('div');
-        this.postIndexElement.classList.add('post-index');
-        this.postIndexElement.innerHTML = /* html */ `
-            <h1>Post Index render</h1>
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <h1>All Posts</h1>
+            <p>Content from PostIndex.js for path: /api/posts/post-index</p>
         `;
+        return div;
+    }
+
+    // Optional init method if you need post-render setup
+    init() {
+        console.log("PostIndex view initialized.");
     }
 }

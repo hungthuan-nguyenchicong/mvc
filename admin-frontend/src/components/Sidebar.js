@@ -18,7 +18,7 @@ export class Sidebar {
                     <li><a href="/" class="nav-link" data-link>Dashboard</a></li>
                     <hr>
                     <li>
-                        <a href="/posts" class="nav-link" data-link>Tất cả Bài viết</a>
+                        <a href="/api/posts/post-index" class="nav-link" data-link>Tất cả Bài viết</a>
                         <ul>
                             <li><a href="/post/create" data-link>Thêm Mới</a></li>
                             <li><a href="/category/post" data-link>Danh mục bài viết</a></li>

@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
     mainElement.appendChild(contentElement);
 
     // routes
-    //console.log(routes);
+    console.log(routes);
 
     // router
-    const routerInstance = new Router(routes);
+    const routerInstance = new Router();
     routerInstance.init();
     // side add current path
     //sidebarInstance.clickLink(routerInstance.currentPath);
