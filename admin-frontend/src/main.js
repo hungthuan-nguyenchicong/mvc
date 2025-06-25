@@ -3,6 +3,7 @@ import './main.scss';
 //import { appEvents } from './utils/EventEmitter.js';
 import {Header} from './components/Header.js'
 import { Sidebar } from "./components/Sidebar.js";
+import {routes} from './routes.js';
 import { Router } from './core/Router.js';
 
 document.addEventListener('DOMContentLoaded', ()=>{
@@ -33,6 +34,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const contentElement = document.createElement('div');
     contentElement.id = 'content';
     mainElement.appendChild(contentElement);
+
+    // routes
+    console.log(routes);
 
     // router
     const routerInstance = new Router();
