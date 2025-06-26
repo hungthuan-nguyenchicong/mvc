@@ -1,0 +1,35 @@
+// Ví dụ về sử dụng biến trong SCSS
+$primary-color: #007bff;
+$text-color: #333;
+$bg-color: #f4f4f4;
+$card-bg: #fff;
+$card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background-color: $bg-color;
+    color: $text-color;
+}
+
+#app {
+    background-color: $card-bg;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: $card-shadow;
+
+    // Ví dụ về nesting trong SCSS
+    nav {
+        margin-top: 20px;
+
+        a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: $primary-color;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

@@ -3,9 +3,13 @@ mkdir my-vanilla-spa
 cd my-vanilla-spa
 npm init -y
 
-## wb
+## wb không cần clean-webpack-plugin
 
 npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin clean-webpack-plugin css-loader style-loader
+
+## fix
+npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin css-loader style-loader
+
 
 ## .gitignore
 /node_modules
@@ -308,3 +312,45 @@ npm run start: Chạy dev server với hot-reloading.
 
 npm run build: Build project cho production.
 
+## Để sử dụng splitChunks, bạn thêm cấu hình vào optimization trong 
+// webpack.config.js
+module.exports = (env, argv) => {
+  const isProduction = argv.mode === 'production';
+
+  return {
+    // ... các cấu hình khác
+
+    optimization: {
+      minimize: isProduction, // Đảm bảo minification được bật ở production
+      minimizer: [
+        `...`, // Bao gồm các minimizer mặc định cho JS
+        isProduction && new CssMinimizerPlugin(),
+      ].filter(Boolean),
+      splitChunks: {
+        chunks: 'all', // Áp dụng cho tất cả các loại chunk (async và initial)
+        minSize: 20000, // Kích thước tối thiểu (bytes) để chunk được tạo ra
+        minChunks: 1, // Số lần một module phải được sử dụng trước khi tách
+        maxAsyncRequests: 30, // Số request song song tối đa cho lazy-loaded chunks
+        maxInitialRequests: 30, // Số request song song tối đa cho entry point
+        enforceSizeThreshold: 50000, // Buộc tách chunk nếu vượt ngưỡng, bất kể minSize/minChunks
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/, // Các module từ node_modules
+            name: 'vendors', // Tên chunk cho vendor (tùy chọn)
+            priority: -10, // Ưu tiên thấp hơn các cache group khác
+            reuseExistingChunk: true, // Nếu module đã có trong chunk khác, tái sử dụng
+          },
+          default: {
+            minChunks: 2, // Module được dùng ít nhất 2 lần
+            priority: -20, // Ưu tiên thấp hơn vendors
+            reuseExistingChunk: true,
+          },
+        },
+      },
+    },
+    // ...
+  };
+};
+
+this.router.addRoute('/', () => this.loadPage(() => import('./pages/home')));
+this.router.addRoute('/about', () => this.loadPage(() => import('./pages/about')));
