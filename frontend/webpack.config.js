@@ -12,6 +12,30 @@ module.exports = {
         path: path.resolve(__dirname, 'public'),
         clean: true,
     },
+    // module: {
+    //     rules: [
+    //     {
+    //         test: /\.css$/, // This regular expression matches files ending with .css
+    //         use: ['style-loader', 'css-loader'], // Apply these loaders to matched files
+    //     },
+    //     // Add other rules for JavaScript (babel-loader), images, etc. if you have them
+    //     ],
+    // },
+    module: {
+        rules: [
+        {
+            test: /\.s[ac]ss$/i,
+            use: [
+            // Creates `style` nodes from JS strings
+            "style-loader",
+            // Translates CSS into CommonJS
+            "css-loader",
+            // Compiles Sass to CSS
+            "sass-loader",
+            ],
+        },
+        ],
+    },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Webpack App',
