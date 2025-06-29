@@ -126,3 +126,120 @@ window.addEventListener('popstate', () => {
 
 // 3. Setup Click Listeners
 setupNavigationClicks(); // Call this to attach event listeners to links
+
+## tham khảo v2
+
+import './main.scss';
+import './hoc-vi-du-co-ban/main.scss';
+import './hoc-vi-du-co-ban/nav.scss';
+
+// Get app
+const app = document.getElementById('app');
+
+// Create and append nav
+const navElement = document.createElement('nav');
+app.appendChild(navElement);
+navElement.innerHTML = /* html */ `
+    <ul>
+        <li><a href="/" data-path="/">Home</a></li>
+        <li><a href="/about" data-path="/about">About</a></li>
+        <li><a href="/contact" data-path="/contact">Contact</a></li>
+        <li><a href="/test" data-path="/test">Test 404</a></li>
+    </ul>
+`;
+
+// Create and append main content area
+const mainContent = document.createElement('main');
+app.appendChild(mainContent);
+
+// Routes configuration
+const routes = {
+    '/': {
+        content: '<h1>Home</h1>',
+        title: 'Home Page' // Added titles for better SEO/UX with document.title
+    },
+    '/about': {
+        content: '<h1>About</h1>',
+        title: 'About Us'
+    },
+    '/contact': {
+        content: '<h1>Contact</h1>',
+        title: 'Contact Us'
+    },
+    '/404': {
+        content: '<h1>Page Not Found</h1>',
+        title: '404 - Not Found'
+    }
+};
+
+/**
+ * Renders content and updates document title based on the given path.
+ * Falls back to 404 if route not found.
+ * @param {string} path - The URL path to render.
+ */
+const renderContent = (path) => {
+    const page = routes[path] || routes['/404'];
+    mainContent.innerHTML = page.content;
+    document.title = page.title || 'My SPA'; // Set document title
+};
+
+/**
+ * Sets the 'active' class on the navigation link corresponding to the current path.
+ * Removes 'active' from all other links.
+ * @param {string} currentPath - The path to mark as active.
+ */
+const setActiveLink = (currentPath) => {
+    document.querySelectorAll('a[data-path]').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-path') === currentPath) {
+            link.classList.add('active');
+        }
+    });
+};
+
+/**
+ * The central routing function that handles UI updates based on the current URL.
+ * It also corrects the URL to /404 if the path is not found.
+ */
+const router = () => {
+    let currentPath = window.location.pathname;
+
+    // Handle 404 route: if the current path isn't in our routes, redirect to /404
+    if (!routes[currentPath]) {
+        window.history.replaceState({}, '', '/404');
+        currentPath = '/404'; // Use /404 path for rendering and active link
+    }
+
+    renderContent(currentPath); // Render the main content
+    setActiveLink(currentPath); // Update the active state of navigation links
+};
+
+// --- Event Listeners and Initial Setup ---
+
+// 1. Handle direct navigation link clicks
+document.addEventListener('click', (e) => {
+    // Use .closest() to ensure we get the <a> tag even if a child element was clicked
+    const targetLink = e.target.closest('a[data-path]');
+    if (targetLink) {
+        e.preventDefault(); // Prevent default full page reload
+        const path = targetLink.getAttribute('data-path');
+
+        // Only push a new state if the path is different from the current one
+        if (window.location.pathname !== path) {
+            window.history.pushState({}, '', path);
+        }
+        // Call the router to update the UI
+        router();
+    }
+});
+
+// 2. Handle browser back/forward buttons (popstate event)
+window.addEventListener('popstate', () => {
+    router(); // Just call the router, it will get the new path from window.location.pathname
+});
+
+// 3. Initial page load
+// Ensures the content and active link are set up correctly when the page first loads
+document.addEventListener('DOMContentLoaded', () => {
+    router(); // Call the router to handle the initial URL
+});
