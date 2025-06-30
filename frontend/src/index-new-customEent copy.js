@@ -1,9 +1,6 @@
 import './main.scss';
-
-import './hoc-vi-du-co-ban/nav.scss';
 import './hoc-vi-du-co-ban/main.scss';
-import './hoc-vi-du-co-ban/sidebar.scss';
-import './hoc-vi-du-co-ban/main-content.scss';
+import './hoc-vi-du-co-ban/nav.scss';
 
 // app
 const app = document.getElementById('app');
@@ -25,26 +22,6 @@ navElement.innerHTML = /* html */ `
 const mainContent = document.createElement('main');
 app.appendChild(mainContent);
 
-// add sidebar
-const sidebarElement = document.createElement('aside');
-mainContent.appendChild(sidebarElement);
-// add contentElement
-const contentElement = document.createElement('div');
-contentElement.classList.add('main-content');
-mainContent.appendChild(contentElement);
-
-// render sidebar 
-sidebarElement.innerHTML = /* html */ `
-    <ul>
-        <li><a href="/" route>Home</a></li>
-        <li><a href="/contact" route>Contact</a></li>
-        <hr>
-        <li><a href="/products" route>All Products</a></li>
-        <li><a href="/products-create" route>Create Product</a></li>
-        <li><a href="/category-products" route>Category Products</a></li>
-    </ul>
-`;
-
 // routes
 
 const routes = {
@@ -59,23 +36,14 @@ const routes = {
     },
     '/404': {
         content: '<h1>Page 404</h1>'
-    },
-    '/products': {
-        content: '<h1>Product</h1>'
-    },
-    '/products-create': {
-        content: '<h1>Create Product</h1>'
-    },
-    '/category-products': {
-        content: '<h1>Category Products</h1>'
     }
 }
 
-// rendercontent in contentElement =>div.content
+// rendercontent
 
 const renderContent = (path) => {
     const page = routes[path] || routes['/404'];
-    contentElement.innerHTML = page.content;
+    mainContent.innerHTML = page.content;
 }
 
 // router
