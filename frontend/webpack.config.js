@@ -5,65 +5,50 @@ module.exports = {
     entry: './src/index.js',
     output: {
         filename: 'bundle.[contenthash].js',
-        // Vì index.html sẽ ở thư mục gốc, và bundle.js cũng cần được tải,
-        // chúng ta có thể giữ output.path là 'public' để tách biệt code build,
-        // HOẶC đặt nó vào thư mục gốc nếu muốn.
-        // Option A: Vẫn xuất vào 'public' và điều chỉnh devServer.static
+        // Đặt tất cả các tệp đầu ra vào thư mục 'public'
         path: path.resolve(__dirname, 'public'),
         clean: true,
+        // *** THÊM DÒNG NÀY ***
+        // Đảm bảo rằng tất cả các tài sản (assets) được tham chiếu từ gốc của miền.
+        // Ví dụ: <script src="/bundle.[contenthash].js"></script> thay vì <script src="bundle.[contenthash].js"></script>
+        publicPath: '/',
     },
-    // module: {
-    //     rules: [
-    //     {
-    //         test: /\.css$/, // This regular expression matches files ending with .css
-    //         use: ['style-loader', 'css-loader'], // Apply these loaders to matched files
-    //     },
-    //     // Add other rules for JavaScript (babel-loader), images, etc. if you have them
-    //     ],
-    // },
     module: {
         rules: [
-        {
-            test: /\.s[ac]ss$/i,
-            use: [
-            // Creates `style` nodes from JS strings
-            "style-loader",
-            // Translates CSS into CommonJS
-            "css-loader",
-            // Compiles Sass to CSS
-            "sass-loader",
-            ],
-        },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    // Creates `style` nodes from JS strings
+                    "style-loader",
+                    // Translates CSS into CommonJS
+                    "css-loader",
+                    // Compiles Sass to CSS
+                    "sass-loader",
+                ],
+            },
+            // Thêm các quy tắc khác nếu bạn có (ví dụ: babel-loader cho JS, file-loader cho hình ảnh)
         ],
     },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Webpack App',
-            template: './index.html', // <<< THAY ĐỔI ĐƯỜNG DẪN MẪU TẠI ĐÂY
-            // File HTML đầu ra mặc định là index.html, và nó sẽ được đặt trong output.path (tức là public)
-            // Nếu bạn muốn nó được đặt vào thư mục gốc, bạn cần cấu hình thêm filename và publicPath.
-            // Ví dụ: filename: '../index.html' (nếu output.path là 'public') hoặc
-            // đơn giản nhất là để HtmlWebpackPlugin đặt nó vào output.path
-            // Thêm tùy chọn scriptLoading vào đây để sử dụng type="module"
-            scriptLoading: 'module',
+            template: './index.html', // Đường dẫn đến tệp HTML mẫu của bạn
+            scriptLoading: 'module', // Đảm bảo script được tải dưới dạng module
         }),
     ],
     devServer: {
-        // Cần điều chỉnh devServer.static để nó phục vụ thư mục 'public' (nơi chứa bundle.js)
-        // VÀ cũng phục vụ thư mục gốc (nơi chứa index.html).
-        // Cách đơn giản nhất là chỉ phục vụ output.path của bạn.
+        // Phục vụ các tệp tĩnh từ thư mục 'public'
         static: {
-            directory: path.join(__dirname, 'public'), // devServer vẫn phục vụ public
-            // Vì index.html mẫu ở gốc, nhưng file index.html được tạo ra sẽ nằm trong public.
-            // Do đó, devServer chỉ cần phục vụ thư mục public là đủ.
+            directory: path.join(__dirname, 'public'),
         },
-        compress: true,
-        port: 9000,
-        open: {
+        compress: true, // Bật nén Gzip cho tất cả nội dung được phục vụ
+        port: 9000,     // Cổng để chạy dev server
+        open: {         // Tự động mở trình duyệt khi dev server khởi động
             app: {
-                name: 'chrome',
+                name: 'chrome', // Mở bằng Chrome
             },
         },
+        // Quan trọng cho SPA: chuyển hướng tất cả các yêu cầu không phải tệp tĩnh về index.html
         historyApiFallback: true,
     }
 };

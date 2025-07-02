@@ -43,6 +43,7 @@ sidebarElement.innerHTML = /* html */ `
         <hr>
         <li><a href="/products" route>All Products</a></li>
         <li><a href="/product-create" route>Create Product</a></li>
+        <li><a href="/products/789" route>Specific Product (789)</a></li>
         <li><a href="/category-products" route>Category Products</a></li>
     </ul>
 `;
@@ -57,23 +58,3 @@ document.addEventListener('DOMContentLoaded',()=>{
     //renderContent('/about')
     init();
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
