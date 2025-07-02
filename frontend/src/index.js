@@ -1,149 +1,79 @@
-import './main.scss';
+// ./index.js
 
-import './hoc-vi-du-co-ban/nav.scss';
+import './main.scss';
 import './hoc-vi-du-co-ban/main.scss';
+import './hoc-vi-du-co-ban/nav.scss';
 import './hoc-vi-du-co-ban/sidebar.scss';
 import './hoc-vi-du-co-ban/main-content.scss';
+
+import {
+    //renderContent
+    //router,
+    init,
+} from './router.js';
 
 // app
 const app = document.getElementById('app');
 // add nav
 const navElement = document.createElement('nav');
 app.appendChild(navElement);
-// render nav
+// nav render
 navElement.innerHTML = /* html */ `
     <ul>
         <li><a href="/" route>Home</a></li>
         <li><a href="/about" route>About</a></li>
         <li><a href="/contact" route>Contact</a></li>
-        <li><a href="/test" route>Test 404</a></li>
-        <li><a href="/noroute">No Route</a></li>
+        <li><a href="/test" route>Tes 404</a></li>
     </ul>
 `;
 
-// main content
-const mainContent = document.createElement('main');
-app.appendChild(mainContent);
+// main element
+const mainElement = document.createElement('main');
+app.appendChild(mainElement);
 
-// add sidebar
+// sidebar element
 const sidebarElement = document.createElement('aside');
-mainContent.appendChild(sidebarElement);
-// add contentElement
-const contentElement = document.createElement('div');
-contentElement.classList.add('main-content');
-mainContent.appendChild(contentElement);
+mainElement.appendChild(sidebarElement);
 
-// render sidebar 
+// sidebar render
 sidebarElement.innerHTML = /* html */ `
     <ul>
         <li><a href="/" route>Home</a></li>
         <li><a href="/contact" route>Contact</a></li>
         <hr>
         <li><a href="/products" route>All Products</a></li>
-        <li><a href="/products-create" route>Create Product</a></li>
+        <li><a href="/product-create" route>Create Product</a></li>
         <li><a href="/category-products" route>Category Products</a></li>
     </ul>
 `;
 
-// routes
+// main-content
+const mainContent = document.createElement('div');
+mainContent.classList.add('main-content');
+mainElement.appendChild(mainContent);
 
-const routes = {
-    '/': {
-        content: '<h1>Home</h1>'
-    },
-    '/about': {
-        content: '<h1>About</h1>'
-    },
-    '/contact': {
-        content: '<h1>Contact</h1>'
-    },
-    '/404': {
-        content: '<h1>Page 404</h1>'
-    },
-    '/products': {
-        content: '<h1>Product</h1>'
-    },
-    '/products-create': {
-        content: '<h1>Create Product</h1>'
-    },
-    '/category-products': {
-        content: '<h1>Category Products</h1>'
-    }
-}
+// load
+document.addEventListener('DOMContentLoaded',()=>{
+    //renderContent('/about')
+    init();
+})
 
-// rendercontent in contentElement =>div.content
 
-const renderContent = (path) => {
-    const page = routes[path] || routes['/404'];
-    contentElement.innerHTML = page.content;
-}
 
-// router
-const router = ()=>{
-    let currentPath = window.location.pathname;
-    //console.log(currentPath)
-    // chuuyen hong neu url <> routes
-    if (!routes[currentPath]) {
-        window.history.replaceState(null,null,'/404');
-        renderContent('/404');
-    }
-    // render content
-    renderContent(currentPath);
-    // phat ra su kien routeChange
-    // tao su kien tuy chinh routeChangeEvent
-    const routeChangeEvent = new CustomEvent(
-        'routeChange', {
-            detail: {path: currentPath}
-        }
-    );
-    // phat su kien tren document de cac thanh phan khac co the lang nghe
-    document.dispatchEvent(routeChangeEvent);
-}
 
-// su ly click link route
 
-document.addEventListener('click',(e)=>{
-    const routeLink = e.target.closest(('a[route]'));
-    if (routeLink) {
-        e.preventDefault();
-        const path = e.target.getAttribute('href');
 
-        // chi push neu path khac de tranh trung lap lich su
-        if (window.location.pathname !== path) {
-            window.history.pushState(null,null,path);
-        }
-        // kich hoat router()
-        router();
-    }
-});
 
-// su ly quay lai tien len cua trinh duyet
-window.addEventListener('popstate', ()=>{
-    // kick hoat router
-    router();
-});
 
-// lang nghe su kien routeChang -> add class active
-const setupNavActiveLinkListener = ()=>{
-    // lang nghe su kien tren document de bao quat toan bo ung dung
-    document.addEventListener('routeChange', (e)=>{
-        // lay path tu du lieu su kien
-        const {path} = e.detail;
-        // xu ly class active
-        document.querySelectorAll('a[route]').forEach(link => {
-            // remove all class 'active
-            link.classList.remove('active');
-            if (link.getAttribute('href') === path) {
-                link.classList.add('active');
-            }
-        });
-    });
-};
 
-document.addEventListener('DOMContentLoaded', ()=>{
-    //renderContent('/')
-    // mac dinh khi loaded
-    router();
-    setupNavActiveLinkListener();
-});
+
+
+
+
+
+
+
+
+
+
 
