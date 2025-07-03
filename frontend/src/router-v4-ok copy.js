@@ -18,16 +18,21 @@ const routes = {
         title: 'Sản Phẩm',
         content: '<h1>Các Sản Phẩm Của Chúng Tôi</h1><p>Khám phá các sản phẩm độc đáo của chúng tôi.</p>'
     },
+    // // Route động cho chi tiết sản phẩm
+    // '/products/{id}': { 
+    //     title: 'Chi Tiết Sản Phẩm', // Tiêu đề sẽ được cập nhật động sau
+    //     content: '<h1>Chi Tiết Sản Phẩm</h1><p>Đang tải chi tiết sản phẩm...</p>' // Nội dung sẽ được cập nhật động sau
+    // },
     // Route động cho chi tiết sản phẩm
-    '/products/{id}': (params) => { // This is now a function that returns an object
-        return {
-            title: `Chi Tiết Sản Phẩm: ${params.id}`, // Dynamic title
-            content: `
+    '/products/{id}': { 
+        title: 'Chi Tiết Sản Phẩm', // Tiêu đề sẽ được cập nhật động sau
+        content: (params) => {
+            return `
                 <h1>Sản Phẩm Theo Danh Mục #${params.id}</h1>
                 <p>Đây là danh sách sản phẩm thuộc danh mục có ID: <strong>${params.id}</strong>.</p>
                 <p>Tải và hiển thị các sản phẩm của danh mục này.</p>
-            `
-        };
+            `;
+        }
     },
     '/product-create': {
         title: 'Tạo Sản Phẩm Mới',
@@ -44,38 +49,47 @@ const routes = {
 };
 
 export const renderContent = (path) => {
+    //let page = null;
     let params = {};
-    let matchResult = null; // Changed from 'match' to avoid confusion with potentialMatch
-    let pageTitle = '';
-    let pageContent = '';
+    let match = null;
+    let pageContent = ''; // Declare with an initial empty string
 
     // tim route phu hop
+
     for (const routePath in routes) {
         // chuyen doi routePath thanh RegExp de khop voi route dong
         const routeRegex = new RegExp(`^${routePath.replace(/{([a-zA-Z0-9_]+)}/g, '(?<$1>[a-zA-Z0-9_]+)')}$`);
         const potentialMatch = path.match(routeRegex);
 
         if (potentialMatch) {
-            // If the route itself is a function, call it to get the route details
-            if (typeof routes[routePath] === 'function') {
-                params = potentialMatch.groups || {};
-                matchResult = routes[routePath](params); // Call the function to get title and content
-            } else {
-                matchResult = routes[routePath]; // Assign the static route object
-            }
+            match = routes[routePath];
+            // tric xuat cac tham so dong
+            params = potentialMatch.groups || {};
             break;
         }
     }
 
     // neu khong tim thay route phu hop, chuyen huong den trang 404
-    if (!matchResult) {
-        matchResult = routes['/404'];
+    if (!match) {
+        match = routes['/404'];
     }
 
-    // Assign title and content based on the matchResult
-    pageTitle = matchResult.title;
-    pageContent = matchResult.content;
-    
+    const pageTitle = match.title;
+    //const pageContent = match.content;
+
+    // xu ly route dong neu co
+    // if (typeof match.content === 'function') {
+    //     pageContent = match.content(params);
+    // }
+    //
+
+    // xu ly route dong neu co
+    if (typeof match.content === 'function') {
+        pageContent = match.content(params); // Reassign here, as pageContent is now a `let`
+    } else {
+        pageContent = match.content; // Assign static content if it's not a function
+    }
+    //
     const appTitle = document.querySelector('title');
     const contentElement = document.querySelector('.main-content');
 
