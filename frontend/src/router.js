@@ -1,102 +1,95 @@
 // router.js
 
-const parseUrlParams = (path, routePath) => {
-    const pathParts = path.split('/').filter(p => p);
-    const routeParts = routePath.split('/').filter(p => p); // Đổi tên biến để rõ ràng hơn
-
-    const params = {};
-
-    // Kiểm tra độ dài: nếu số lượng phần tử không khớp, chắc chắn không khớp
-    // Trừ khi một trong số đó là root path '/'
-    if (pathParts.length !== routeParts.length && !(path === '/' && routePath === '/')) {
-        return null;
-    }
-
-    for (let i = 0; i < routeParts.length; i++) {
-        if (routeParts[i].startsWith(':')) {
-            const paramName = routeParts[i].substring(1);
-            params[paramName] = pathParts[i];
-        } else if (routeParts[i] !== pathParts[i]) {
-            // Không khớp nếu phần tử không phải tham số động VÀ khác nhau
-            return null;
-        }
-    }
-    return params;
-};
-
-// cap nhat routes
+// Định nghĩa các route và nội dung tương ứng
 const routes = {
     '/': {
-        title: 'Home',
-        content: '<h1>Home Page Content</h1>'
+        title: 'Trang Chủ',
+        content: '<h1>Chào mừng đến với Trang Chủ!</h1><p>Đây là nội dung của trang chủ.</p>'
     },
     '/about': {
-        title: 'About',
-        content: '<h1>About Us</h1>'
+        title: 'Về Chúng Tôi',
+        content: '<h1>Về Chúng Tôi</h1><p>Chúng tôi là một đội ngũ đam mê công nghệ.</p>'
     },
     '/contact': {
-        title: 'Contact',
-        content: '<h1> Contact Us</h1>'
+        title: 'Liên Hệ',
+        content: '<h1>Liên Hệ Với Chúng Tôi</h1><p>Bạn có thể liên hệ với chúng tôi qua email: example@email.com</p>'
     },
     '/products': {
-        title: 'Product',
-        content: '<h1>Our Products</h1>'
+        title: 'Sản Phẩm',
+        content: '<h1>Các Sản Phẩm Của Chúng Tôi</h1><p>Khám phá các sản phẩm độc đáo của chúng tôi.</p>'
     },
-    '/products/:id': {
-        title: (params) => `Product Details for ID: ${params.id}`, // Đổi về chuỗi trực tiếp để tránh h1 lồng h1
-        content: (params) => `<h1>Product Details for ID: ${params.id}</h1><p>More details about product ${params.id} will go here.</p>`
+    // // Route động cho chi tiết sản phẩm
+    // '/products/{id}': { 
+    //     title: 'Chi Tiết Sản Phẩm', // Tiêu đề sẽ được cập nhật động sau
+    //     content: '<h1>Chi Tiết Sản Phẩm</h1><p>Đang tải chi tiết sản phẩm...</p>' // Nội dung sẽ được cập nhật động sau
+    // },
+    // Route động cho chi tiết sản phẩm
+    '/products/{id}': { 
+        title: 'Chi Tiết Sản Phẩm', // Tiêu đề sẽ được cập nhật động sau
+        content: (params) => {
+            return `
+                <h1>Sản Phẩm Theo Danh Mục #${params.id}</h1>
+                <p>Đây là danh sách sản phẩm thuộc danh mục có ID: <strong>${params.id}</strong>.</p>
+                <p>Tải và hiển thị các sản phẩm của danh mục này.</p>
+            `;
+        }
     },
     '/product-create': {
-        title: 'Create Product',
-        content: '<h1>Create New Product</h1>'
+        title: 'Tạo Sản Phẩm Mới',
+        content: '<h1>Tạo Sản Phẩm Mới</h1><p>Form tạo sản phẩm sẽ ở đây.</p>'
     },
     '/category-products': {
-        title: 'Category Product',
-        content: '<h1>Category Product</h1>'
+        title: 'Sản Phẩm Theo Danh Mục',
+        content: '<h1>Sản Phẩm Theo Danh Mục</h1><p>Danh sách sản phẩm theo danh mục cụ thể.</p>'
     },
     '/404': {
-        title: 'Page Not Found',
-        content: '<h1>404 - Page Not Found</h1>'
+        title: 'Không Tìm Thấy Trang',
+        content: '<h1>404 - Trang Không Tồn Tại</h1><p>Rất tiếc, trang bạn tìm kiếm không có ở đây.</p>'
     }
 };
 
 export const renderContent = (path) => {
-    let page = null;
+    //let page = null;
     let params = {};
-    let matchedRoutePath = null; // Biến để lưu đường dẫn route khớp
+    let match = null;
+    let pageContent = ''; // Declare with an initial empty string
 
-    // 1. Ưu tiên tìm kiếm các route cố định khớp chính xác
-    if (routes[path]) {
-        page = routes[path];
-        matchedRoutePath = path;
-    } else {
-        // 2. Nếu không tìm thấy route cố định, tìm kiếm các route có tham số động
-        // Chuyển đổi routes thành mảng để sắp xếp và ưu tiên
-        const routeKeys = Object.keys(routes);
-        // Sắp xếp để ưu tiên các route có tham số động dài hơn hoặc cụ thể hơn nếu cần,
-        // nhưng với logic parseUrlParams hiện tại, duyệt qua là đủ.
-        // Có thể đảo ngược thứ tự duyệt để ưu tiên route động dài hơn nếu bạn có /product/:id và /product/:id/details
-        // Tuy nhiên, với set route hiện tại, không quá cần thiết.
-        
-        for (const routePath in routes) {
-            if (routePath.includes(':')) {
-                const parsedParams = parseUrlParams(path, routePath);
-                if (parsedParams) {
-                    page = routes[routePath];
-                    params = parsedParams;
-                    matchedRoutePath = routePath;
-                    break; // Tìm thấy route động khớp, thoát vòng lặp
-                }
-            }
+    // tim route phu hop
+
+    for (const routePath in routes) {
+        // chuyen doi routePath thanh RegExp de khop voi route dong
+        const routeRegex = new RegExp(`^${routePath.replace(/{([a-zA-Z0-9_]+)}/g, '(?<$1>[a-zA-Z0-9_]+)')}$`);
+        const potentialMatch = path.match(routeRegex);
+
+        if (potentialMatch) {
+            match = routes[routePath];
+            // tric xuat cac tham so dong
+            params = potentialMatch.groups || {};
+            break;
         }
     }
 
-    // Nếu không tìm thấy trang nào, chuyển hướng đến trang 404
-    if (!page) {
-        page = routes['/404'];
-        matchedRoutePath = '/404'; // Cập nhật đường dẫn khớp để hiển thị trong debug nếu cần
+    // neu khong tim thay route phu hop, chuyen huong den trang 404
+    if (!match) {
+        match = routes['/404'];
     }
 
+    const pageTitle = match.title;
+    //const pageContent = match.content;
+
+    // xu ly route dong neu co
+    // if (typeof match.content === 'function') {
+    //     pageContent = match.content(params);
+    // }
+    //
+
+    // xu ly route dong neu co
+    if (typeof match.content === 'function') {
+        pageContent = match.content(params); // Reassign here, as pageContent is now a `let`
+    } else {
+        pageContent = match.content; // Assign static content if it's not a function
+    }
+    //
     const appTitle = document.querySelector('title');
     const contentElement = document.querySelector('.main-content');
 
@@ -105,14 +98,10 @@ export const renderContent = (path) => {
         return;
     }
 
-    // Render content
-    contentElement.innerHTML = typeof page.content === 'function' ? page.content(params) : page.content;
-
-    // Set title
-    // Đảm bảo rằng title không chứa các thẻ HTML như h1 nếu nó được dùng trong <title> của tài liệu
-    const baseTitle = typeof page.title === 'function' ? page.title(params) : (page.title || 'My SPA');
-    appTitle.textContent = `${baseTitle} | My SPA`;
-};
+    // render content
+    appTitle.textContent = pageTitle;
+    contentElement.innerHTML = pageContent;
+}
 
 export const router = () => {
     let currentPath = window.location.pathname;
