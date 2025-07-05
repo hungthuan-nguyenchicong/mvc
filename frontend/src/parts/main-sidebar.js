@@ -19,7 +19,7 @@ class MainSidebar {
         this.mainSidebarElement.innerHTML = /* html */ `
             <ul>
                 <li><a href="/" route>Home</a></li>
-                <li><a href="/contact" route>Contact</a></li>
+                <li><a href="/about" route>About</a></li>
                 <hr>
                 <li><a href="/products" route>All Products</a></li>
                 <li><a href="/product-create" route>Create Product</a></li>
