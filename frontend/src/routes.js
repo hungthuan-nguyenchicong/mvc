@@ -1,42 +1,24 @@
-// ./src/routes.js
-
 // src/routes.js
-// const routes = [
-//     {
-//         path: '/',
-//         file: '@views/Home.js', // <-- This is the correct format for your routes
-//         view: 'Home Page'
-//     },
-//     {
-//         path: '/about',
-//         file: '@views/About.js',
-//         view: 'About Us'
-//     },
-//     {
-//         path: '/api/posts/post-index',
-//         file: '@views/posts/PostIndex.js',
-//         view: 'Post Index'
-//     },
-//     {
-//         path: '/posts/{id}',
-//         file: '@views/posts/PostDetail.js',
-//         view: 'Post Detail'
-//     },
-//     // Add other routes similarly, always starting with '@views/'
-// ];
 
-// export { routes };
-
-const routes =  {
+const routes = {
     '/': {
         file: '@views/home.js',
+        view: 'Home Page'
     },
     '/about': {
         file: '@views/about.js',
+        view: 'About Us'
     },
+    // Dynamic route for post details
+    '/posts/{id}': {
+        file: '@views/posts/post-detail.js',
+        view: 'Post Detail' // You might want to make this dynamic in the view itself
+    },
+    // 404 Not Found page
     '/404': {
         file: '@views/not-found.js',
+        view: 'Page Not Found'
     }
-}
+};
 
 export { routes };

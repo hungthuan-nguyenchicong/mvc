@@ -17,56 +17,52 @@ class Router {
         mainContent.innerHTML = content;
     }
 
-    // ... inside your navigateTo method
     async navigateTo(path) {
         this.currentPath = path;
         console.log("Router.js: Đang điều hướng đến đường dẫn:", path);
 
         let matchedRoute = null;
         let params = {};
-        //console.log(this.routes);
 
-        // Change this line:
-        for (const routePath in this.routes) { // Iterate over keys of the routes object
-            const routeDetails = this.routes[routePath]; // Get the route details (value)
+        for (const routePath in this.routes) {
+            const routeDetails = this.routes[routePath];
+            // Escape forward slashes and replace {param} with a named capture group
+            //const routeRegex = new RegExp(`^${routePath.replace(/\//g, '\\/').replace(/{([a-zA-Z0-9-]+)}/g, '(?<$1>[a-zA-Z0-9-]+)')}$`);
             const routeRegex = new RegExp(`^${routePath.replace(/{([a-zA-Z0-9-]+)}/g, '(?<$1>[a-zA-Z0-9-]+)')}$`);
+
             const potentialMatch = path.match(routeRegex);
-            //console.log(potentialMatch);
 
             if (potentialMatch) {
-                // if the route itself is a function, call it to get the route details
-                if (typeof routeDetails === 'function') { // Use routeDetails here
-                    params = potentialMatch.groups || {};
-                    matchedRoute = routeDetails(params); // Call the function to get title and content
-                } else {
-                    matchedRoute = routeDetails; // Assign the static route object
-                }
+                matchedRoute = { ...routeDetails }; // Create a copy to avoid modifying the original route object
+                params = potentialMatch.groups || {};
+                matchedRoute.params = params; // Attach params directly to the matchedRoute object
                 break;
             }
         }
 
-        //console.log(matchedRoute);
-
         if (matchedRoute) {
-            //console.log(matchedRoute);
-            // You'll likely want to render your view here based on matchedRoute
-            // For example: this.renderView(matchedRoute.file, params);
             try {
+                // Update the document title based on the view property
+                document.title = matchedRoute.view || 'Default Title';
+
                 const relativePathInContext = matchedRoute.file.replace('@views/', './');
                 console.log("Router.js: Đang cố gắng tải động từ context:", relativePathInContext);
                 const module = await viewContext(relativePathInContext);
-                // const viewInstance = module.homeInstance; // Access the named export
-                // const content = await viewInstance.render();
-                // Then append 'content' to your DOM
-                // ...
+
                 const ViewComponent = module.default;
-                const viewInstance = new ViewComponent(matchedRoute.params); // Instantiate it
+                const viewInstance = new ViewComponent(matchedRoute.params); // Pass params to the view constructor
                 const content = await viewInstance.render();
-                //console.log(content)
+                
                 this.renderContent(content);
             } catch (error) {
-                console.error(`Router.js: Không thể tải hoặc render view cho đường dẫn '${path}':`, error)
+                console.error(`Router.js: Không thể tải hoặc render view cho đường dẫn '${path}':`, error);
+                // If there's an error loading the specific view, redirect to 404
+                this.navigateTo('/404');
             }
+        } else {
+            // No route matched, navigate to 404 page
+            console.log("Router.js: Không tìm thấy đường dẫn phù hợp, điều hướng đến /404.");
+            this.navigateTo('/404');
         }
     }
 
@@ -96,4 +92,4 @@ class Router {
     }
 }
 
-export const routerInstance = new Router();
+export const routerInstance = new Router(); // Pass routes here
