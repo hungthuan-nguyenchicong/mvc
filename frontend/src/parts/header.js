@@ -1,27 +1,23 @@
+// ./src/parts/header.js
 import './header.scss';
 class Header {
     constructor() {
         this.headerElement = document.createElement('header');
     }
 
-    setupHeader () {
-        const app = document.getElementById('app');
-        if (!app) {
-            console.error('no id app');
-            return;
-        }
-        app.appendChild(this.headerElement);
+    setupHeader() {
+        document.body.appendChild(this.headerElement);
     }
-    
+
     render() {
-        return /* html */ `
-        <p>Chào nừng bạn đến với trang quản trị</p>
+        this.headerElement.innerHTML = /* html */ `
+            <p>Chào mừng bạn đến với trang quản trị<p>
         `;
     }
 
     init() {
         this.setupHeader();
-        this.headerElement.innerHTML = this.render();
+        this.render();
     }
 }
 

@@ -1,4 +1,3 @@
-// ./src/parts/main-content.js
 import './main-content.scss';
 class MainContent {
     constructor() {
@@ -9,9 +8,10 @@ class MainContent {
     setupMainContent() {
         const mainElement = document.querySelector('main');
         if (!mainElement) {
-            console.error('no <main>');
+            console.error('no main');
             return;
         }
+        //const sidebarElement = document.createElement('aside');
         mainElement.appendChild(this.mainContentElement);
     }
 

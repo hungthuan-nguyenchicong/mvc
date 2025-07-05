@@ -1,22 +1,22 @@
+// ./src/parts/main.js
 import './main.scss';
+import { mainSidebarInstance } from './main-sidebar';
+import { mainContentInstance } from './main-content';
 class Main {
     constructor() {
         this.mainElement = document.createElement('main');
-        //this.mainContent.classList.add('main-content');
     }
 
     setupMain() {
-        const app = document.getElementById('app');
-        if (!app) {
-            console.error('no id app');
-            return;
-        }
-        app.appendChild(this.mainElement);
+        document.body.appendChild(this.mainElement);
     }
 
     init() {
         this.setupMain();
+        mainSidebarInstance.init();
+        mainContentInstance.init();
     }
+
 }
 
 export const mainInstance = new Main();
