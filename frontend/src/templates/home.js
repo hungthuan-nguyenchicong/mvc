@@ -8,8 +8,6 @@ class Home {
         return /* html */ `
             <h1>Trang Home (Home Page)</h1>
             <p>Welcome to your single-page application!</p>
-            <p>You can add more content here.</p>
-            <p>Here's a link to a dynamic route: <a href="/users/123" route>User 123</a></p>
         `;
     }
 

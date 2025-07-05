@@ -1,6 +1,6 @@
 // ./src/core/router.js
 
-const viewContext = require.context('../templates', true, /\.js$/);
+//const viewContext = require.context('../templates', true, /\.js$/);
 
 class Router {
     constructor(routes) {
@@ -19,7 +19,7 @@ class Router {
 
     async navigateTo(path) {
         this.currentPath = path;
-        console.log("Router.js: Đang điều hướng đến đường dẫn:", path);
+        //console.log("Router.js: Đang điều hướng đến đường dẫn:", path);
 
         let matchedRoute = null;
         let params = {};
@@ -40,30 +40,58 @@ class Router {
             }
         }
 
+        // if (matchedRoute) {
+        //     try {
+        //         // Update the document title based on the view property
+        //         document.title = matchedRoute.view || 'Default Title';
+
+        //         const relativePathInContext = matchedRoute.file.replace('@views/', './');
+        //         //console.log("Router.js: Đang cố gắng tải động từ context:", relativePathInContext);
+        //         const module = await viewContext(relativePathInContext);
+
+        //         const ViewComponent = module.default;
+        //         const viewInstance = new ViewComponent(matchedRoute.params); // Pass params to the view constructor
+        //         const content = await viewInstance.render();
+                
+        //         this.renderContent(content);
+        //     } catch (error) {
+        //         //console.error(`Router.js: Không thể tải hoặc render view cho đường dẫn '${path}':`, error);
+        //         // If there's an error loading the specific view, redirect to 404
+        //         this.navigateTo('/404');
+        //     }
+        // } else {
+        //     // No route matched, navigate to 404 page
+        //     //console.log("Router.js: Không tìm thấy đường dẫn phù hợp, điều hướng đến /404.");
+        //     this.navigateTo('/404');
+        // }
+
+
+
+        // Inside your navigateTo method
+    // ...
         if (matchedRoute) {
             try {
-                // Update the document title based on the view property
                 document.title = matchedRoute.view || 'Default Title';
 
-                const relativePathInContext = matchedRoute.file.replace('@views/', './');
-                console.log("Router.js: Đang cố gắng tải động từ context:", relativePathInContext);
-                const module = await viewContext(relativePathInContext);
+                // Use dynamic import for true lazy loading
+                // Webpack will create separate chunks for these modules
+                const module = await import(/* webpackChunkName: "view-[request]" */ `../templates/${matchedRoute.file.replace('@views/', '')}`);
 
                 const ViewComponent = module.default;
-                const viewInstance = new ViewComponent(matchedRoute.params); // Pass params to the view constructor
+                const viewInstance = new ViewComponent(matchedRoute.params);
                 const content = await viewInstance.render();
-                
+
                 this.renderContent(content);
             } catch (error) {
-                console.error(`Router.js: Không thể tải hoặc render view cho đường dẫn '${path}':`, error);
-                // If there's an error loading the specific view, redirect to 404
                 this.navigateTo('/404');
             }
-        } else {
-            // No route matched, navigate to 404 page
-            console.log("Router.js: Không tìm thấy đường dẫn phù hợp, điều hướng đến /404.");
-            this.navigateTo('/404');
+        }  else {
+                // No route matched, navigate to 404 page
+                //console.log("Router.js: Không tìm thấy đường dẫn phù hợp, điều hướng đến /404.");
+                this.navigateTo('/404');
         }
+
+
     }
 
     init() {
@@ -72,7 +100,7 @@ class Router {
         });
 
         document.body.addEventListener('click', (e) => {
-            const routeLink = e.target.closest('a[router]');
+            const routeLink = e.target.closest('a[route]');
             if (routeLink) {
                 e.preventDefault();
                 const path = routeLink.getAttribute('href');
