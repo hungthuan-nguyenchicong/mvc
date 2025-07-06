@@ -1,7 +1,6 @@
 // ./src/core.router.js
 
 import { routes } from "../routes";
-import { eventEmitterInstance } from "../utils/event-emitter";
 function tt(t) {
     console.log(t)
 }
@@ -9,7 +8,6 @@ class Router {
     constructor(routes) {
         this.routes = routes;
         this.currentPath = window.location.pathname;
-        this.eventEmitterInstance = eventEmitterInstance;
     }
 
     async renderContent(content) {
@@ -40,7 +38,7 @@ class Router {
         }
 
         if (matchedRoute) {
-            //tt(matchedRoute)
+            tt(matchedRoute)
             // tt(params)
             try {
                 //const module = await import(`../templates/${matchedRoute.replace('@views/', '')}`);
@@ -51,42 +49,13 @@ class Router {
                 const content = await viewInstance.render();
                 //tt(content)
                 await this.renderContent(content);
-                if (matchedRoute === '@views/not-found.js') {
-                    window.history.replaceState(null,null,'/404');
-                }
             } catch (error) {
                 console.error(`router.js: Không thể tải hoặc render view cho đường dẫn '${matchedRoute}':`, error)
             }
         }
-        this.eventEmitterInstance.emit('routeChange', this.currentPath);
-    }
-
-    // click a[route]
-
-    setupRouterListeners() {
-        document.addEventListener('click', (e)=>{
-            const routeLink = e.target.closest('a[route]');
-            if (routeLink) {
-                e.preventDefault();
-                // path
-                const path = e.target.getAttribute('href');
-                if (window.location.pathname !== path) {
-                    window.history.pushState(null,null,path);
-                }
-
-                // navigateTo -> path
-                this.navigateTo(path);
-            }
-        })
-        // quay lai / tien len cua trinh duyet
-        window.addEventListener('popstate', ()=>{
-            this.navigateTo(window.location.pathname)
-        })
     }
 
     init() {
-        this.setupRouterListeners();
-        // mac dinh tai trang lan dau
         this.navigateTo(this.currentPath)
     }
 }

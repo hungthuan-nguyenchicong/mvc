@@ -1,7 +1,6 @@
 // ./src/core.router.js
 
 import { routes } from "../routes";
-import { eventEmitterInstance } from "../utils/event-emitter";
 function tt(t) {
     console.log(t)
 }
@@ -9,7 +8,6 @@ class Router {
     constructor(routes) {
         this.routes = routes;
         this.currentPath = window.location.pathname;
-        this.eventEmitterInstance = eventEmitterInstance;
     }
 
     async renderContent(content) {
@@ -58,7 +56,6 @@ class Router {
                 console.error(`router.js: Không thể tải hoặc render view cho đường dẫn '${matchedRoute}':`, error)
             }
         }
-        this.eventEmitterInstance.emit('routeChange', this.currentPath);
     }
 
     // click a[route]

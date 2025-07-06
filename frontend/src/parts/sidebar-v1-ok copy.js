@@ -27,17 +27,23 @@ class Sidebar {
     setupActiveLink() {
         console.log(this.eventEmitterInstance)
         // Listen for the 'routeChange' event
-        this.eventEmitterInstance.on('routeChange', (currentPath)=>{
-            const sidebarLink = this.sidebar.querySelectorAll('a[route]');
-            sidebarLink.forEach(link => {
+        this.eventEmitterInstance.on('routeChange', (currentPath) => {
+            const sidebarLinks = this.sidebar.querySelectorAll('a[route]');
+
+            sidebarLinks.forEach(link => {
+                // Get the href attribute of the link
                 const linkPath = link.getAttribute('href');
-                if (currentPath === linkPath) {
+
+                // Check if the currentPath matches the link's path
+                // For dynamic routes like /posts/{id}, you'll need more sophisticated matching
+                // For now, a direct match or startsWith for parent paths is sufficient.
+                if (currentPath === linkPath || (linkPath !== '/' && currentPath.startsWith(linkPath))) {
                     link.classList.add('active');
                 } else {
                     link.classList.remove('active');
                 }
-            })
-        })
+            });
+        });
     }
 
     init() {
