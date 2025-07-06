@@ -1,52 +1,63 @@
-// ./src/core/router.js
+// ./src/core.router.js
+
 import { routes } from "../routes";
-
-
+function tt(t) {
+    console.log(t)
+}
 class Router {
     constructor(routes) {
         this.routes = routes;
         this.currentPath = window.location.pathname;
     }
 
+    async renderContent(content) {
+        const contentElement = document.querySelector('main div.content');
+        if (!contentElement) {
+            console.error('no main div.content');
+            return;
+        }
+        contentElement.innerHTML = content;
+    }
+
     async navigateTo(path) {
         this.currentPath = path;
+        //console.log(this.currentPath)
         let matchedRoute = null;
         let params = {};
-        //console.log(this.currentPath);
 
         for (const routePath in this.routes) {
             const routeRegex = new RegExp(`^${routePath.replace(/{([a-zA-Z0-9-]+)}/g, '(?<$1>[a-zA-Z0-9-]+)')}$`);
-            const potentialMatch = this.currentPath.match(routeRegex);
-
+            //tt(routeRegex)
+            const potentialMatch = this.currentPath.match(routeRegex) || '/404'.match(routeRegex);
+            //tt(potentialMatch)
             if (potentialMatch) {
                 params = potentialMatch.groups || {};
-                matchedRoute = this.routes[routePath]; // Attach params directly to the matchedRoute object
+                matchedRoute = this.routes[routePath];
                 break;
             }
-            // if (potentialMatch) {
-            //     params = potentialMatch.groups || {};
-            //     // Create a new object that includes the original route data and the extracted params
-            //     matchedRoute = {
-            //         ...this.routes[routePath], // Copy all properties from the original route definition
-            //         params: params             // Add the extracted params
-            //     };
-            //     break;
-            // }
         }
 
         if (matchedRoute) {
-            console.log("Matched Route:", matchedRoute);
-            console.log("Extracted Params:", params);
-            // Now you can use matchedRoute and params to render a component or call a handler
-            // e.g., this.renderComponent(matchedRoute.component, params);
+            tt(matchedRoute)
+            // tt(params)
+            try {
+                //const module = await import(`../templates/${matchedRoute.replace('@views/', '')}`);
+                //const module = await import(/* webpackChunkName: "view-[request]" */ `../templates/${matchedRoute.file.replace('@views/', '')}`);
+                const module = await import(/* webpackChunkName: "view-[request]" */ `../views/${matchedRoute.replace('@views/', '')}`);
+                const viewComponent = module.default;
+                const viewInstance = new viewComponent(params);
+                const content = await viewInstance.render();
+                //tt(content)
+                await this.renderContent(content);
+            } catch (error) {
+                console.error(`router.js: Không thể tải hoặc render view cho đường dẫn '${matchedRoute}':`, error)
+            }
         }
     }
 
     init() {
-        //console.log(this.routes)
-        this.navigateTo(this.currentPath);
+        this.navigateTo(this.currentPath)
     }
 }
-
 
 export const routerInstance = new Router(routes);

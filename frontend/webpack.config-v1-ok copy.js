@@ -2,13 +2,14 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    //mode: 'development',
+    mode: 'development',
     entry: './src/app.js',
     output: {
         filename: 'bundle.[contenthash].js',
         // Đặt tất cả các tệp đầu ra vào thư mục 'public'
         path: path.resolve(__dirname, 'public'),
-        //clean: true,
+        clean: true,
+        // *** THÊM DÒNG NÀY ***
         // Đảm bảo rằng tất cả các tài sản (assets) được tham chiếu từ gốc của miền.
         // Ví dụ: <script src="/bundle.[contenthash].js"></script> thay vì <script src="bundle.[contenthash].js"></script>
         publicPath: '/',
@@ -31,20 +32,14 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html', // Path to your source HTML template
-            filename: 'index.html',          // Output filename in your build directory
+            //template: './public/index.html',
+            filename: './index.html',
             inject: 'body',
-            scriptLoading: 'module',
+            scriptLoading: 'module', // Thêm tùy chọn này để tạo <script type="module">
         }),
     ],
     devServer: {
         hot: true, // Enable HMR
-        // *** THÊM DÒNG NÀY ĐỂ VÔ HIỆU HÓA CACHE TRÌNH DUYỆT ***
-        // headers: {
-        //     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        //     'Pragma': 'no-cache',
-        //     'Expires': '0',
-        // },
         // Phục vụ các tệp tĩnh từ thư mục 'public'
         static: {
             directory: path.join(__dirname, 'public'),

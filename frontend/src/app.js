@@ -4,7 +4,7 @@ import { headerInstance } from "./parts/header";
 import { mainInstance } from './parts/main';
 
 // router
-import { routerInstance } from './core/Router';
+import { routerInstance } from './core/router';
 
 
 document.addEventListener('DOMContentLoaded', ()=>{
