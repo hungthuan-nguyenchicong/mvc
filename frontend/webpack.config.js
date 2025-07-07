@@ -44,7 +44,8 @@ module.exports = (env, argv) => {
                 template: './admin/src/index.html',
                 favicon: './admin/src/favicon.ico',
                 // Đổi lại filename thành index.html cho dev server
-                filename: 'index.html', // Webpack dev server sẽ phục vụ index.html
+                //filename: 'index.html', // Webpack dev server sẽ phục vụ index.html
+                filename: 'admin.html',
                 inject: 'body',
                 scriptLoading: 'module',
             }),
@@ -73,7 +74,8 @@ module.exports = (env, argv) => {
                 rewrites: [
                     {
                         from: /^\/admin\/.*$/,
-                        to: '/admin/index.html', // Webpack dev server sẽ phục vụ index.html của nó
+                        //to: '/admin/index.html', // Webpack dev server sẽ phục vụ index.html của nó
+                        to: '/admin/admin.html', // Webpack dev server sẽ phục vụ index.html của nó
                     },
                 ],
             },
