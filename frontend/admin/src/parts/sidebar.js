@@ -11,12 +11,12 @@ class Sidebar {
     render() {
         return /* html */ `
             <ul>
-                <li><a href="/" route>Home</a></li>
-                <li><a href="/about" route>About</a></li>
+                <li><a href="/admin/" route>Home</a></li>
+                <li><a href="/admin/about" route>About</a></li>
                 <hr>
-                <li><a href="/posts/789" route>Detail Pots (789)</a></li>
+                <li><a href="/admin/posts/789/" route>Detail Pots (789)</a></li>
                 <hr>
-                <li><a href="/products" route>All Products</a></li>
+                <li><a href="/admin/api/products" route>All Products</a></li>
                 <li><a href="/product-create" route>Create Product</a></li>
                 <li><a href="/products/789" route>Detail Product (789)</a></li>
                 <li><a href="/category-products" route>Category Products</a></li>
@@ -25,7 +25,7 @@ class Sidebar {
     }
 
     setupActiveLink() {
-        console.log(this.eventEmitterInstance)
+        //console.log(this.eventEmitterInstance)
         // Listen for the 'routeChange' event
         this.eventEmitterInstance.on('routeChange', (currentPath)=>{
             const sidebarLink = this.sidebar.querySelectorAll('a[route]');

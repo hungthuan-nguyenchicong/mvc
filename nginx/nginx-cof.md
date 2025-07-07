@@ -17,3 +17,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 
 http://localhost/
+
+## fix
+
+sudo ln -s /mnt/e/webside/www/mvc /var/www/html/mvc

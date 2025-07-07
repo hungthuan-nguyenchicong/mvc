@@ -1,62 +1,101 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
-    //mode: 'development',
-    entry: './src/app.js',
-    output: {
-        filename: 'bundle.[contenthash].js',
-        // Đặt tất cả các tệp đầu ra vào thư mục 'public'
-        path: path.resolve(__dirname, 'public'),
-        //clean: true,
-        // Đảm bảo rằng tất cả các tài sản (assets) được tham chiếu từ gốc của miền.
-        // Ví dụ: <script src="/bundle.[contenthash].js"></script> thay vì <script src="bundle.[contenthash].js"></script>
-        publicPath: '/',
-    },
-    module: {
-        rules: [
-            {
-                test: /\.s[ac]ss$/i,
-                use: [
-                    // Creates `style` nodes from JS strings
-                    "style-loader",
-                    // Translates CSS into CommonJS
-                    "css-loader",
-                    // Compiles Sass to CSS
-                    "sass-loader",
+module.exports = (env, argv) => {
+    const isProduction = argv.mode === 'production';
+
+    return {
+        entry: './admin/src/app.js', // Entry point for your admin app
+        output: {
+            filename: 'bundle.[contenthash].js',
+            path: path.resolve(__dirname, '../public/admin'), // Output to public/admin
+            clean: true,
+            publicPath: '/admin/',
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.(ico|png|jpg|jpeg|gif|svg)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'images/[name][ext][query]',
+                    },
+                },
+                {
+                    test: /\.s[ac]ss$/i,
+                    use: [
+                        isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+                        "css-loader",
+                        "sass-loader",
+                    ],
+                },
+                {
+                    test: /\.css$/i,
+                    use: [
+                        isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+                        'css-loader',
+                    ],
+                },
+            ],
+        },
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: './admin/src/index.html',
+                favicon: './admin/src/favicon.ico',
+                // Đổi lại filename thành index.html cho dev server
+                filename: 'index.html', // Webpack dev server sẽ phục vụ index.html
+                inject: 'body',
+                scriptLoading: 'module',
+            }),
+            new MiniCssExtractPlugin({
+                filename: isProduction ? 'style.[contenthash].css' : 'style.css',
+            }),
+        ],
+        devServer: {
+            hot: true,
+            // Không cần static cho dev server nếu dùng proxy hoàn toàn cho PHP
+            // Bỏ phần `static` nếu bạn chỉ muốn dev server phục vụ tài sản của webpack
+            // và mọi thứ khác đều qua proxy.
+            // Nếu bạn vẫn muốn phục vụ một số tài sản tĩnh từ public/admin, hãy giữ nó.
+            // static: {
+            //     directory: path.join(__dirname, '../public/admin'),
+            //     publicPath: '/admin/',
+            // },
+            compress: true,
+            port: 9000,
+            open: {
+                app: {
+                    name: 'chrome',
+                },
+            },
+            historyApiFallback: {
+                rewrites: [
+                    {
+                        from: /^\/admin\/.*$/,
+                        to: '/admin/index.html', // Webpack dev server sẽ phục vụ index.html của nó
+                    },
                 ],
             },
-            // Thêm các quy tắc khác nếu bạn có (ví dụ: babel-loader cho JS, file-loader cho hình ảnh)
-        ],
-    },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: './src/index.html', // Path to your source HTML template
-            filename: 'index.html',          // Output filename in your build directory
-            inject: 'body',
-            scriptLoading: 'module',
-        }),
-    ],
-    devServer: {
-        hot: true, // Enable HMR
-        // *** THÊM DÒNG NÀY ĐỂ VÔ HIỆU HÓA CACHE TRÌNH DUYỆT ***
-        // headers: {
-        //     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        //     'Pragma': 'no-cache',
-        //     'Expires': '0',
-        // },
-        // Phục vụ các tệp tĩnh từ thư mục 'public'
-        static: {
-            directory: path.join(__dirname, 'public'),
+            // *** SỬA LẠI PHẦN PROXY NÀY THÀNH MỘT MẢNG ***
+            proxy: [ // Bắt đầu bằng dấu ngoặc vuông để tạo một mảng
+                {
+                    context: ['/admin/index.php', '/admin/api'], // Các đường dẫn mà bạn muốn proxy
+                    target: 'http://localhost:8080', // Địa chỉ của server PHP của bạn
+                    changeOrigin: true,
+                    secure: false,
+                    // rewrite: (path) => path.replace(/^\/admin/, ''), // Bỏ ghi chú nếu backend PHP của bạn không có tiền tố /admin
+                },
+                // Bạn có thể thêm các đối tượng proxy khác vào mảng nếu cần
+                // {
+                //     context: ['/another/php/route'],
+                //     target: 'http://localhost:8080',
+                //     changeOrigin: true,
+                //     secure: false,
+                // },
+            ], // Kết thúc bằng dấu ngoặc vuông
         },
-        compress: true, // Bật nén Gzip cho tất cả nội dung được phục vụ
-        port: 9000,     // Cổng để chạy dev server
-        open: {         // Tự động mở trình duyệt khi dev server khởi động
-            app: {
-                name: 'chrome', // Mở bằng Chrome
-            },
-        },
-        // Quan trọng cho SPA: chuyển hướng tất cả các yêu cầu không phải tệp tĩnh về index.html
-        historyApiFallback: true,
-    }
+        mode: isProduction ? 'production' : 'development',
+        devtool: isProduction ? 'source-map' : 'eval-source-map',
+    };
 };

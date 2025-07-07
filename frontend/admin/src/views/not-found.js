@@ -8,7 +8,7 @@ class NotFound {
     render() {
         return /* html */ `
             <h1>Trang 404 Not Found</h1>
-            <p>Quay ve trang chu <a href="/" route>Quay ve trang chu</a></p>
+            <p>Quay ve trang chu <a href="/admin/" route>Quay ve trang chu</a></p>
         `;
     }
 

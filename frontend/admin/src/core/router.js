@@ -30,7 +30,7 @@ class Router {
         for (const routePath in this.routes) {
             const routeRegex = new RegExp(`^${routePath.replace(/{([a-zA-Z0-9-]+)}/g, '(?<$1>[a-zA-Z0-9-]+)')}$`);
             //tt(routeRegex)
-            const potentialMatch = this.currentPath.match(routeRegex) || '/404'.match(routeRegex);
+            const potentialMatch = this.currentPath.match(routeRegex) || '/admin/404/'.match(routeRegex);
             //tt(potentialMatch)
             if (potentialMatch) {
                 params = potentialMatch.groups || {};
@@ -52,7 +52,7 @@ class Router {
                 //tt(content)
                 await this.renderContent(content);
                 if (matchedRoute === '@views/not-found.js') {
-                    window.history.replaceState(null,null,'/404');
+                    window.history.replaceState(null,null,'/admin/404/');
                 }
             } catch (error) {
                 console.error(`router.js: Không thể tải hoặc render view cho đường dẫn '${matchedRoute}':`, error)
