@@ -1,5 +1,5 @@
 <?php 
-use Admin\Core\Router;
+use AdminCore\Router;
 
 // $routerInstance = new Router();
 
@@ -12,11 +12,11 @@ require root() . 'backend/vendor/autoload.php';
 
 
 // Now you can freely use classes from your 'Admin' namespace
-// use Admin\Core\Router;
+//use Admin\Core\Router;
 
 $routerInstance = new Router(); // This will now call the constructor and echo 1
 
-echo "Router instantiated successfully using Composer!";
+//echo "Router instantiated successfully using Composer!";
 
 // Tạo một phiên bản mới của Dotenv
 // Truyền đường dẫn đến thư mục chứa tệp .env của bạn

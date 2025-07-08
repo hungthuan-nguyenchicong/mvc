@@ -4,7 +4,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Admin\\": "Admin/"
+            "AdminApp\\": "Admin/App/",
+            "AdminCore\\": "Admin/Core/"
         }
     }
 }
