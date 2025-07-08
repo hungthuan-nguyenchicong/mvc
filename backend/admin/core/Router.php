@@ -1,6 +1,8 @@
-<h2>router</h2>
-<?php 
-require_once root(). 'backend/admin/app/thest/abc.php';
+<?php
+namespace Admin\Core;
 
-$h = 123;
-tt($h);
+class Router {
+    public function __construct() {
+        echo 'admin/core/router';
+    }
+}
