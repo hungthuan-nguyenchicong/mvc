@@ -56,24 +56,26 @@ server {
     # #     try_files $uri $uri/ /admin/index.php?$query_string;
     # # }
 
-    # For other paths under /admin/, assume it's the SPA
     location /admin/views/ {
-        # Serve static files directly if they exist
-        # If not, fallback to /admin/index.html which is your SPA entry point for admin
-        try_files $uri $uri/ /admin/views/index.html?$query_string;
+        # Ensure your root is correctly set for this SPA, if different from the server's root
+        # root /path/to/your/admin_views_spa_build; # Uncomment if this SPA has a dedicated root
+        try_files $uri $uri/ /admin/views/index.html;
     }
 
-	location /admin/ {
-        # Exact match for /admin/, often directs to the PHP entry point for initial load
+    # # For other paths under /admin/, assume it's the SPA
+    location /admin/ {
+        # Serve static files directly if they exist
+        # If not, fallback to /admin/index.html which is your SPA entry point for admin
         try_files $uri $uri/ /admin/index.php?$query_string;
     }
+
 
     # General location block for the root of your domain.
     # This assumes your main site (not admin) is a static site or a different SPA.
     location / {
         # Try to serve the requested URI as a file, then as a directory.
         # If neither is found, fall back to /index.html (your main SPA entry point).
-        try_files $uri $uri/ /index.php?$query_string; # /admin/index.php?$query_string;
+        try_files $uri $uri/ /index.php?$query_string; #/admin/index.php?$query_string /admin/views/index.html?$query_string;
     }
 	
 
@@ -103,7 +105,7 @@ server {
         # Adjust this to your PHP-FPM socket or IP:PORT
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         fastcgi_index index.php;
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$; # add them
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         # Pass the original URI to PHP so your PHP router can use $_SERVER['REQUEST_URI']
         fastcgi_param REQUEST_URI $request_uri;

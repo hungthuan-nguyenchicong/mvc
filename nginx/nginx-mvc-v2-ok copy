@@ -10,7 +10,7 @@ server {
     # Set default index files.
     # index.html should be listed first if your SPA is the primary entry point
     # for the root path (/).
-    index index.html index.php index.htm;
+    index index.html index.php index.htm index.nginx-debian.html;
 
     # Ensure all files served from this server have UTF-8 charset
     charset utf-8;
@@ -46,36 +46,31 @@ server {
 
     # Option 1: Prioritize PHP for specific admin routes, then fallback to SPA
     # This is more complex but accurately reflects if specific /admin paths are PHP-only.
-    # location = /admin/ {
-    #     # Exact match for /admin/, often directs to the PHP entry point for initial load
-    #     try_files $uri $uri/ /index.php?$query_string;
-    # }
-
-    # # location = /admin/login/ {
-    # #     # Exact match for /admin/login/, directed to PHP for backend login logic
-    # #     try_files $uri $uri/ /admin/index.php?$query_string;
-    # # }
-
-    # For other paths under /admin/, assume it's the SPA
-    location /admin/views/ {
-        # Serve static files directly if they exist
-        # If not, fallback to /admin/index.html which is your SPA entry point for admin
-        try_files $uri $uri/ /admin/views/index.html?$query_string;
-    }
-
-	location /admin/ {
+    location = /admin/ {
         # Exact match for /admin/, often directs to the PHP entry point for initial load
         try_files $uri $uri/ /admin/index.php?$query_string;
     }
+
+    location = /admin/login/ {
+        # Exact match for /admin/login/, directed to PHP for backend login logic
+        try_files $uri $uri/ /admin/index.php?$query_string;
+    }
+
+    # For other paths under /admin/, assume it's the SPA
+    location /admin/ {
+        # Serve static files directly if they exist
+        # If not, fallback to /admin/index.html which is your SPA entry point for admin
+        try_files $uri $uri/ /admin/admin.html;
+    }
+
 
     # General location block for the root of your domain.
     # This assumes your main site (not admin) is a static site or a different SPA.
     location / {
         # Try to serve the requested URI as a file, then as a directory.
         # If neither is found, fall back to /index.html (your main SPA entry point).
-        try_files $uri $uri/ /index.php?$query_string; # /admin/index.php?$query_string;
+        try_files $uri $uri/ /index.html;
     }
-	
 
     # Serve static files directly with caching headers
     # This should be above the PHP location block to ensure static files are not processed by PHP-FPM.
@@ -86,24 +81,11 @@ server {
         # Important: No `fastcgi_pass` here
     }
 
-	# --- Ưu tiên xử lý các file PHP trong admin trước ---
-    # location ~ /admin/\.php$ {
-    #     # Đảm bảo đường dẫn này đúng cho admin PHP-FPM nếu bạn dùng socket riêng
-    #     fastcgi_pass unix:/run/php/php8.3-fpm-admin.sock; # Ví dụ socket riêng
-    #     fastcgi_index index.php;
-    #     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    #     fastcgi_param REQUEST_URI $request_uri;
-    #     include fastcgi_params;
-    #     # Các cài đặt riêng cho admin PHP-FPM
-    #     #fastcgi_read_timeout 600s; # Ví dụ: timeout dài hơn cho admin
-    # }
-
     # Pass all .php files to PHP-FPM
     location ~ \.php$ {
         # Adjust this to your PHP-FPM socket or IP:PORT
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         fastcgi_index index.php;
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         # Pass the original URI to PHP so your PHP router can use $_SERVER['REQUEST_URI']
         fastcgi_param REQUEST_URI $request_uri;

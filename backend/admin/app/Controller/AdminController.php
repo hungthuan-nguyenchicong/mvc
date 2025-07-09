@@ -9,7 +9,7 @@ class AdminController extends Controller {
 
     public function index() {
         //echo 'admin index';
-        header('location: /admin/admin.html');
+        header('location: /admin/views/');
     }
 
     public function login() {

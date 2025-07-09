@@ -11,10 +11,10 @@ class Sidebar {
     render() {
         return /* html */ `
             <ul>
-                <li><a href="/admin/" route>Home</a></li>
-                <li><a href="/admin/about" route>About</a></li>
+                <li><a href="/admin/views" route>Home</a></li>
+                <li><a href="/admin/views/about" route>About</a></li>
                 <hr>
-                <li><a href="/admin/posts/789/" route>Detail Pots (789)</a></li>
+                <li><a href="/admin/views/posts/789" route>Detail Pots (789)</a></li>
                 <hr>
                 <li><a href="/admin/api/products" route>All Products</a></li>
                 <li><a href="/product-create" route>Create Product</a></li>

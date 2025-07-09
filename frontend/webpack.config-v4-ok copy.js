@@ -9,9 +9,9 @@ module.exports = (env, argv) => {
         entry: './admin/src/app.js', // Entry point for your admin app
         output: {
             filename: 'bundle.[contenthash].js',
-            path: path.resolve(__dirname, '../public/admin/views'), // Output to public/admin
+            path: path.resolve(__dirname, '../public/admin'), // Output to public/admin
             clean: true,
-            publicPath: '/admin/views/',
+            publicPath: '/admin/',
         },
         module: {
             rules: [
@@ -45,7 +45,7 @@ module.exports = (env, argv) => {
                 favicon: './admin/src/favicon.ico',
                 // Đổi lại filename thành index.html cho dev server
                 //filename: 'index.html', // Webpack dev server sẽ phục vụ index.html
-                filename: 'index.html',
+                filename: 'admin.html',
                 inject: 'body',
                 scriptLoading: 'module',
             }),
@@ -73,21 +73,12 @@ module.exports = (env, argv) => {
             historyApiFallback: {
                 rewrites: [
                     {
-                        from: /^\/admin\/.*$/, // Matches /admin/ anything
-                        to: '/admin/views/index.html', // <--- This is the key.
+                        from: /^\/admin\/.*$/,
+                        //to: '/admin/index.html', // Webpack dev server sẽ phục vụ index.html của nó
+                        to: '/admin/admin.html', // Webpack dev server sẽ phục vụ index.html của nó
                     },
                 ],
             },
-            // historyApiFallback: {
-            //     rewrites: [
-            //         {
-            //             //from: /^\/admin\/.*$/,
-            //             from: /^\/admin(\/.*)?$/,
-            //             //to: '/admin/index.html', // Webpack dev server sẽ phục vụ index.html của nó
-            //             to: '/admin/index.html', // Webpack dev server sẽ phục vụ index.html của nó
-            //         },
-            //     ],
-            // },
             // *** SỬA LẠI PHẦN PROXY NÀY THÀNH MỘT MẢNG ***
             proxy: [ // Bắt đầu bằng dấu ngoặc vuông để tạo một mảng
                 {

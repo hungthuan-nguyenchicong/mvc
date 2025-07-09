@@ -21,7 +21,7 @@ class Router {
                 case '/admin/':
                     $this->adminControllerInstance->index();
                     break;
-                case '/admin/login/':
+                case '/admin/login':
                     $this->adminControllerInstance->login();
                     break;
                 default:
