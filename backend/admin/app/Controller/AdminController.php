@@ -1,5 +1,6 @@
 <?php
 namespace AdminApp\Controller;
+use AdminCore\View;
 
 class AdminController extends Controller {
     public function __construct() {
@@ -13,6 +14,6 @@ class AdminController extends Controller {
     }
 
     public function login() {
-        echo 'login';
+        View::render(null,'login');
     }
 }
