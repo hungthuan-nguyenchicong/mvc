@@ -7,7 +7,7 @@
     <style>
         h1 {
             text-align: center;
-            padding-top: 150px;
+            padding-top: 100px;
         }
         form#login {
             display: flex;
@@ -34,12 +34,11 @@
     </style>
 </head>
 <body>
+    <h1>Login</h1>
+    <form id="login">
+        <input type="text" name="username" placeholder="User Name" autocomplete="username">
+        <input type="password" name="password" placeholder="Password" autocomplete="new-password">
+        <button type="submit">Login</button>
+    </form>
 </body>
-<h1>Login</h1>
-<form id="login">
-    <input type="text" name="username" placeholder="User Name" autocomplete="username">
-    <input type="password" name="password" placeholder="Password" autocomplete="new-password">
-    <button type="submit">Login</button>
-</form>
-
 </html>

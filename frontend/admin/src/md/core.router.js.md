@@ -1,3 +1,24 @@
+# core.router.js
+Bạn đang gặp lỗi 404 vì URL bạn đang nhập ( /admin/views/?view=posts/post-show&id=567) không khớp với định nghĩa tuyến đường ( 'posts/post-show&{id}') trong routesđối tượng.
+
+Nguyên nhân là do xung đột trong cách cấu hình bộ định tuyến để diễn giải các tuyến đường có tham số và cách trình duyệt web xử lý các tham số truy vấn.
+
+Tại sao trận đấu thất bại
+Định nghĩa bộ định tuyến: Tuyến đường được định nghĩa là 'posts/post-show&{id}'. Biểu thức chính quy của bộ định tuyến mong đợi ID là một phần của giá trị viewtham số, được kết nối bằng dấu & (ví dụ: ?view=posts/post-show&567).
+
+Đầu vào URL của bạn: Khi bạn nhập /admin/views/?view=posts/post-show&id=567, trình duyệt sẽ URLSearchParamsnhận dạng view=posts/post-showvà id=567là hai tham số truy vấn riêng biệt .
+
+Bộ định tuyến nhìn thấy: Dữ liệu viewParamđược bộ định tuyến lấy về chỉ là posts/post-show.
+
+Không khớp: Bộ định tuyến cố gắng khớp posts/post-showvới biểu thức chính quy for 'posts/post-show&{id}'(tìm kiếm ^posts/post-show&[a-zA-Z0-9-]+$). Vì posts/post-showkhông chứa &và ID nên việc khớp không thành công và bộ định tuyến mặc định là 404.
+
+Bản sửa lỗi: Cập nhật Định nghĩa Tuyến đường và Xử lý Tham số
+Để khắc phục điều này, chúng ta cần điều chỉnh bộ định tuyến để coi nó id=567như một tham số truy vấn chuẩn trong khi vẫn sử dụng view=posts/post-showđể khớp tuyến.
+
+Chúng tôi sẽ sửa đổi routesđịnh nghĩa và MapsTophương pháp để nắm bắt chính xác idcác tham số tìm kiếm từ URL và truyền nó vào chế độ xem.
+
+JavaScript
+
 // ./src/core.router.js
 
 const routes = {
