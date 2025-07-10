@@ -1,11 +1,15 @@
 // ./src/core.router.js
 
-import { routes } from "../routes";
-import { eventEmitterInstance } from "../utils/event-emitter";
+const routes = {
+    'home': '@views/home.js',
+    'posts/post-index': '@views/posts/post-index.js',
+    // We remove the &{id} from the key definition, as we will extract 'id' from searchParams.
+    'posts/post-show': '@views/posts/post-show.js', 
+    '404': '@views/not-found.js'
+}
 
 class Router {
     constructor(routes) {
-        this.eventEmitterInstance = eventEmitterInstance;
         this.routes = routes;
         this.currentPath = window.location.pathname;
         console.log('1. window.location.search:', window.location.search);
@@ -28,45 +32,23 @@ class Router {
     async navigateTo(path) {
         this.currentPath = path;
         console.log(`Navigating to: ${path}`);
-
-        // --- FIX: Update internal queryString and searchParams based on the new path ---
-        // This is necessary because navigating via a link changes the URL, and we need 
-        // to parse the parameters from the new path.
-        try {
-            // Use URL constructor to parse the path (including potential query strings)
-            const url = new URL(path, window.location.origin);
-            this.queryString = url.search;
-            console.log('search'+ this.queryString)
-            this.searchParams = new URLSearchParams(this.queryString);
-        } catch (e) {
-            console.error(`Invalid URL path provided to navigateTo: ${path}`, e);
-        }
-        // -----------------------------------------------------------------------------
-
         console.log(`Current path: ${this.currentPath}`);
         console.log(`Query string: ${this.queryString}`);
-        
+        console.log(`View parameter: ${this.searchParams.get('view')}`);
+
         let matchedRouteFile = null;
         let params = {}; 
+        const viewParam = this.searchParams.get('view');
+        console.log(viewParam);
 
-        // Extract the 'view' parameter from the updated searchParams.
-        let viewParam = this.searchParams.get('view');
-
-        // --- FIX: Explicitly default viewParam to 'home' if no 'view' parameter is present ---
-        // This handles URLs like /admin/views/ or /admin/views/?
-        if (!viewParam) {
-            viewParam = 'home';
-        }
-        // ------------------------------------------------------------------------------------
-        
-        console.log(`View parameter: ${viewParam}`);
-
-        // Capture all URL search parameters (excluding 'view')
+        // --- Fix 1: Capture all URL search parameters (excluding 'view') ---
+        // This ensures parameters like 'id=567' are available in the 'params' object.
         for (const [key, value] of this.searchParams.entries()) {
             if (key !== 'view') {
                 params[key] = value;
             }
-        };
+        }
+        // ------------------------------------------------------------------
 
         // Iterate through routes to find a match for viewParam
         for (const routePath in this.routes) {
@@ -83,13 +65,13 @@ class Router {
                 Object.assign(params, potentialMatch.groups); 
                 matchedRouteFile = this.routes[routePath];
                 break; // Stop iterating once a match is found
-            };
-        };
+            }
+        }
 
         // If no route was matched, use the 404 fallback
         if (!matchedRouteFile) {
             matchedRouteFile = this.routes['404'];
-        };
+        }
 
         if (matchedRouteFile) {
             console.log(matchedRouteFile)
@@ -112,10 +94,8 @@ class Router {
                 } 
             } catch (error) {
                 console.error(`router.js: Không thể tải hoặc render view cho đường dẫn '${matchedRouteFile}':`, error)
-            };
-        };
-        // phát sự kiện routeChange
-        this.eventEmitterInstance.emit('routeChange', this.currentPath);
+            }
+        }
     }
 
     // click a[route]
@@ -129,24 +109,19 @@ class Router {
                 // path
                 const path = e.target.getAttribute('href');
                 // console.log(`'path: '. ${path}`);
-                if (window.location.pathname + this.queryString !== path) {
+                // if (window.location.pathname !== path) {
                     window.history.pushState(null, null, path);
-                }
+                // }
                 
                 // navigateTo -> path
                 this.navigateTo(path);
             }
-        });
-        // quay lai / tien len cua trinh duyet
-        window.addEventListener('popstate', ()=>{
-            this.navigateTo(window.location.pathname)
-        });
+        })
     }
 
     init() {
         this.setupRouterListeners();
-        // Use the current path and the initial queryString (which defaults to ?view=home) for the first navigation
-        this.navigateTo(this.currentPath + this.queryString); 
+        this.navigateTo(this.currentPath + this.queryString);
     }
 }
 

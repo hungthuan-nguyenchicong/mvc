@@ -11,8 +11,8 @@ class Sidebar {
     render() {
         return /* html */ `
             <ul>
-                <li><a href="/admin/views/" route>Home</a></li>
-                <li><a href="/admin/views/?view=home" route>Home 2</a></li>
+                <!-- <li><a href="/admin/views/" route>Home</a></li> -->
+                <li><a href="/admin/views/?view=home" route>Home</a></li>
                 <li><a href="/admin/views/?view=about" route>About</a></li>
                 <hr>
                 <li><a href="/admin/views/?view=posts/post-show&id=789" route>Detail Pots (789)</a></li>
