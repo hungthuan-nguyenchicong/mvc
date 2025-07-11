@@ -15,43 +15,6 @@ server {
     # Ensure all files served from this server have UTF-8 charset
     charset utf-8;
 
-    location = /_auth {
-    internal;
-
-    # Pass the request to PHP-FPM
-    fastcgi_pass unix:/run/php/php8.3-fpm.sock;
-
-    # Set SCRIPT_FILENAME to the PHP router entry point
-    fastcgi_param SCRIPT_FILENAME $document_root/admin/index.php;
-
-    # Bao gồm các thông số cơ bản trước
-    include fastcgi_params;
-
-    # QUAN TRỌNG: Thiết lập lại REQUEST_URI sau khi include để đảm bảo nó không bị ghi đè bởi $request_uri từ fastcgi_params
-    fastcgi_param REQUEST_URI /admin/check-auth; 
-}
-
-    # Location to authenticate and serve static files specifically under /admin/views/
-location ~* ^/admin/views/(.+)\.(html|js|css|png|jpg|jpeg|gif|ico|svg|eot|ttf|woff|woff2)$ {
-    
-    # 1. Apply authentication using the /_auth endpoint
-    auth_request /_auth;
-
-    # 2. Serve the static file (if it exists)
-    #try_files $uri =404;
-
-    # Optional: If you want specific caching headers for these files 
-    # after authentication, you can set them here.
-    # expires 30d; 
-    # add_header Cache-Control "public, no-transform";
-    # Đặt Cache-Control thành no-store, no-cache cho các tài nguyên admin
-        expires off; # Tắt Expires để Cache-Control được ưu tiên
-        add_header Cache-Control "no-store, no-cache, must-revalidate";
-        add_header Pragma "no-cache"; # Cho các proxy/client cũ
-
-        try_files $uri =404; # Đảm bảo file tồn tại
-}
-
     # This catches requests for your admin SPA.
     # Your JavaScript router handles paths like /admin/login/, /admin/dashboard/, etc.
     #
@@ -93,27 +56,24 @@ location ~* ^/admin/views/(.+)\.(html|js|css|png|jpg|jpeg|gif|ico|svg|eot|ttf|wo
     # #     try_files $uri $uri/ /admin/index.php?$query_string;
     # # }
 
+    # For other paths under /admin/, assume it's the SPA
     location /admin/views/ {
-        auth_request /_auth;
-        # Ensure your root is correctly set for this SPA, if different from the server's root
-        # root /path/to/your/admin_views_spa_build; # Uncomment if this SPA has a dedicated root
-        try_files $uri $uri/ /admin/views/index.html;
-    }
-
-    # # For other paths under /admin/, assume it's the SPA
-    location /admin/ {
         # Serve static files directly if they exist
         # If not, fallback to /admin/index.html which is your SPA entry point for admin
-        try_files $uri $uri/ /admin/index.php?$query_string;
+        try_files $uri $uri/ /admin/views/index.html?$query_string;
     }
 
+	location /admin/ {
+        # Exact match for /admin/, often directs to the PHP entry point for initial load
+        try_files $uri $uri/ /admin/index.php?$query_string;
+    }
 
     # General location block for the root of your domain.
     # This assumes your main site (not admin) is a static site or a different SPA.
     location / {
         # Try to serve the requested URI as a file, then as a directory.
         # If neither is found, fall back to /index.html (your main SPA entry point).
-        try_files $uri $uri/ /index.php?$query_string; #/admin/index.php?$query_string /admin/views/index.html?$query_string;
+        try_files $uri $uri/ /index.php?$query_string; # /admin/index.php?$query_string;
     }
 	
 
@@ -143,7 +103,7 @@ location ~* ^/admin/views/(.+)\.(html|js|css|png|jpg|jpeg|gif|ico|svg|eot|ttf|wo
         # Adjust this to your PHP-FPM socket or IP:PORT
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         fastcgi_index index.php;
-        #fastcgi_split_path_info ^(.+\.php)(/.+)$; # add them
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         # Pass the original URI to PHP so your PHP router can use $_SERVER['REQUEST_URI']
         fastcgi_param REQUEST_URI $request_uri;

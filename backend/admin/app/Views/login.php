@@ -40,5 +40,43 @@
         <input type="password" name="password" placeholder="Password" autocomplete="new-password">
         <button type="submit">Login</button>
     </form>
+    <script>
+        function tt(t) {
+            console.log(t);
+        }
+
+        class Login {
+            constructor() {
+                this.form = document.getElementById('login');
+                this.form.addEventListener('submit',this.handleSubmit.bind(this))
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                this.sendAdminController_login();
+            }
+
+            async sendAdminController_login() {
+                try {
+                    const formData = new FormData(this.form);
+                    const response = await fetch('/admin/login', {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    const result = await response.json();
+                    tt(result)
+                    if (result.status === 'success') {
+                        window.location.href = '/admin/';
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded',()=>{
+            new Login();
+        })
+    </script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
-namespace AdminApp\Controller;
+namespace AdminApp\Controllers;
+//use AdminApp\Models\Model;
 
 class Controller {
     public function __construct() {

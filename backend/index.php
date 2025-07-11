@@ -1,5 +1,6 @@
 <?php 
 use AdminCore\Router;
+use AdminApp\Models\Model;
 
 // $routerInstance = new Router();
 
