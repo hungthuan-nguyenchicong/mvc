@@ -31,14 +31,20 @@
             border-radius: 5px; /* Bo góc nhẹ cho đẹp */
             cursor: pointer;
         }
+        form#login .error {
+            text-align: center;
+            margin-top: 40px;
+            color: red;
+        }
     </style>
 </head>
 <body>
     <h1>Login</h1>
     <form id="login">
-        <input type="text" name="username" placeholder="User Name" autocomplete="username">
-        <input type="password" name="password" placeholder="Password" autocomplete="new-password">
+        <input type="text" name="username" placeholder="User Name" autocomplete="username" required>
+        <input type="password" name="password" placeholder="Password" autocomplete="new-password" required>
         <button type="submit">Login</button>
+        <div class="error"></div>
     </form>
     <script>
         function tt(t) {
@@ -48,7 +54,9 @@
         class Login {
             constructor() {
                 this.form = document.getElementById('login');
-                this.form.addEventListener('submit',this.handleSubmit.bind(this))
+                this.form.addEventListener('submit',this.handleSubmit.bind(this));
+                this.divError = this.form.querySelector('.error');
+                
             }
 
             handleSubmit(e) {
@@ -64,12 +72,16 @@
                         body: formData,
                     });
                     const result = await response.json();
-                    tt(result)
+                    //tt(result)
                     if (result.status === 'success') {
                         window.location.href = '/admin/';
+                    } else {
+                        this.form.reset();
+                        this.divError.textContent = 'Tài khoản hoặc mật khẩu không đúng';
                     }
                 } catch (error) {
                     console.error(error);
+                    this.divError.textContent = 'Đã xảy ra lỗi khi kết nối';
                 }
             }
         }

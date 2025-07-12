@@ -12,9 +12,13 @@ class Router {
         $this->uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         //tt($this->uri);
         //echo 'admin/core/router';
-        error_log("Router URI received: " . $this->uri); // Thêm dòng này
+        //error_log("Router URI received: " . $this->uri); // Thêm dòng này
+        //$this->adminControllerInstance = new AdminController();
+        // ...
+        //echo "Debug: Before AdminController instantiation.<br>"; // Dòng 1
         $this->adminControllerInstance = new AdminController();
-
+        //echo "Debug: After AdminController instantiation.<br>"; // Dòng 2
+        // ...
         // router
 
         // In your PHP router (admin/index.php or similar)
@@ -31,6 +35,7 @@ class Router {
                     $this->adminControllerInstance->index();
                     break;
                 case '/admin/login':
+                //case '/admin/login/': // Thêm case này
                     $this->adminControllerInstance->login();
                     break;
                 case '/admin/logout':

@@ -403,3 +403,34 @@ server {
     error_page 404 /404.html;
     location = /404.html { internal; }
 }
+
+## ver 4
+
+// Ví dụ xử lý Fetch trong JavaScript
+fetch('/admin/views/')
+    .then(response => {
+        // Kiểm tra xem phản hồi có phải là 302 (hoặc 401) và có header Location hay không
+        // Lưu ý: Trong Fetch API, bạn có thể không truy cập được trực tiếp vào header Location nếu yêu cầu được chuyển hướng.
+        // Tuy nhiên, nếu server trả về 401 và chúng ta nhận 302 (do cấu hình Nginx), 
+        // chúng ta có thể kiểm tra response.status.
+        
+        if (response.status === 302 || response.status === 401) {
+            // Thực hiện chuyển hướng trình duyệt thủ công
+            // Nếu bạn biết URL đích là /admin/login
+            window.location.href = '/admin/login';
+            
+            // Hoặc nếu bạn muốn đọc URL từ header Location (nếu có thể truy cập)
+            // const location = response.headers.get('Location');
+            // if (location) {
+            //     window.location.href = location;
+            // }
+        } else if (response.ok) {
+            // Xử lý khi yêu cầu thành công (ví dụ: đăng nhập thành công hoặc đã được cấp phép)
+            // ...
+        } else {
+            // Xử lý các lỗi khác
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });

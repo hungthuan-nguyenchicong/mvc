@@ -10,9 +10,10 @@ class AdminController extends Controller {
     private $adminModel;
 
     public function __construct() {
+        //echo "Debug: AdminController constructor started.<br>"; // Dòng 3
         parent::__construct();
-        //echo 1;
-        
+        //echo 1; 
+        //echo "Debug: AdminController constructor finished.<br>"; // Dòng 4
     }
 
     public function index() {
@@ -51,7 +52,9 @@ class AdminController extends Controller {
             echo json_encode($response);
             exit;
         } else {
+            //echo "Debug: Reached login GET route.<br>"; // Dòng 5 (đã thêm trước đó)
             View::render(null,'login');
+            //echo "Debug: Rendered successfully.<br>"; // Dòng 6
             exit;
         }
     }
@@ -74,9 +77,14 @@ class AdminController extends Controller {
             // If NOT authenticated:
             // IMPORTANT: DO NOT use header('location: ...') in an auth_request handler.
             // Return an unauthorized status code instead.
+            //http_response_code(401); // Nginx will respond with 401 Unauthorized
+            //header('location: /admin/login');
+            //header('X-Accel-Redirect: /admin/check-auth');
+            //View::render(null,'login');
             http_response_code(401); // Nginx will respond with 401 Unauthorized
-            header('location: /admin/login');
+            //header('location: /admin/login');
             exit; 
         }
     }
+
 }

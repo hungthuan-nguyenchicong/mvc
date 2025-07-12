@@ -7,13 +7,22 @@ class Header {
 
     render () {
         return /* html*/ `
-            <p>Chào mừng bạn đến với trang quản trị<p>
+            <p>Chào mừng bạn đến với trang quản trị</p>
+            <button id="btn-logout" type="submit">Đăng Xuất</button>
         `;
+    }
+
+    logout() {
+        const btnLogout = document.getElementById('btn-logout');
+        btnLogout.addEventListener('click', ()=> {
+            window.location.href = '/admin/logout';
+        })
     }
 
     init() {
         document.body.appendChild(this.header);
         this.header.innerHTML = this.render();
+        this.logout();
     }
 }
 

@@ -14,9 +14,12 @@ server {
 
     # Ensure all files served from this server have UTF-8 charset
     charset utf-8;
+    #error_page 401 =302 /admin/login;
 
     location = /_auth {
     internal;
+
+    #error_page 401 =302 /admin/login;
 
     # Pass the request to PHP-FPM
     fastcgi_pass unix:/run/php/php8.3-fpm.sock;
@@ -36,7 +39,8 @@ location ~* ^/admin/views/(.+)\.(html|js|css|png|jpg|jpeg|gif|ico|svg|eot|ttf|wo
     
     # 1. Apply authentication using the /_auth endpoint
     auth_request /_auth;
-
+    
+    #error_page 401 =302 /admin/error-page;
     # 2. Serve the static file (if it exists)
     #try_files $uri =404;
 
@@ -95,6 +99,7 @@ location ~* ^/admin/views/(.+)\.(html|js|css|png|jpg|jpeg|gif|ico|svg|eot|ttf|wo
 
     location /admin/views/ {
         auth_request /_auth;
+        #error_page 401 =302 /admin/error-page;
         # Ensure your root is correctly set for this SPA, if different from the server's root
         # root /path/to/your/admin_views_spa_build; # Uncomment if this SPA has a dedicated root
         try_files $uri $uri/ /admin/views/index.html;
@@ -170,7 +175,9 @@ location ~* ^/admin/views/(.+)\.(html|js|css|png|jpg|jpeg|gif|ico|svg|eot|ttf|wo
     location = /404.html {
         internal;
     }
+    error_page 401 =302 /401-302.html;
 
+    
     # SSL configuration (uncomment and configure if using HTTPS)
     # listen 443 ssl default_server;
     # listen [::]:443 ssl default_server;
