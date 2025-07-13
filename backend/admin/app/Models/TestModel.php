@@ -9,7 +9,7 @@ class TestModel extends Model {
     public function testDatabase() {
         try {
             $sql = "SELECT 'Hello, database'";
-            $stmt = $this->pdo->prepare($sql);
+            $stmt = $this->getPdo()->prepare($sql);
             $stmt->execute();
             // $stmt->fetch(PDO::FETCH_ASSOC);
             // print_r($stmt);

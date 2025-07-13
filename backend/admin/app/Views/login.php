@@ -81,7 +81,8 @@ $csrf = CSRF::input();
                     if (result.status === 'success') {
                         window.location.href = '/admin/';
                     } else if(result.status === 'csrf') {
-                        window.location.reload();
+                        //window.location.reload();
+                        this.form.reset();
                     } else {
                         this.form.reset();
                         this.divError.textContent = 'Tài khoản hoặc mật khẩu không đúng';

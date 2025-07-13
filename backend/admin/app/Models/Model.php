@@ -1,70 +1,79 @@
 <?php
 namespace AdminApp\Models;
 
-use Dotenv\Dotenv;
+use AdminCore\Config;
 use PDO;
 use PDOException;
 
 class Model {
-    protected $pdo; // Đối tượng kết nối PDO
+    protected $config;
+    // 1. Change $pdo to a static property to hold the single connection instance
+    protected static $pdoInstance = null; 
 
-    // Chúng ta không cần thuộc tính $env vì chúng ta sử dụng $_ENV
-    // protected $env; 
+    // We no longer need the instance property $pdo
+    // protected $pdo; 
 
     protected function __construct() {
-        // Tải biến môi trường
-        $this->getEnv();
-        // Thiết lập kết nối cơ sở dữ liệu ngay khi khởi tạo Model
+        $this->config = new Config();
+        
+        // 2. We now call connectDatabase() if a connection hasn't been established yet
         $this->connectDatabase();
     }
 
-    private function getEnv() {
-        // Lưu ý: Tôi giả sử `root()` là một hàm helper đã được định nghĩa ở nơi khác
-        // để trả về đường dẫn thư mục gốc của dự án chứa file .env.
-        $envFile = root();
-        $dotenv = Dotenv::createImmutable($envFile);
-        $dotenv->load();
-
-        // Các biến môi trường hiện đã có sẵn trong $_ENV
-    }
-
     private function connectDatabase() {
-        // Lấy thông tin đăng nhập từ $_ENV. 
-        // Sử dụng toán tử ?? để gán null nếu biến không tồn tại.
-        $dbHost = $_ENV['DB_HOST'] ?? null;
-        $dbName = $_ENV['DB_NAME'] ?? null;
-        $dbUser = $_ENV['DB_USER'] ?? null;
-        $dbPass = $_ENV['DB_PASS'] ?? null;
+        // 3. Implement the Singleton pattern: Check if $pdoInstance is already set
+        if (self::$pdoInstance !== null) {
+            // Connection already exists, do nothing and return.
+            return;
+        }
 
-        // Kiểm tra xem các biến môi trường cần thiết đã được định nghĩa chưa
+        // 4. If connection is null, proceed with creating it
+
+        // Retrieve configuration data
+        $dbConfig = $this->config->getDbConfig();
+
+        $dbHost = $dbConfig['dbhost'] ?? null;
+        $dbName = $dbConfig['dbname'] ?? null;
+        $dbUser = $dbConfig['dbuser'] ?? null;
+        $dbPass = $dbConfig['dbpassword'] ?? null;
+
         if (!$dbHost || !$dbName || !$dbUser) {
-            // Xử lý lỗi nếu thiếu cấu hình
-            error_log("Missing database environment variables (DB_HOST, DB_NAME, DB_USER).");
+            error_log("Missing database environment variables.");
             http_response_code(500);
             die("Lỗi cấu hình hệ thống: Thiếu thông tin kết nối cơ sở dữ liệu.");
         }
 
-        //$dsn = "mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4";
         $dsn = "pgsql:host=$dbHost;dbname=$dbName";
 
         $options = [
-            // Luôn ném ngoại lệ khi có lỗi SQL
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            // Đặt chế độ tìm nạp mặc định là mảng kết hợp
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            // Tắt chế độ mô phỏng Prepared Statements để tăng cường bảo mật
             PDO::ATTR_EMULATE_PREPARES => false,
         ];
 
         try {
-            //$this->db = new PDO($dsn, $dbUser, $dbPass, $options);
-            $this->pdo = new PDO($dsn, $dbUser, $dbPass, $options);
-            //echo ('ok');
+            // 5. Create the PDO connection and assign it to the static property
+            self::$pdoInstance = new PDO($dsn, $dbUser, $dbPass, $options);
         } catch (PDOException $e) {
-            // Xử lý lỗi kết nối cơ sở dữ liệu
             error_log("Database connection failed: " . $e->getMessage());
             http_response_code(500);
             die("Lỗi hệ thống nội bộ: Không thể kết nối cơ sở dữ liệu.");
         }
     }
+    
+    /**
+     * Get the PDO connection instance.
+     * * @return PDO
+     */
+    protected function getPdo(): PDO {
+        // Since connectDatabase() is called in the constructor, we guarantee $pdoInstance is set.
+        return self::$pdoInstance;
+    }
+
+    // Example usage in a child Model class method:
+    // public function getUserById($id) {
+    //     $stmt = $this->getPdo()->prepare("SELECT * FROM users WHERE id = :id");
+    //     $stmt->execute(['id' => $id]);
+    //     return $stmt->fetch();
+    // }
 }

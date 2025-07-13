@@ -7,18 +7,18 @@ use AdminCore\CSRF;
 //use AdminApp\Models\Model;
 use AdminApp\Models\AdminModel;
 
-use AdminApp\Models\TestModel;
+//use AdminApp\Models\TestModel;
 
 class AdminController extends Controller {
     private $adminModel;
-    private $testModel;
+    //private $testModel;
     public function __construct() {
         //echo "Debug: AdminController constructor started.<br>"; // Dòng 3
         parent::__construct();
         //echo 1; 
         //echo "Debug: AdminController constructor finished.<br>"; // Dòng 4
-        $this->testModel = new TestModel();
-        $this->testModel->testDatabase();
+        //$this->testModel = new TestModel();
+        //$this->testModel->testDatabase();
         //echo __CLASS__;
     }
 
@@ -38,20 +38,28 @@ class AdminController extends Controller {
             $response = ['status' => 'error'];
 
             if (CSRF::controller()) {
-                $username = $_POST['username'] ?? '';
-                $password = $_POST['password'] ?? '';
-    
+                // $username = $_POST['username'] ?? '';
+                // $password = $_POST['password'] ?? '';
+                
+                // Validate and sanitize input
+                $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
+                $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS); // neu validate password_has() model
+                // $password = $_POST['password']; // Password will be hashed, so no sanitization like htmlspecialchars
+
                 $login = [
                     'username' => $username,
                     'password' => $password,
                 ];
                 // Model::load('AdminModel');
-
-                $this->adminModel = new AdminModel();
-                $validateLogin = $this->adminModel->validateLogin($login['username'], $login['password']);
-                if ($validateLogin) {
-                    $response['status'] = 'success';
-                    Session::set('admin', true);
+                try {
+                    $this->adminModel = new AdminModel();
+                    $validateLogin = $this->adminModel->validateLogin($login['username'], $login['password']);
+                    if ($validateLogin) {
+                        $response['status'] = 'success';
+                        Session::set('admin', true);
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
                 }
             } else {
                 $response['status'] = 'csrf';

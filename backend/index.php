@@ -1,4 +1,5 @@
 <?php 
+//use Dotenv\Dotenv;
 use AdminCore\Router;
 //use AdminApp\Models\Model;
 
@@ -16,6 +17,12 @@ require root() . 'backend/vendor/autoload.php';
 //use Admin\Core\Router;
 
 // tesst
+
+// Lưu ý: Tôi giả sử `root()` là một hàm helper đã được định nghĩa ở nơi khác
+    //     // để trả về đường dẫn thư mục gốc của dự án chứa file .env.
+        // $envFile = root();
+        // $dotenv = Dotenv::createImmutable($envFile);
+        // $dotenv->load();
 
 $routerInstance = new Router(); // This will now call the constructor and echo 1
 
