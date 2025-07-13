@@ -1,6 +1,6 @@
 <?php 
 use AdminCore\Router;
-use AdminApp\Models\Model;
+//use AdminApp\Models\Model;
 
 // $routerInstance = new Router();
 
@@ -14,6 +14,8 @@ require root() . 'backend/vendor/autoload.php';
 
 // Now you can freely use classes from your 'Admin' namespace
 //use Admin\Core\Router;
+
+// tesst
 
 $routerInstance = new Router(); // This will now call the constructor and echo 1
 

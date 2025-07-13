@@ -4,17 +4,22 @@ namespace AdminApp\Controllers;
 use AdminCore\View;
 use AdminCore\Session;
 use AdminCore\CSRF;
-use AdminApp\Models\Model;
+//use AdminApp\Models\Model;
 use AdminApp\Models\AdminModel;
+
+use AdminApp\Models\TestModel;
 
 class AdminController extends Controller {
     private $adminModel;
-
+    private $testModel;
     public function __construct() {
         //echo "Debug: AdminController constructor started.<br>"; // Dòng 3
         parent::__construct();
         //echo 1; 
         //echo "Debug: AdminController constructor finished.<br>"; // Dòng 4
+        $this->testModel = new TestModel();
+        $this->testModel->testDatabase();
+        //echo __CLASS__;
     }
 
     public function index() {
@@ -40,7 +45,8 @@ class AdminController extends Controller {
                     'username' => $username,
                     'password' => $password,
                 ];
-                Model::load('AdminModel');
+                // Model::load('AdminModel');
+
                 $this->adminModel = new AdminModel();
                 $validateLogin = $this->adminModel->validateLogin($login['username'], $login['password']);
                 if ($validateLogin) {
