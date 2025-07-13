@@ -3,6 +3,7 @@ namespace AdminApp\Controllers;
 
 use AdminCore\View;
 use AdminCore\Session;
+use AdminCore\CSRF;
 use AdminApp\Models\Model;
 use AdminApp\Models\AdminModel;
 
@@ -31,19 +32,23 @@ class AdminController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = ['status' => 'error'];
 
-            $username = $_POST['username'] ?? '';
-            $password = $_POST['password'] ?? '';
-
-            $login = [
-                'username' => $username,
-                'password' => $password,
-            ];
-            Model::load('AdminModel');
-            $this->adminModel = new AdminModel();
-            $validateLogin = $this->adminModel->validateLogin($login['username'], $login['password']);
-            if ($validateLogin) {
-                $response['status'] = 'success';
-                Session::set('admin', true);
+            if (CSRF::controller()) {
+                $username = $_POST['username'] ?? '';
+                $password = $_POST['password'] ?? '';
+    
+                $login = [
+                    'username' => $username,
+                    'password' => $password,
+                ];
+                Model::load('AdminModel');
+                $this->adminModel = new AdminModel();
+                $validateLogin = $this->adminModel->validateLogin($login['username'], $login['password']);
+                if ($validateLogin) {
+                    $response['status'] = 'success';
+                    Session::set('admin', true);
+                }
+            } else {
+                $response['status'] = 'csrf';
             }
 
             //$response['login'] = $login;

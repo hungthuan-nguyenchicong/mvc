@@ -42,8 +42,7 @@ module.exports = (env, argv) => {
         plugins: [
             new HtmlWebpackPlugin({
                 template: './admin/src/index.html',
-                //favicon: './admin/src/favicon.ico',
-                //favicon: './favicon.ico',
+                favicon: './admin/src/favicon.ico',
                 // Đổi lại filename thành index.html cho dev server
                 //filename: 'index.html', // Webpack dev server sẽ phục vụ index.html
                 filename: 'index.html',

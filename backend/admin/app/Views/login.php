@@ -38,11 +38,16 @@
         }
     </style>
 </head>
+<?php
+use AdminCore\CSRF;
+$csrf = CSRF::input();
+?>
 <body>
     <h1>Login</h1>
     <form id="login">
         <input type="text" name="username" placeholder="User Name" autocomplete="username" required>
         <input type="password" name="password" placeholder="Password" autocomplete="new-password" required>
+        <?=$csrf ?>
         <button type="submit">Login</button>
         <div class="error"></div>
     </form>
@@ -75,6 +80,8 @@
                     //tt(result)
                     if (result.status === 'success') {
                         window.location.href = '/admin/';
+                    } else if(result.status === 'csrf') {
+                        window.location.reload();
                     } else {
                         this.form.reset();
                         this.divError.textContent = 'Tài khoản hoặc mật khẩu không đúng';

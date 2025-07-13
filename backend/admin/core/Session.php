@@ -1,5 +1,6 @@
 <?php
 namespace AdminCore;
+use AdminCore\Session;
 
 class Session {
     private static $sessionStarted = false;
