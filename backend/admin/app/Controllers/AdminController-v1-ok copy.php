@@ -9,8 +9,6 @@ use AdminApp\Models\AdminModel;
 
 //use AdminApp\Models\TestModel;
 
-use AdminApp\Views\Login;
-
 class AdminController extends Controller {
     private $adminModel;
     //private $testModel;
@@ -22,7 +20,6 @@ class AdminController extends Controller {
         //$this->testModel = new TestModel();
         //$this->testModel->testDatabase();
         //echo __CLASS__;
-        new Login();
     }
 
     public function index() {

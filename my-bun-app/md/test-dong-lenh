@@ -1,0 +1,68 @@
+## test
+
+			
+Test		Bash (Linux/macOS):	
+			
+		bash	
+		# GET	
+		curl -i http://localhost:3000/api/posts	
+		# POST	
+		curl -i -X POST http://localhost:3000/api/posts -H "Content-Type: application/json" -d '{"title":"Tiêu đề","content":"Nội dung"}'	
+		# PUT	
+		curl -i -X PUT http://localhost:3000/api/posts -H "Content-Type: application/json" -d '{"id":"123","title":"Tiêu đề mới","content":"Nội dung mới"}'	
+		# DELETE	
+		curl -i -X DELETE http://localhost:3000/api/posts	
+		PowerShell (Windows):	
+		powershell	
+		# GET	
+		Invoke-WebRequest -Uri http://localhost:3000/api/posts -Method GET	
+		# POST	
+		Invoke-WebRequest -Uri http://localhost:3000/api/posts -Method POST -Body '{"title":"Tiêu đề","content":"Nội dung"}' -ContentType "application/json"	
+		# PUT	
+		Invoke-WebRequest -Uri http://localhost:3000/api/posts -Method PUT -Body '{"id":"123","title":"Tiêu đề mới","content":"Nội dung mới"}' -ContentType "application/json"	
+		# DELETE	
+		Invoke-WebRequest -Uri http://localhost:3000/api/posts -Method DELETE	
+		Bạn thay đổi URL, dữ liệu và phương thức phù hợp với route bạn muốn kiểm tra.	
+			
+			
+Gửi form		Bash (Linux/macOS):	
+			
+		bash	
+		# POST với form-data (gửi file hoặc text)	
+		curl -i -X POST http://localhost:3000/form \	
+		-F "someField=giá trị mẫu" \	
+		-F "profilePicture=@/path/to/file.png"	
+		# POST với application/x-www-form-urlencoded	
+		curl -i -X POST http://localhost:3000/form \	
+		-d "someField=giá trị mẫu&otherField=abc" \	
+		-H "Content-Type: application/x-www-form-urlencoded"	
+		# PUT với form-data (nếu server hỗ trợ)	
+		curl -i -X PUT http://localhost:3000/form \	
+		-F "someField=giá trị PUT" \	
+		-F "profilePicture=@/path/to/file.png"	
+		# DELETE với form-data (ít phổ biến, chỉ nếu server hỗ trợ)	
+		curl -i -X DELETE http://localhost:3000/form \	
+		-F "someField=giá trị DELETE"	
+		PowerShell (Windows):	
+		powershell	
+		# POST với form-data (gửi file hoặc text)	
+		$Form = @{	
+		someField = "giá trị mẫu"	
+		profilePicture = Get-Item "C:\path\to\file.png"	
+		}	
+		Invoke-WebRequest -Uri http://localhost:3000/form -Method POST -Form $Form	
+		# POST với application/x-www-form-urlencoded	
+		$Body = "someField=giá trị mẫu&otherField=abc"	
+		Invoke-WebRequest -Uri http://localhost:3000/form -Method POST -Body $Body -ContentType "application/x-www-form-urlencoded"	
+		# PUT với application/x-www-form-urlencoded (PowerShell không hỗ trợ -Form cho PUT, dùng -Body)	
+		$Body = "someField=giá trị PUT"	
+		Invoke-WebRequest -Uri http://localhost:3000/form -Method PUT -Body $Body -ContentType "application/x-www-form-urlencoded"	
+		# DELETE với application/x-www-form-urlencoded (nếu server hỗ trợ)	
+		$Body = "someField=giá trị DELETE"	
+		Invoke-WebRequest -Uri http://localhost:3000/form -Method DELETE -Body $Body -ContentType "application/x-www-form-urlencoded"	
+		Bạn có thể thay đổi các field, file, hoặc endpoint phù hợp với API của mình. Để nhận và xử lý dữ liệu form, Bun server có thể dùng await req.formData() như ví dụ tại Upload files via HTTP using FormData with Bun1.	
+			
+			
+			
+			
+			

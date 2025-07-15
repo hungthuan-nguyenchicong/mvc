@@ -1,13 +1,3 @@
-<?php
-namespace AdminApp\Views;
-class Login {
-    public function __construct() {
-        echo __CLASS__;
-    }
-}
-use AdminCore\CSRF;
-$csrf = CSRF::input();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,6 +38,10 @@ $csrf = CSRF::input();
         }
     </style>
 </head>
+<?php
+use AdminCore\CSRF;
+$csrf = CSRF::input();
+?>
 <body>
     <h1>Login</h1>
     <form id="login">
