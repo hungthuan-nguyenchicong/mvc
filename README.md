@@ -4,3 +4,5 @@ MVC cơ bản PHP
 git checkout -b nguyenchicong
 ## branch bun
 git checkout -b bun
+## bun
+bun init
