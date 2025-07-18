@@ -11,6 +11,8 @@ Bun.serve({
 
     fetch(req) {
         // ... api requests
-        return new Response("hello world d");
+        return new Response("hello world a");
     }
 });
+
+console.log(123);

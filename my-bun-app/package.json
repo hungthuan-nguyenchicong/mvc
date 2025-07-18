@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --watch ./backend/app.js"
+    "dev": "bun --watch /var/www/html/mvc/my-bun-app/backend/index.html"
   },
   "devDependencies": {
     "@types/bun": "latest"
