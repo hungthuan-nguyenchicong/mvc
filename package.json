@@ -2,11 +2,22 @@
   "name": "mvc",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "start": "bun run index.ts",
+    "learn": "bun --hot ./learn/learn.ts",
+    "app": "bun --hot run ./vanilla/server.js"
+  },
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/figlet": "^1.7.0",
+    "@types/react-dom": "^19.1.6"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "figlet": "^1.8.2",
+    "react-dom": "^19.1.0"
   }
 }

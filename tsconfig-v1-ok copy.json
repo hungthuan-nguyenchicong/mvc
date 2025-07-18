@@ -24,15 +24,6 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
-
-    // custom
-    // ... other options
-    //"target": "es2022", // Or "es5", "esnext", etc., depending on your project needs
-    //"module": "esnext", // Or "commonjs", etc.
-    //"lib": ["es2022", "dom", "dom.iterable"], // Add "dom" and typically "dom.iterable"
-    // ... other options
-
-    //"lib": ["ESNext", "dom", "dom.iterable"],
+    "noPropertyAccessFromIndexSignature": false
   }
 }

@@ -6,3 +6,11 @@ git checkout -b nguyenchicong
 git checkout -b bun
 ## bun
 bun init
+
+bun add react-dom
+
+bun add -d @types/react-dom
+
+## use document
+
+/// <reference lib="dom" />
