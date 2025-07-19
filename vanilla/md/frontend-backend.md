@@ -129,3 +129,230 @@ const server = serve({
 
 console.log(`Bun Backend server running on http://localhost:${server.port}`);
 Thiết lập này cung cấp những điều tốt nhất của cả hai thế giới: thời gian chạy Bun nhanh với chức năng khởi động lại tự động và máy chủ phát triển Vite mạnh mẽ với HMR cực nhanh.
+
+## vi du co ban
+
+Dưới đây là một ví dụ đơn giản để phát triển cả backend (Bun) và frontend (Vite) trong cùng một dự án, tuân theo cấu trúc bạn đã cung cấp.
+
+Cấu Trúc Dự Án
+your-project/
+├── backend/
+│   └── server.js
+├── frontend/
+│   ├── index.html
+│   ├── main.js
+│   └── public/        # Thư mục chứa các tài nguyên tĩnh khác của frontend (ví dụ: CSS)
+│       └── style.css
+├── package.json
+└── tsconfig.json      # (Nếu bạn dùng TypeScript)
+1. File package.json (ở thư mục gốc your-project/)
+Đây là nơi bạn định nghĩa các script để chạy cả hai phần.
+
+JSON
+
+{
+  "name": "fullstack-bun-vite",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "backend:dev": "bun --watch run ./backend/server.js",
+    "frontend:dev": "cd frontend && bun --bun vite dev --port 5173",
+    "dev": "bun run backend:dev & bun run frontend:dev"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "vite": "^5.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
+2. Máy chủ phụ trợ ( backend/server.js)
+File này sẽ là API backend của bạn, chạy trên Bun.
+
+JavaScript
+
+// backend/server.js
+import { serve } from "bun";
+
+const server = serve({
+  port: 3000, // Cổng cho API backend của Bun
+  fetch(req) {
+    const url = new URL(req.url);
+
+    // Một API endpoint đơn giản
+    if (url.pathname === "/api/hello" && req.method === "GET") {
+      console.log("Received request for /api/hello");
+      return new Response(JSON.stringify({ message: "Hello from Bun Backend!" }), {
+        headers: {
+          "Content-Type": "application/json",
+          // Cho phép frontend từ Vite server (port 5173) truy cập API này
+          "Access-Control-Allow-Origin": "http://localhost:5173",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type"
+        },
+      });
+    }
+
+    // Xử lý preflight requests cho CORS
+    if (req.method === "OPTIONS") {
+        return new Response(null, {
+            status: 204, // No Content
+            headers: {
+                "Access-Control-Allow-Origin": "http://localhost:5173",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Max-Age": "86400"
+            }
+        });
+    }
+
+    return new Response("Not Found", { status: 404 });
+  },
+  error(error) {
+    console.error("Bun server error:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+});
+
+console.log(`🚀 Bun Backend server running on http://localhost:${server.port}`);
+3. Frontend Files (trong thư mục frontend/)
+3.1.frontend/index.html
+File HTML chính của ứng dụng frontend.
+
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bun + Vite Frontend</title>
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+    <h1>Loading...</h1>
+    <button id="fetchDataBtn">Fetch Data from Backend</button>
+    <p id="dataMessage"></p>
+    <script type="module" src="/main.js"></script>
+</body>
+</html>
+3.2.frontend/main.js
+Logic JavaScript cho frontend của bạn, tương tác với backend.
+
+JavaScript
+
+// frontend/main.js
+import './public/style.css'; // Import CSS
+
+document.addEventListener('DOMContentLoaded', () => {
+    const h1 = document.querySelector('h1');
+    const fetchDataBtn = document.getElementById('fetchDataBtn');
+    const dataMessage = document.getElementById('dataMessage');
+
+    h1.textContent = 'Welcome to Bun + Vite App!';
+
+    fetchDataBtn.addEventListener('click', async () => {
+        dataMessage.textContent = 'Fetching data...';
+        try {
+            // Gọi API từ backend server của Bun
+            const response = await fetch('http://localhost:3000/api/hello');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            dataMessage.textContent = `Backend Says: "${data.message}"`;
+            console.log('Data from backend:', data);
+        } catch (error) {
+            dataMessage.textContent = `Error: ${error.message}`;
+            console.error('Error fetching data:', error);
+        }
+    });
+
+    console.log('Frontend script loaded!');
+});
+3.3.frontend/public/style.css
+Một file CSS đơn giản cho frontend.
+
+CSS
+
+/* frontend/public/style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+}
+
+h1 {
+    color: #3498db;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #27ae60;
+}
+
+#dataMessage {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #e74c3c;
+}
+4. Thiết Lập Vite (frontend/vite.config.js) (Tùy chọn nhưng tốt cho cấu hình)
+Khi chạy bun create vite, nó sẽ tạo file này. Nếu không, bạn có thể tạo thủ công.
+
+JavaScript
+
+// frontend/vite.config.js
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  // Cấu hình Vite tại đây
+  // Ví dụ: để phục vụ các file từ thư mục 'public' trong frontend
+  publicDir: 'public',
+  server: {
+    port: 5173, // Đảm bảo trùng với port trong package.json
+  },
+});
+Các Bước Chạy
+Mở Terminal: Chuyển đến thư mục gốc của dự án (your-project/).
+
+Cài đặt Dependencies:
+
+Đập
+
+bun install
+# Chắc chắn đã cài đặt Vite trong thư mục frontend
+cd frontend && bun install && cd ..
+Khởi động Dev Server:
+
+Đập
+
+bun run dev
+Bây giờ:
+
+Terminal sẽ hiển thị thông báo từ Bun backend (chạy trên http://localhost:3000) và Vite frontend (chạy trên http://localhost:5173).
+
+Mở trình duyệt và truy cập http://localhost:5173. Bạn sẽ thấy ứng dụng frontend của mình.
+
+Khi bạn sửa đổi frontend/main.js hoặc frontend/public/style.css, Vite sẽ tự động hot-reload trình duyệt mà không làm mất trạng thái.
+
+Khi bạn sửa đổi backend/server.js, Bun sẽ tự động khởi động lại backend server của bạn. Bạn có thể nhấn nút "Fetch Data from Backend" để thấy các thay đổi từ backend.
+
+Đây là một cấu hình cơ bản nhưng mạnh mẽ để bắt đầu phát triển full-stack với Bun và Vite.
