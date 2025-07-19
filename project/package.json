@@ -1,0 +1,18 @@
+{
+  "name": "fullstack-bun-vite",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "backend:dev": "bun --watch run ./backend/server.js",
+    "frontend:dev": "cd frontend && bun --bun vite dev --host 127.0.0.1 --port 5173",
+    "dev": "bun run backend:dev & bun run frontend:dev"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "vite": "^5.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

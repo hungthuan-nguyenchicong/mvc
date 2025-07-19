@@ -3,9 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "backend:dev": "bun --watch run ./project/backend/server.js",
-    "frontend:dev": "cd /project/frontend && bun --bun vite dev --port 5173",
-    "dev": "bun run backend:dev & bun run frontend:dev"
+    "start": "bun run index.ts",
+    "learn": "bun --hot ./learn/learn.ts",
+    "app": "bun --watch run ./vanilla/server.js"
   },
   "private": true,
   "devDependencies": {
@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "figlet": "^1.8.2",
-    "react-dom": "^19.1.0",
-    "vite": "^7.0.4"
+    "react-dom": "^19.1.0"
   }
 }
