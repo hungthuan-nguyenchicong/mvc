@@ -5,7 +5,7 @@
   "scripts": {
     "start": "bun run index.ts",
     "learn": "bun --hot ./learn/learn.ts",
-    "app": "bun --hot run ./vanilla/server.js"
+    "app": "bun --watch run ./vanilla/server.js"
   },
   "private": true,
   "devDependencies": {
