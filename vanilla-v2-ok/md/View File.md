@@ -162,3 +162,4 @@ Nó nhận lại chuỗi HTML từ phương thức đó.
 Tạo một Response mới với chuỗi HTML làm thân (body) và quan trọng nhất là đặt Content-Type': 'text/html' trong headers. Điều này báo cho trình duyệt biết rằng nội dung là HTML và nó nên render nó như một trang web.
 
 Bây giờ, khi bạn truy cập http://localhost:3000/admin/login trong trình duyệt của mình, bạn sẽ thấy trang đăng nhập được render.
+
