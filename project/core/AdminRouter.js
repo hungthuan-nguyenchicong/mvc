@@ -1,8 +1,9 @@
 // ./project/core/AdminRouter.js
-import AdminController from "../controllers/AdminController";
-const adminRouter = {
+//import AdminController from "../controllers/AdminController";
+export const AdminRouter = {
     '/admin/test': new Response('/admin/test'),
     '/admin/:method': async req => {
+        const {AdminController} = await import('../controllers/AdminController.js')
         const adminController = new AdminController(req);
         const methodName = req.params.method;
         if (typeof adminController[methodName] === 'function') {
@@ -12,4 +13,6 @@ const adminRouter = {
     }
 }
 
-export default adminRouter;
+//export default adminRouter;
+// import adminRouter from "../core/AdminRouter";
+//export const AdminRouter

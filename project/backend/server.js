@@ -1,13 +1,13 @@
 // ./project/backend/server.js
 
 import {serve, file} from "bun";
-import adminRouter from "../core/AdminRouter";
+import {AdminRouter} from "../core/AdminRouter";
 
 const server = serve({
     port: process.env.PORT || 3000,
     routes: {
         '/': new Response('bun /'),
-        ...adminRouter,
+        ...AdminRouter,
     },
 
     fetch(req) {

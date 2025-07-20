@@ -1,6 +1,6 @@
 // ./project/controllers/AdminController.js
 
-class AdminController {
+export class AdminController {
     constructor(req) {
         this.req = req;
     }
@@ -10,8 +10,13 @@ class AdminController {
     }
 
     async login() {
-        return new Response('login');
+        if (this.req.method === 'POST') {
+            return Response.json({"message":"login post"})
+        } else {
+            return new Response('login');
+        }
     }
 }
 
-export default AdminController;
+//export default AdminController;
+//export const adminController = new AdminController();
