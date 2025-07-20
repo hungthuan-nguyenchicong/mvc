@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "backend:dev": "bun --watch run ./project/backend/server.js",
-    "frontend:dev": "cd project/frontend && bun --bun vite dev --port 5173",
+    "frontend:dev": "cd /project/frontend && bun --bun vite dev --port 5173",
     "dev": "bun run backend:dev & bun run frontend:dev"
   },
   "private": true,
