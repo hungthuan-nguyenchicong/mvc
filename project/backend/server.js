@@ -1,7 +1,12 @@
 // ./project/backend/server.js
 
-import {serve, file} from "bun";
+//import {serve, file} from "bun";
+import { serve } from "bun";
 import {AdminRouter} from "../core/AdminRouter";
+// import path from 'path';
+
+// // Đường dẫn tuyệt đối đến thư mục frontend/public
+// const FRONTEND_PUBLIC_DIR = path.join(import.meta.dir, '../../frontend/public');
 
 const server = serve({
     port: process.env.PORT || 3000,
@@ -16,3 +21,4 @@ const server = serve({
 });
 
 console.log(`bun run on http://${process.env.HOST}:${server.port}`);
+//console.log(FRONTEND_PUBLIC_DIR)

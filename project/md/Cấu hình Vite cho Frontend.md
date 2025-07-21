@@ -308,3 +308,7 @@ Bạn có thể giữ index.html rất tối giản và tập trung toàn bộ l
 Việc có một index.html ở phía frontend giúp đồng bộ hóa quy trình dev (Vite) và prod (Bun serving static files), vì cả hai đều dựa vào một file HTML để khởi chạy ứng dụng client-side của bạn.
 
 Việc chấp nhận một index.html tối giản này sẽ giúp bạn có được trải nghiệm phát triển frontend tốt nhất với live reloading và HMR, đồng thời vẫn cho phép bạn tập trung vào Vanilla JS.
+
+## tham khảo
+
+Cấu hình Vite để /srcxây /publicdựng
