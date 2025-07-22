@@ -13,6 +13,8 @@ export class Login {
         </head>
         <body>
             <h1>Login</h1>
+            <script type="module" src="public/admin-dist/login-main.js"></script>
+            (isDev)
         </body>
         </html>
         `;
