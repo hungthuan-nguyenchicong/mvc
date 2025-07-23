@@ -1,0 +1,120 @@
+<!-- index.html -->
+<!-- Đây là tệp HTML gốc mà Vite sử dụng làm template. -->
+<!-- Nội dung từ máy chủ sẽ được chèn vào placeholder  -->
+<!--app-html-->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bun SSR + Vite + Vanilla JS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Màu nền nhẹ nhàng */
+            color: #334155; /* Màu chữ chính */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px; /* Góc bo tròn */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); /* Đổ bóng nhẹ */
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-size: 2.5rem; /* Kích thước tiêu đề lớn hơn */
+            font-weight: 700;
+        }
+        p {
+            font-size: 1.125rem; /* Kích thước đoạn văn dễ đọc */
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        button {
+            background-color: #4f46e5; /* Màu nút đẹp */
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 12px; /* Góc bo tròn cho nút */
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+        button:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px); /* Hiệu ứng nhấc nhẹ khi hover */
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        #app-message {
+            margin-top: 20px;
+            font-style: italic;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Đây là placeholder nơi nội dung được render từ máy chủ sẽ được chèn vào -->
+        <!-- Ví dụ: <div id="app">...nội dung từ server...</div> -->
+        <!--app-html-->
+
+        <p id="client-message">Nội dung này được thêm vào từ phía client (Vanilla JS).</p>
+        <button id="counter-button">Nhấn vào đây: 0</button>
+        <p id="app-message"></p>
+    </div>
+
+    <!-- Client-side JavaScript -->
+    <!-- Trong một dự án Vite SSR thực tế, đây sẽ là đường dẫn đến entry-client.js
+         được Vite build (ví dụ: /src/entry-client.js hoặc /assets/entry-client.js) -->
+    <script type="module">
+        // src/main.js (hoặc src/entry-client.js)
+        // Đây là mã JavaScript chạy ở phía trình duyệt (client-side).
+
+        console.log("Client-side JavaScript đã tải.");
+
+        const counterButton = document.getElementById('counter-button');
+        const appMessage = document.getElementById('app-message');
+        let count = 0;
+
+        // Kiểm tra xem #app có tồn tại không (nếu được render từ server)
+        const appDiv = document.getElementById('app');
+        if (appDiv) {
+            appMessage.textContent = "Phần 'app' đã được render từ máy chủ và bây giờ được 'hydrate' bởi client-side JS.";
+            // Trong thực tế, bạn sẽ khởi tạo framework (React/Vue) ở đây
+            // và gắn nó vào #app để tiếp quản DOM từ server.
+        } else {
+            appMessage.textContent = "Phần 'app' không được render từ máy chủ, chỉ có client-side JS hoạt động.";
+            // Điều này có thể xảy ra nếu SSR không thành công hoặc không được bật.
+            const newAppDiv = document.createElement('div');
+            newAppDiv.id = 'app';
+            newAppDiv.innerHTML = `<h1>Chào mừng từ Client!</h1><p>Ứng dụng được khởi tạo hoàn toàn từ client.</p>`;
+            document.querySelector('.container').prepend(newAppDiv);
+        }
+
+
+        counterButton.addEventListener('click', () => {
+            count++;
+            counterButton.textContent = `Nhấn vào đây: ${count}`;
+        });
+
+        // Ví dụ về cách kiểm tra xem JS có chạy ở client hay không
+        document.getElementById('client-message').style.color = '#10b981'; // Màu xanh lá cây
+    </script>
+</body>
+</html>
