@@ -1,10 +1,9 @@
 // server.js
 import { Elysia } from 'elysia';
 import { html } from '@elysiajs/html';
-import { staticPlugin } from '@elysiajs/static'; // Vẫn giữ staticPlugin cho chế độ production
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import { lookup } from 'mime-types'; // Cần thư viện mime-types để xác định kiểu MIME
+import { lookup } from 'mime-types';
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
@@ -17,7 +16,7 @@ if (IS_DEV) {
 
   // 1. Route phục vụ các tệp tĩnh từ thư mục 'src' (ví dụ: /main.js, /vite.svg)
   // Route này sẽ bắt TẤT CẢ các yêu cầu, sau đó kiểm tra xem đó có phải là tệp tĩnh không.
-  // Đặt route này đầu tiên để nó có cơ hội xử lý trước các tài sản.
+  // Đặt route này đầu tiên để nó có cơ hội xử lý trước.
   app.get('/*', async ({ request, set }) => {
     const url = new URL(request.url);
     const pathname = url.pathname;
@@ -150,7 +149,6 @@ if (IS_DEV) {
 
 } else {
   // --- Chế độ sản xuất: Phục vụ các tệp tĩnh và gói SSR đã được build ---
-  // Trong sản xuất, sử dụng staticPlugin là cách tốt nhất
   app.use(staticPlugin({ assets: 'dist/client', prefix: '/' }));
 
   app.get('/*', async ({ set, request }) => {
@@ -164,7 +162,7 @@ if (IS_DEV) {
       const initialStateScript = `<script>window.__INITIAL_STATE__ = { count: ${initialCount} };</script>`;
 
       const appHtml = render(initialCount);
-      const hydrateScriptTag = `<script type="module" src="/assets/main.js"></script>`; // Trong prod, đường dẫn sẽ là /assets/main.js
+      const hydrateScriptTag = `<script type="module" src="/assets/main.js"></script>`;
 
       const finalHtml = template
         .replace(`<!--app-html-->`, appHtml)
