@@ -1,0 +1,17 @@
+{
+  "name": "app-test",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot server.js",
+    "build": "vite build && vite build --ssr",
+    "preview": "bun server.js"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

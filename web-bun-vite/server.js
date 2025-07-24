@@ -5,6 +5,10 @@ import { serve } from "bun";
 import { readFileSync } from "fs";
 import path from "path";
 
+if (import.meta.hot) {
+  import.meta.hot.accept();
+}
+
 const isProduction = process.env.NODE_ENV === 'production';
 const projectRoot = import.meta.dir;
 const viteDevServerUrl = 'http://127.0.0.1:5173'; // Địa chỉ Vite dev server

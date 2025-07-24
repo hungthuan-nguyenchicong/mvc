@@ -6,7 +6,9 @@ import dashboard from './src/public/dashboard.html';
 //import { App } from "./app";
 
 //document.addEventListener()
-
+if (import.meta.hot) {
+  import.meta.hot.accept();
+}
 const sever = serve({
     //const body = document.querySelector('body')
     routes: {
@@ -29,5 +31,5 @@ const sever = serve({
     fetch (req) {
         return new Response('hello');
     },
-
+    
 })
