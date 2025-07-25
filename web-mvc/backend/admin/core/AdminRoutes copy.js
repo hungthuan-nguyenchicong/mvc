@@ -1,7 +1,6 @@
 // web-mvc/backend/admin/core/AdminRoutes.js
 
 //import AdminController from "../controllers/AdminController";
-import { RouterAdminApi } from './RouterAdminApi.js';
 const AdminRoutes = {
     '/admin/test': new Response('/admin/test'),
     '/admin/:method': async req => {
@@ -12,10 +11,6 @@ const AdminRoutes = {
             return adminControllerInstance[methodName]();
         }
         return new Response('Not Found', {status: 404});
-    },
-    '/admin/api/*': async req => {
-        const routerAdminApiInstance = new RouterAdminApi(req);
-        return await routerAdminApiInstance.handle();
     }
 }
 
