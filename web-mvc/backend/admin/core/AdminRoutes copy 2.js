@@ -1,8 +1,6 @@
 // web-mvc/backend/admin/core/AdminRoutes.js
 
 //import AdminController from "../controllers/AdminController";
-import AdminController from '../controllers/AdminController.js';
-import { LoginController } from '../controllers/LoginController.js';
 import { RouterAdminApi } from './RouterAdminApi.js';
 const AdminRoutes = {
     '/admin/test': new Response('/admin/test'),
@@ -18,10 +16,6 @@ const AdminRoutes = {
     '/admin/api/*': async req => {
         const routerAdminApiInstance = new RouterAdminApi(req);
         return await routerAdminApiInstance.handle();
-    },
-    '/admin/login': async req => {
-        const loginControllerInstance = new LoginController(req);
-        return await loginControllerInstance.index();
     }
 }
 
