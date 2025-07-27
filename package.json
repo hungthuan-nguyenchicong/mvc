@@ -5,7 +5,8 @@
   "scripts": {
     "backend:dev": "bun --watch run ./project/backend/server.js",
     "frontend:dev": "cd project/frontend & bun run dev",
-    "dev": "bun run backend:dev & bun run frontend:dev"
+    "dev": "bun run backend:dev & bun run frontend:dev",
+    "build:server-test": "bunx --bun vite build"
   },
   "private": true,
   "devDependencies": {
