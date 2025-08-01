@@ -27,6 +27,7 @@ bun run dist/server/server.js
 ## chạy thử
 PORT=3333 bun run ./out/dist/server/server.js
 
+NODE_ENV=production PORT=3333 bun run server.js
 ## .env
 import.meta.env.NODE_ENV
 process.env.NODE_ENV
@@ -87,3 +88,12 @@ export default defineConfig({
         }
     }
 });
+
+## bun file
+    const scriptRender = await Bun.file('backend/admin/views/login/login-frontend.js').text();
+
+## /src/login.js
+
+import('/backend/admin/views/login/login-frontend.js')
+
+
