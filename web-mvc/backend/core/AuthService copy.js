@@ -4,12 +4,11 @@ import { CookieManager } from "./CookieManager";
 class AuthService {
     #req;
 
-    // constructor() {
-    //     this.#req;
-    // }
+    constructor(req) {
+        this.#req = req;
+    }
 
-    async checkAuth(req) {
-        this.#req = req
+    async checkAuth() {
         const cookieManagerInstance = new CookieManager(this.#req.headers);
         const sessionToken = cookieManagerInstance.get('session_token');
 

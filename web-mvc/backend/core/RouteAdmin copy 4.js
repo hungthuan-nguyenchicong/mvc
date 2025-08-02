@@ -4,18 +4,39 @@ import { LoginController } from "../admin/controller.js/LoginController"
 import { AuthService } from "./AuthService";
 const loginControllerInstance = new LoginController();
 const authServiceInstance = new AuthService();
-//import adminPage from '../../dist/server/index.html';
 //let adminPage = null;
-let adminPage;
+let adminPageHandler;
 
 // Logic để chọn cách xử lý trang admin dựa trên môi trường
 if (import.meta.env.NODE_ENV === 'development') {
-    adminPage = await fetch('http://localhost:4000/src/admin/');
-    //return adminPageHandler;
+    // Trong môi trường phát triển, proxy đến server Vite
+    const VITE_ADMIN_URL = "http://localhost:4000/src/admin/index.html"; // Cổng mặc định của Vite
+
+    adminPageHandler = async (req) => {
+        try {
+            // Chuyển tiếp request đến Vite dev server
+            // Lưu ý: Cần thêm logic để xử lý các tài nguyên phụ (CSS, JS, etc.)
+            // Đây là một cách đơn giản chỉ chuyển tiếp index.html
+            const proxyResponse = await fetch(VITE_ADMIN_URL);
+            return proxyResponse;
+        } catch (error) {
+            console.error("Lỗi khi kết nối đến Vite dev server:", error);
+            return new Response("Lỗi: Không thể kết nối đến server Vite. Hãy đảm bảo nó đang chạy.", { status: 500 });
+        }
+    };
 } else {
-    const adminIndexHtml = Bun.file('./dist/server/index.html');
-    adminPage = new Response(adminIndexHtml);
-    //return adminPageHandler;
+    // Trong môi trường production, phục vụ file tĩnh từ thư mục dist
+    adminPageHandler = async (req) => {
+        const distPath = path.join(__dirname, '../../dist/admin/index.html');
+        try {
+            // Đọc file index.html đã được build
+            const file = Bun.file(distPath);
+            return new Response(file);
+        } catch (error) {
+            console.error("Lỗi khi đọc file dist/admin/index.html:", error);
+            return new Response("Lỗi: Không tìm thấy trang admin.", { status: 404 });
+        }
+    };
 }
 
 const RouteAdmin = {
@@ -30,8 +51,7 @@ const RouteAdmin = {
             //     console.log(adminPage)
             //     return adminPage;
             // }
-            return adminPage;
-            //return await adminPageHandler(req);
+            return await adminPageHandler(req);
             //return ADMIN_PAGE_URL;
             //return new Response('Admin Dashboard', { status: 200 });
         } else {
@@ -43,7 +63,7 @@ const RouteAdmin = {
                 }
             })
             //return new Response('/302')
-
+            
         }
     },
     //'/admin/login': new LoginController().index(),

@@ -1,39 +1,30 @@
 // web-mvc/backend/core/RouteAdmin.js
 import { LoginController } from "../admin/controller.js/LoginController"
-//import { CookieManager } from "./CookieManager";
-import { AuthService } from "./AuthService";
+import { CookieManager } from "./CookieManager";
 const loginControllerInstance = new LoginController();
-const authServiceInstance = new AuthService();
-//import adminPage from '../../dist/server/index.html';
-//let adminPage = null;
-let adminPage;
 
-// Logic để chọn cách xử lý trang admin dựa trên môi trường
-if (import.meta.env.NODE_ENV === 'development') {
-    adminPage = await fetch('http://localhost:4000/src/admin/');
-    //return adminPageHandler;
-} else {
-    const adminIndexHtml = Bun.file('./dist/server/index.html');
-    adminPage = new Response(adminIndexHtml);
-    //return adminPageHandler;
+// Hàm kiểm tra quyền truy cập.
+// Nó sẽ nhận request và thực hiện kiểm tra cookie.
+async function checkAuth(req) {
+    const cookieManagerInstance = new CookieManager(req.headers);
+    const sessionToken = cookieManagerInstance.get('session_token');
+    console.log(sessionToken)
+    // Giả định bạn có một cách để xác thực token này
+    // Ở đây, chúng ta chỉ kiểm tra xem nó có tồn tại không.
+    // Trong thực tế, bạn sẽ cần kiểm tra token này với database hoặc bộ nhớ cache.
+    if (sessionToken && sessionToken.length > 0) {
+        return true;
+    }
+    return false;
 }
-
 const RouteAdmin = {
-    '/admin/*': async req => {
+    '/admin/': async req => {
         // Gọi hàm checkAuth để kiểm tra
         //console.log(req)
-        if (await authServiceInstance.checkAuth(req)) {
+        if (await checkAuth(req)) {
             // Nếu đã đăng nhập, trả về nội dung trang admin
             // Ví dụ: một trang dashboard đơn giản.
-            //return new Response('/admin/')
-            // if (adminPage) {
-            //     console.log(adminPage)
-            //     return adminPage;
-            // }
-            return adminPage;
-            //return await adminPageHandler(req);
-            //return ADMIN_PAGE_URL;
-            //return new Response('Admin Dashboard', { status: 200 });
+            return new Response('/admin/')
         } else {
             // Nếu chưa đăng nhập, chuyển hướng đến trang login
             return new Response(null, {
@@ -43,7 +34,7 @@ const RouteAdmin = {
                 }
             })
             //return new Response('/302')
-
+            
         }
     },
     //'/admin/login': new LoginController().index(),

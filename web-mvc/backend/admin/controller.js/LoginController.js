@@ -69,7 +69,7 @@ class LoginController {
         for (const header of setCookieHeaders) {
             res.headers.append('Set-Cookie', header);
         }
-        console.log(res)
+        //console.log(res)
         return res;
     }
     async logout(req) {
@@ -86,7 +86,7 @@ class LoginController {
         for (const header of setCookieHeaders) {
             res.headers.append('Set-Cookie', header);
         }
-        console.log(res)
+        //console.log(res)
         return res;
     }
 }

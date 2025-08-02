@@ -96,4 +96,31 @@ export default defineConfig({
 
 import('/backend/admin/views/login/login-frontend.js')
 
+## // Logic để chọn cách xử lý trang admin dựa trên môi trường
 
+if (import.meta.env.NODE_ENV === 'development') {
+    adminPage = await fetch('http://localhost:4000/src/admin/');
+    //return adminPageHandler;
+} else {
+    const adminIndexHtml = Bun.file('./dist/server/index.html');
+    adminPage = new Response(adminIndexHtml);
+    //return adminPageHandler;
+}
+
+### use routes return adminPage
+
+'/admin/*': async req => {
+        // Gọi hàm checkAuth để kiểm tra
+        //console.log(req)
+        if (await authServiceInstance.checkAuth(req)) {
+            return adminPage;
+        } else {
+            // Nếu chưa đăng nhập, chuyển hướng đến trang login
+            return new Response(null, {
+                status: 302,
+                headers: {
+                    'location': '/admin/login'
+                }
+            })
+        }
+    },
