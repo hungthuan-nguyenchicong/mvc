@@ -5,6 +5,10 @@ sudo kill -9 44991
 ## bun built
 bun build ./server.js --outdir dist/server
 
+## bun scss
+
+bun add -D sass-embedded
+
 NODE_ENV=production bun build ./server.js --outdir dist/server
 
 ## built -production

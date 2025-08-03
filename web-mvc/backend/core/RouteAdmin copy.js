@@ -1,5 +1,5 @@
 // web-mvc/backend/core/RouteAdmin.js
-import { LoginController } from "../admin/controller.js/LoginController"
+import { LoginController } from "../admin/controllers/LoginController"
 
 const loginControllerInstance = new LoginController();
 const RouteAdmin = {
@@ -11,6 +11,6 @@ const RouteAdmin = {
     }
 }
 
-export {RouteAdmin}
+export { RouteAdmin }
 
 //console.log(new LoginController().index())

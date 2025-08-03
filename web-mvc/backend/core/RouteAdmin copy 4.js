@@ -1,5 +1,5 @@
 // web-mvc/backend/core/RouteAdmin.js
-import { LoginController } from "../admin/controller.js/LoginController"
+import { LoginController } from "../admin/controllers/LoginController"
 //import { CookieManager } from "./CookieManager";
 import { AuthService } from "./AuthService";
 const loginControllerInstance = new LoginController();
@@ -63,7 +63,7 @@ const RouteAdmin = {
                 }
             })
             //return new Response('/302')
-            
+
         }
     },
     //'/admin/login': new LoginController().index(),

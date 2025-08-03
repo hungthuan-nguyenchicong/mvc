@@ -1,0 +1,31 @@
+// web-mvc/src/admin/template/parts/sidebar.scss
+
+aside {
+    margin: 5px 1px 5px 5px;
+    padding: 20px 0;
+    background-color: rgb(206, 202, 202);
+    box-shadow: 0 0 5px black;
+    ul {
+        margin: 0;
+        padding: 0px;
+        hr {
+            margin: 1px;
+            background-color: black;
+        }
+        li {
+            list-style: none;
+            a {
+                text-decoration: none;
+                display: block;
+                background-color: antiquewhite;
+                padding: 10px 0 10px 5px;
+            }
+            a:hover {
+                background-color: blue;
+            }
+            a.active {
+                background-color: black;
+            }
+        }
+    }
+}

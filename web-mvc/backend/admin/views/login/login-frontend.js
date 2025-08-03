@@ -16,9 +16,9 @@ async function requestLogin() {
         body: formData,
     });
     const result = await response.json();
-
+    console.log(result.status)
     if (result.status === 200) {
-        console.log('ok')
+        window.location = '/admin/';
     } else {
         form.reset();
     }

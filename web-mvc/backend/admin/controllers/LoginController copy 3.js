@@ -52,6 +52,9 @@ class LoginController {
                     maxAge: 3600,
                     path: '/admin/'
                 });
+                //return Response.redirect("/admin/")
+
+                //window.location = '/admin/'
                 response.status = 200;
             } else {
                 // Sử dụng mã lỗi 401 Unauthorized khi đăng nhập thất bại
