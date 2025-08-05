@@ -3,13 +3,14 @@ import { LoginController } from "../admin/controllers/LoginController";
 import { AuthService } from "./AuthService";
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import { AdminApi } from "./AdminApi";
 // Helper để lấy __dirname trong module ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const loginControllerInstance = new LoginController();
 const authServiceInstance = new AuthService();
+const adminApiInstance = new AdminApi();
 
 // Tạo một hàm handler để phục vụ trang admin, logic này phụ thuộc vào môi trường
 let adminPageHandler;
@@ -79,6 +80,18 @@ const RouteAdmin = {
     },
     '/admin/logout': {
         GET: async req => loginControllerInstance.logout(req),
+    },
+    '/admin/api/*': async req => {
+        if (await authServiceInstance.checkAuth(req)) {
+            return await adminApiInstance.handle(req);
+        } else {
+            return new Response(null, {
+                status: 302,
+                headers: {
+                    'location': '/admin/login'
+                }
+            })
+        }
     }
 }
 

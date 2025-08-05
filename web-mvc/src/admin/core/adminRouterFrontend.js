@@ -21,7 +21,10 @@ async function adminRouterFrontend() {
     //console.log(params)
     // các lỗi trả về 404 -> notFound
     let errorMessage = null;
-
+    // xử lý logout
+    if (window.location.pathname === '/admin/logout') {
+        window.location = '/admin/logout';
+    }
     // 1. Kiểm tra pathname trước tiên và chặn ngay lập tức nếu không hợp lệ
     if (window.location.pathname !== '/admin/') {
         const errorMessage = `Lỗi: Đường dẫn không hợp lệ "${window.location.pathname}".`;

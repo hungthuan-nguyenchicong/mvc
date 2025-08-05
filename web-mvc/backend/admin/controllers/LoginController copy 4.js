@@ -33,8 +33,7 @@ class LoginController {
         //let postData;
         let username = null;
         let password = null;
-        //let response = {};
-        //let status = {}
+        let response = {};
         // Khởi tạo CookieManager với headers từ request
         const cookieManagerInstance = new CookieManager(req.headers);
         try {
@@ -56,37 +55,25 @@ class LoginController {
                 //return Response.redirect("/admin/")
 
                 //window.location = '/admin/'
-                //status = {status: 302, headers: {'location': '/admin/login'}};
-                //status.status = 302;
-                const res = Response.json({status: 302});
-                // Gắn tất cả các header Set-Cookie vào response trước khi gửi đi
-
-                const setCookieHeaders = cookieManagerInstance.getSetCookieHeaders();
-
-                for (const header of setCookieHeaders) {
-                    res.headers.append('Set-Cookie', header);
-                }
-                //console.log(res)
-                return res;
-
+                response.status = 200;
             } else {
                 // Sử dụng mã lỗi 401 Unauthorized khi đăng nhập thất bại
-                return Response.json({message: 'tài khoản hoặc mật khẩu không đúng'}, {status:401});
+                response.status = 401;
             }
         } catch (error) {
             console.error('eror', error);
         }
-        //const res =  Response.json(response, status);
+        const res =  Response.json(response);
 
-        // // Gắn tất cả các header Set-Cookie vào response trước khi gửi đi
+        // Gắn tất cả các header Set-Cookie vào response trước khi gửi đi
 
-        // const setCookieHeaders = cookieManagerInstance.getSetCookieHeaders();
+        const setCookieHeaders = cookieManagerInstance.getSetCookieHeaders();
 
-        // for (const header of setCookieHeaders) {
-        //     res.headers.append('Set-Cookie', header);
-        // }
-        // //console.log(res)
-        // return res;
+        for (const header of setCookieHeaders) {
+            res.headers.append('Set-Cookie', header);
+        }
+        //console.log(res)
+        return res;
     }
     async logout(req) {
         // Khởi tạo CookieManager
@@ -95,13 +82,8 @@ class LoginController {
         // Xóa cookie bằng cách đặt Max-Age = 0
         cookieManagerInstance.delete('session_token', {path: '/admin/'});
         cookieManagerInstance.delete('user_id', {path: '/admin/'});
-        //const res = new Response('Logged out successfully');
-        const res = new Response(null, {
-            status: 302,
-            headers: {
-                'location': '/admin/login'
-            }
-        });
+        const res = new Response('Logged out successfully');
+
         // Gắn header Set-Cookie để xóa cookie trên trình duyệt
         const setCookieHeaders = cookieManagerInstance.getSetCookieHeaders();
         for (const header of setCookieHeaders) {
