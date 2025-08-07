@@ -1,8 +1,6 @@
 // web-mvc/server.js
 import { RouteAdmin } from "./backend/core/RouteAdmin";
 // import { connectDB } from "./backend/core/ConnectDB";
-// import { testConnection } from "./backend/admin/models/testConnection";
-// testConnection();
 // const db = connectDB.client;
 //import index from "./index.html";
 Bun.serve({
