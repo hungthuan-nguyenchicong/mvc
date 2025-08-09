@@ -23,16 +23,15 @@ async function adminRouterFrontend() {
     let errorMessage = null;
     // xử lý logout
     if (window.location.pathname === '/admin/logout') {
-        window.location = '/admin/logout';
-    }
-    // 1. Kiểm tra pathname trước tiên và chặn ngay lập tức nếu không hợp lệ
-    if (window.location.pathname !== '/admin/') {
+        window.location.href = '/admin/logout';
+
+        // 1. Kiểm tra pathname trước tiên và chặn ngay lập tức nếu không hợp lệ
+    } else if (window.location.pathname !== '/admin/') {
         const errorMessage = `Lỗi: Đường dẫn không hợp lệ "${window.location.pathname}".`;
         console.error(errorMessage);
         notFound().index(errorMessage);
         return; // Quan trọng: dừng hàm tại đây
     }
-
     //const pageName = searchString.get('p');
     const pageName = searchString.get('p') || 'dashboard';
     // lấy p và action ra
@@ -88,12 +87,12 @@ async function adminRouterFrontend() {
         const moduleInstance = routeHandler();
         const action = pageAction || 'index';
         if (moduleInstance[action]) {
-            console.log(`Đang chạy chức năng: ${action} của ${pageName || 'notFound'}`);
+            //console.log(`Đang chạy chức năng: ${action} của ${pageName || 'notFound'}`);
             moduleInstance[action](params);
         } else {
             errorMessage = `Không tìm thấy hành động "${action}" trong module "${pageName}"`
             notFound().index(errorMessage)
-            console.log(errorMessage);
+            console.error(errorMessage);
         }
     } else {
         errorMessage = `Lỗi: Không tìm thấy route hợp lệ cho trang: "${pageName}"`;

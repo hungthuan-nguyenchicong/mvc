@@ -62,7 +62,6 @@ class LoginController {
                 // Gắn tất cả các header Set-Cookie vào response trước khi gửi đi
 
                 const setCookieHeaders = cookieManagerInstance.getSetCookieHeaders();
-
                 for (const header of setCookieHeaders) {
                     res.headers.append('Set-Cookie', header);
                 }

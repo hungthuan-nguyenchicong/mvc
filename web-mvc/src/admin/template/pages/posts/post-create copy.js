@@ -18,18 +18,17 @@ function adminPostCreate() {
 
 //const form = document.getElementById('create');
 
-function handleFormSubmit() {
+function handleSubmit() {
     const form = document.getElementById('create');
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            requestServer(form);
-        })
-    }
+    const btnCreate = form.querySelector('button');
+    btnCreate.addEventListener('click', (e) => {
+        e.preventDefault();
+        requestServer();
+    })
 }
 
-async function requestServer(form) {
-    //const form = document.getElementById('create');
+async function requestServer() {
+    const form = document.getElementById('create');
     const formData = new FormData(form);
     const response = await fetch('/admin/api/?PostController@create',{
         method: "POST",
@@ -39,4 +38,7 @@ async function requestServer(form) {
     console.log(result);
 }
 
-export {adminPostCreate, handleFormSubmit}
+function init() {
+    handleSubmit();
+}
+export {adminPostCreate, init}
