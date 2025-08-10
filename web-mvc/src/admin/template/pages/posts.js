@@ -29,10 +29,18 @@ function posts() {
 
         module.requestServer(params);
     }
+    async function edit(params = {}) {
+        const module = await import('./posts/post-edit');
+        const htmlContent = module.adminPostEdit();
+        container.innerHTML = htmlContent;
+
+        module.requestServer(params);
+    }
     return {
         index,
         create,
         show,
+        edit,
     }
 }
 

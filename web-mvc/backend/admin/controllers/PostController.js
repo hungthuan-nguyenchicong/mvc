@@ -60,6 +60,43 @@ class PostController {
             return Response.json({error:error}, {status:500})
         }
     }
+
+    async edit(params = {}) {
+        const {id = 1} = params;
+        try {
+            const result = await this.postModel.select(id);
+            return Response.json({posts:result}, {status: 201});
+        } catch (error) {
+            console.error(error);
+            return Response.json({error:error}, {status: 500});
+        }
+    }
+
+    async update() {
+        if (this.req.method === 'PUT') {
+            try {
+                const formData = await this.req.formData();
+                // lay input
+                const id = formData.get('id');
+                const title = formData.get('title');
+                const content = formData.get('content');
+
+                // them vao mang
+                const newPost = {
+                    id: id,
+                    title: title,
+                    content: content,
+                }
+                await this.postModel.update(newPost);
+                return Response.json({message:'success'}, {status:201})
+            } catch (error) {
+                console.error(error);
+                return Response.json({error:error}, {status: 500})
+            }
+        } else {
+            return Response.json(null, {status: 405})
+        }
+    }
 }
 
 export {PostController}

@@ -42,7 +42,7 @@ class PostModel {
 
     async select(id) {
         try {
-            const result = await db`SELECT title, content FROM posts WHERE id = ${id}`
+            const result = await db`SELECT id, title, content FROM posts WHERE id = ${id}`
             return result;
         } catch (error) {
             console.error(error);
@@ -50,6 +50,16 @@ class PostModel {
         }
     }
 
+    async update(post) {
+        try {
+            // Sửa cú pháp UPDATE, gán giá trị cho từng cột
+            const result = await db`UPDATE posts SET title=${post.title}, content=${post.content} WHERE id=${post.id}`;
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 }
 
 export {PostModel}
