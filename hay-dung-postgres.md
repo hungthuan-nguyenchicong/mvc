@@ -17,3 +17,6 @@ psql -h localhost -p 5432 -U user_name -d mvcdb
 mvcdb=> SELECT * FROM users;
 
 ## admin
+
+ALTER TABLE posts
+ADD CONSTRAINT unique_title UNIQUE (title);

@@ -32,7 +32,8 @@ class PostController {
                 return Response.json({message: 'success'}, {status:201});
             } catch (error) {
                 console.error(error);
-                return Response.json({message:'failed'}, {status:500});
+                //console.error(error.errno)
+                return Response.json({error:error.errno}, {status:500});
             }
             //return Response.json({create:'ok'}, {status:200});
         } else {

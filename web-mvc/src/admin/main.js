@@ -3,12 +3,15 @@ import './main.scss'
 import { adminHeader } from "./template/parts/header";
 import { adminSidebar } from './template/parts/sidebar';
 import { adminMainContent } from './template/parts/mainContent';
-
+// flat message
+import { adminFlatMessage } from './template/parts/flatMessage';
 // admin router frontend
 import { adminRouterFrontend } from './core/adminRouterFrontend';
 // sidebar actiivelink -> router -> CustomEvent navigated
 import { activeLinkSidebar } from './template/utils/activeLinkSidebar';
 document.addEventListener('DOMContentLoaded', ()=>{
+    // flat message
+    //adminFlatMessage();
     // add header
     const headerElement = document.createElement('header');
     headerElement.innerHTML = adminHeader();
@@ -28,9 +31,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const mainContent = adminMainContent();
     mainContentElement.innerHTML = mainContent;
     mainElement.appendChild(mainContentElement);
+    // add div messageContainer -> body
+    //document.body.appendChild(adminFlatMessage);
 
     // adminRouterFrontend
     adminRouterFrontend();
     // active link sidebar
     activeLinkSidebar();
+    // flat message
+    adminFlatMessage();
 })
