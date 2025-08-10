@@ -60,6 +60,16 @@ class PostModel {
             throw error;
         }
     }
+
+    async delete(id) {
+        try {
+            const result = await db`DELETE FROM posts WHERE id=${id}`;
+            return result;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 }
 
 export {PostModel}

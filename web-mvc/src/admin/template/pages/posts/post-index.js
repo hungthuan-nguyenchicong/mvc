@@ -103,7 +103,8 @@ function renderPosts(posts) {
             //console.log(postId)
             const isConfirmed = confirm('Bạn có chắc chắn xóa bài post này không');
             if (isConfirmed) {
-                console.log(postId)
+                //console.log(postId)
+                window.location = `/admin/?p=posts&action=remove&id=${postId}`;
             }
         }
     });

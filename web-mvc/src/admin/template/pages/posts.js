@@ -36,11 +36,19 @@ function posts() {
 
         module.requestServer(params);
     }
+
+    async function remove(params = {}) {
+        const module = await import('./posts/post-delete');
+        // const htmlContent = module.adminPostDelete();
+        // container.innerHTML = htmlContent;
+        await module.adminPostDelete(params);
+    }
     return {
         index,
         create,
         show,
         edit,
+        remove,
     }
 }
 
