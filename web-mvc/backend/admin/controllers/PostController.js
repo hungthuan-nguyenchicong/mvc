@@ -101,9 +101,14 @@ class PostController {
 
     async delete(params = {}) {
         if (this.req.method === 'DELETE') {
-            const {id = null} = params;
-            await this.postModel.delete(id);
-            return Response.json({message: 'success'}, {status:201});
+            try {
+                const {id = null} = params;
+                await this.postModel.delete(id);
+                return Response.json({message: 'success'}, {status:201});
+            } catch (error) {
+                console.log(error);
+                return Response.json({error:error}, {status:201});
+            }
         } else {
             return Response.json(null, {status:405});
         }

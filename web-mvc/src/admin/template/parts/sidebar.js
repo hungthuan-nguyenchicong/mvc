@@ -2,7 +2,7 @@
 import './sidebar.scss'
 function adminSidebar() {
     return /* html */ `
-    <aside>
+    <aside class="aside-sidebar">
         <ul>
             <li><a href="/admin/">DashBoard</a></li>
             <li><a href="/admin/abc">Test url: /admin/abc</a></li>

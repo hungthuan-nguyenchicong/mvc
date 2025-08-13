@@ -1,4 +1,5 @@
-// web-mvc/src/admin/template/pages/posts/post-index.js
+// web-mvc/src/admin/template/pages/posts/post-index.js;
+import { adminPostDelete } from "./post-delete";
 async function adminPostIndex() {
     //await requestServer();
     return /* html */ `
@@ -103,8 +104,12 @@ function renderPosts(posts) {
             //console.log(postId)
             const isConfirmed = confirm('Bạn có chắc chắn xóa bài post này không');
             if (isConfirmed) {
+                adminPostDelete({id:postId})
                 //console.log(postId)
-                window.location = `/admin/?p=posts&action=remove&id=${postId}`;
+                //window.location = `/admin/?p=posts&action=remove&id=${postId}`;
+                // history.pushState(null, null, `/admin/?p=posts&action=remove&id=${postId}`);
+                // const navEvent = new CustomEvent('navigated', {detail: {href: `/admin/?p=posts&action=remove&id=${postId}`}});
+                // document.dispatchEvent(navEvent);
             }
         }
     });

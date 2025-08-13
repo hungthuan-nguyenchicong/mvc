@@ -12,7 +12,9 @@ function activeLinkSidebar() {
         const links = document.querySelectorAll('aside a');
         links.forEach(link => {
             const linkHref = link.getAttribute('href');
-            if (currentUrl === linkHref) {
+            if (currentUrl.includes(linkHref) && linkHref !== '/admin/') {
+                link.classList.add('active');
+            } else if (currentUrl === linkHref) {
                 link.classList.add('active');
             }
         })

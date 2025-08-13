@@ -14,7 +14,23 @@ async function requestServer(id) {
             method: 'DELETE',
         });
         const result = await respone.json();
-        console.log(result)
+        //console.log(result)
+        if (result.message === 'success') {
+            const crudEvet = new CustomEvent('crudMessage', {detail: {
+                message: 'Xóa thành công',
+                type: 'success',
+            }});
+            document.dispatchEvent(crudEvet);
+        } else {
+            const crudEvet = new CustomEvent('crudMessage', {detail: {
+                message: 'Xóa bị lỗi',
+                type: 'error',
+            }});
+            document.dispatchEvent(crudEvet);
+        }
+        history.pushState(null, null, '/admin/?p=posts&action=index');
+        const navEvent = new CustomEvent('navigated', {detail: {href: '/admin/?p=posts&action=index'}});
+        document.dispatchEvent(navEvent);
     } catch (error) {
         console.error(error);
     }

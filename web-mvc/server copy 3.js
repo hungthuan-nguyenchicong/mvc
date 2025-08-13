@@ -7,21 +7,8 @@ import { RouteAdmin } from "./backend/core/RouteAdmin";
 //import index from "./index.html";
 
 // upload image
- import { UploadController } from "./backend/admin/controllers/UploadController";
+import { UploadController } from "./backend/admin/controllers/UploadController";
 const uploadControllerInstance = new UploadController();
-//const routeDev = {}
-// if (import.meta.env.NODE_ENV === 'development') {
-//     routeDev['/src/*'] = (req) => {
-//         const url = new URL(req.url);
-//         req.url.replace(url.origin, "http://localhost:3000/");
-//         return fetch(req.url);
-//     };
-//     routeDev['/@vite/client'] = (req) => {
-//         const url = new URL(req.url);
-//         req.url.replace(url.origin, "http://localhost:3000/@vite/client");
-//         return fetch(req.url);
-//     };
-// }
 Bun.serve({
     // development can also be an object.
     // development: {
@@ -34,60 +21,36 @@ Bun.serve({
     //port: 3000,
     //hostname: "0.0.0.0",
     routes: {
-        //...routeDev,
         '/': new Response('/'),
-        '/uploads/*': {
-          GET: async req => {
-            const url = new URL(req.url);
-            const pathname = url.pathname;
-
-            // catch File
-            const catchFile = ['.jpg', 'png'];
-            // Trích xuất phần mở rộng tệp
-            const fileExtension = pathname.substring(pathname.lastIndexOf('.'));
-
-            // kiểm tra phần mở rộng hợp lệ
-            if (!catchFile.includes(fileExtension)) {
-              console.warn(`Yêu cầu truy cập tệp không hợp lệ: ${pathname}`);
-              return new Response.json({message: 'Forbidden'}, {status:403});
-            }
-            try {
-              const file = Bun.file('./' + pathname);
-              if (file) {
-                return new Response(file);
-              }
-            } catch (error) {
-              console.error(error);
-              return Response.json(null, {status:404});
-            }
-          },
+        '/upload/': {
+          GET: () => uploadControllerInstance.index(),
           POST: async req => uploadControllerInstance.post(req),
         },
         //'/': index,
         ...RouteAdmin,
-        // '/src/*': req => {
-        //   const url = new URL(req.url);
-        //   const pathname = url.pathname;
-        //   //console.log(pathname)
-        //   const catchFile = ['.css', '.js', '.png', '.svg'];
-        //   // Bước 1: Trích xuất phần mở rộng của tệp
-        //   const fileExtension = pathname.substring(pathname.lastIndexOf('.'));
-        //   // Bước 2: Kiểm tra xem phần mở rộng có nằm trong danh sách cho phép không
-        //   if (!catchFile.includes(fileExtension)) {
-        //     // Nếu không nằm trong danh sách, trả về lỗi 403 Forbidden hoặc 404 Not Found
-        //     console.warn(`Yêu cầu truy cập tệp không hợp lệ: ${pathname}`);
-        //     return new Response('Forbidden', { status: 403 }); // Hoặc 404 nếu bạn muốn ẩn sự tồn tại của tệp
-        //   }
+        '/src/*': req => {
+          const url = new URL(req.url);
+          const pathname = url.pathname;
+          //console.log(pathname)
+          const catchFile = ['.css', '.js', '.png', '.svg'];
+          // Bước 1: Trích xuất phần mở rộng của tệp
+          const fileExtension = pathname.substring(pathname.lastIndexOf('.'));
+          // Bước 2: Kiểm tra xem phần mở rộng có nằm trong danh sách cho phép không
+          if (!catchFile.includes(fileExtension)) {
+            // Nếu không nằm trong danh sách, trả về lỗi 403 Forbidden hoặc 404 Not Found
+            console.warn(`Yêu cầu truy cập tệp không hợp lệ: ${pathname}`);
+            return new Response('Forbidden', { status: 403 }); // Hoặc 404 nếu bạn muốn ẩn sự tồn tại của tệp
+          }
 
-        //   try {
-        //     const file = Bun.file('./' + pathname);
-        //     if (file) {
-        //       return new Response(file);
-        //     }
-        //   } catch (error) {
-        //     console.error(error);
-        //   }
-        // }
+          try {
+            const file = Bun.file('./' + pathname);
+            if (file) {
+              return new Response(file);
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
     },
     fetch(req) {
       return Response.json(null,{status:404});

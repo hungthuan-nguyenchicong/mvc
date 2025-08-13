@@ -1,0 +1,31 @@
+.uploadOverlay {
+    position: fixed;
+    top: 1%;
+    left: 0.3%;
+    width: 99.4%;
+    height: 98%;
+    background-color: gray;
+    //display: none;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out;
+
+    &.active {
+        //display:flex;
+        opacity: 1;
+        visibility: visible;
+        //transition: opacity 1s ease-in-out;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size:x-large;
+        cursor: pointer;
+        &:hover {
+            color: red;
+        }
+    }
+}

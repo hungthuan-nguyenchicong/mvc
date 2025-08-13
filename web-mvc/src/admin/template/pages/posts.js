@@ -40,8 +40,8 @@ function posts() {
     async function remove(params = {}) {
         const module = await import('./posts/post-delete');
         // const htmlContent = module.adminPostDelete();
-        // container.innerHTML = htmlContent;
         await module.adminPostDelete(params);
+        container.innerHTML = '';
     }
     return {
         index,

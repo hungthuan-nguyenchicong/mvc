@@ -1,5 +1,5 @@
 // web-mvc/src/admin/template/pages/posts/post-create.js
-//import { dispatchCrudMessage } from "../../parts/flatMessage";
+import { dispatchCrudMessage } from "../../parts/flatMessage";
 function adminPostCreate() {
     //await requestServer()
     return /* html */ `
@@ -42,23 +42,11 @@ async function requestServer(form) {
         if (result.message === 'success') {
             history.pushState(null, null, '/admin/?p=posts&action=index');
             //adminRouterFrontend();
-            const navEvent = new CustomEvent('navigated', {detail: {href: '/admin/?p=posts&action=index'}});
-            document.dispatchEvent(navEvent);
-            // crudMessage
-            const crudEvent = new CustomEvent('crudMessage', {detail: {
-                message: 'Sản phẩm được tạo thành công',
-                type: 'success',
-            }});
-            document.dispatchEvent(crudEvent);
-            //dispatchCrudMessage('Sản phẩm đã được tạo thành công', 'success');
+            
+            dispatchCrudMessage('Sản phẩm đã được tạo thành công', 'success');
         } else {
-            const crudEvent = new CustomEvent('crudMessage', {detail: {
-                message: 'Sản phẩm được tạo bị lỗi',
-                type: 'error',
-            }});
-            document.dispatchEvent(crudEvent);
             //console.log(result)
-            //dispatchCrudMessage('Lỗi khi tạo sản phẩm', 'error');
+            dispatchCrudMessage('Lỗi khi tạo sản phẩm', 'error');
         }
         // error.errno 23505
         if (result.error === '23505') {

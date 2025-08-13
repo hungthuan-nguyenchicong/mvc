@@ -8,3 +8,14 @@
                 event.stopPropagation(); // Stop the event from bubbling up
             }
         }
+
+document.addEventListener('navigated', (e)=> {
+        const newUrl = e.detail.href;
+        updateActiveLink(newUrl);
+    })
+
+const href = window.location.pathname + window.location.search;
+        //console.log(href)
+        const navEvent = new CustomEvent('navigated', {detail:{href:href}});
+        document.dispatchEvent(navEvent);
+

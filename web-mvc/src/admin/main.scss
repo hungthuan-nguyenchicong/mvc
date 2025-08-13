@@ -7,10 +7,13 @@ body {
     main {
         display: flex;
         .sidebar {
-            width: 30%;
+            width: 20%;
         }
         .mainContent {
-            width: 70%;
+            width: 60%;
+        }
+        .rightSidebar {
+            width: 20%;
         }
     }
 }

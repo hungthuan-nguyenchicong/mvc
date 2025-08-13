@@ -4,7 +4,7 @@ function adminFlatMessage() {
     // return /* html */ `
     // <div id="messageContainer">Message</div>
     // `;
-    document.addEventListener('crudMessage', (e) => {
+    document.addEventListener('crud-message', (e) => {
         const {message, type} = e.detail;
         render(message, type);
     })
@@ -28,11 +28,11 @@ function render(message, type) {
     }, 3000);
 }
 // phát sự kiện
-// function dispatchCrudMessage(message, type) {
-//     const event = new CustomEvent('crud-message', {
-//         detail: {message, type}
-//     });
-//     document.dispatchEvent(event);
-// }
+function dispatchCrudMessage(message, type) {
+    const event = new CustomEvent('crud-message', {
+        detail: {message, type}
+    });
+    document.dispatchEvent(event);
+}
 
-export {adminFlatMessage}
+export {adminFlatMessage, dispatchCrudMessage}
