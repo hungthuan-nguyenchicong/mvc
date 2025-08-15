@@ -2,6 +2,7 @@
 // accept="image/*"giới hạn lựa chọn tệp chỉ có hình ảnh.
 import { renderUploadFile } from "./renderUploadFile";
 import './uploadFile.scss';
+import { uploadFrontend } from "./uploadFrontend";
 import { uploadLogic } from "./uploadLogic";
 function uploadFile() {
     //const container = document.querySelector('.content');
@@ -46,6 +47,8 @@ function uploadBtn() {
         btn.addEventListener('click', (e)=>{
             e.preventDefault();
             index();
+            // upload front end
+            uploadFrontend();
             // xu ly sau khi tao form da render
             uploadLogic();
             //console.log(btn); // Sẽ trả về một chuỗi rỗng ("") hoặc null tùy trình duyệt

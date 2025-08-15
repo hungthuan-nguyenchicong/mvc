@@ -7,8 +7,8 @@ import { RouteAdmin } from "./backend/core/RouteAdmin";
 //import index from "./index.html";
 
 // upload image
-// import { UploadController } from "./backend/admin/controllers/UploadController";
-//const uploadControllerInstance = new UploadController();
+ import { UploadController } from "./backend/admin/controllers/UploadController";
+const uploadControllerInstance = new UploadController();
 //const routeDev = {}
 // if (import.meta.env.NODE_ENV === 'development') {
 //     routeDev['/src/*'] = (req) => {
@@ -61,7 +61,7 @@ Bun.serve({
               return Response.json(null, {status:404});
             }
           },
-          //POST: async req => new UploadController(req),
+          POST: async req => uploadControllerInstance.post(req),
         },
         //'/': index,
         ...RouteAdmin,
