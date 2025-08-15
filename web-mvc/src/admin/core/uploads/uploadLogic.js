@@ -27,10 +27,13 @@ async function requestServer(form) {
         // const img = document.createElement('img');
         // img.src = result.src;
         // form.appendChild(img);
-        if (result.message === 'success') {
+        if (result.success) {
+            console.log(result);
             form.reset();
             const tabUploadEvent = new CustomEvent('tabUpload', {detail:{tabId:'tabGallery'}});
             document.dispatchEvent(tabUploadEvent);
+        } else {
+            console.error(result);
         }
 
     } catch (error) {
