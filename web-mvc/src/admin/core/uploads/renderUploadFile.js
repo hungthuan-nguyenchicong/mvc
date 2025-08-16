@@ -13,11 +13,13 @@ function renderUploadFile() {
             <form id="upload">
                 <h3>Upload Image</h3>
                 <input type="file" name="file" accept="image/*"><br>
+                <input type="text" name="alt" placeholder="ALT"><br>
                 <button type="submit">Upload Image</button>
             </form>
           </div>
           <div id="tabGallery" class="tabcontent">
-            Gallery
+          <div id="galleryContainer"></div>
+          <div id="gallerySidebar"></div>
           </div>
     `;
 }

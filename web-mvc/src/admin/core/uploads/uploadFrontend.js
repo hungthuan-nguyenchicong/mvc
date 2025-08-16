@@ -1,5 +1,6 @@
 // web-mvc/src/admin/core/uploads/uploadFrontend.js
 import './uploadFrontend.scss';
+//import { uploadGallery } from './uploadGallery';
 function uploadFrontend() {
     //const tablinks = document.querySelectorAll('.tablink');
     //const tabcontents = document.querySelectorAll('.tabcontent');
@@ -7,13 +8,14 @@ function uploadFrontend() {
     document.addEventListener('tabUpload', (e) => {
         const newTabId = e.detail.tabId;
         activeTab(newTabId);
+        //uploadGallery();
     });
 
     // button tab
     btnTab();
-
+    //uploadGallery();
     // document.addEventListener('tabUpload', (e) => {
-
+    //uploadGallery();
     // })
 }
 
@@ -23,6 +25,9 @@ function btnTab() {
 
     tablinks.forEach(tablink => {
         tablink.addEventListener('click', () => {
+            // click current link
+            // const currentClickBtn = e.target.getAttribute('data-tab');
+            // console.log(currentClickBtn)
             // xoa bo all active
             // tablinks.forEach(link => {
             //     link.classList.remove('active');
@@ -33,13 +38,20 @@ function btnTab() {
             // //console.log(1)
             // tablink.classList.add('active');
             // lay id
-            const tabId = tablink.dataset.tab;
-            const tabUploadEvent = new CustomEvent('tabUpload', {detail:{tabId:tabId}});
-            document.dispatchEvent(tabUploadEvent);
+
+            // Thêm điều kiện kiểm tra: chỉ xử lý khi nút click không có class 'active'
+            if (!tablink.classList.contains('active')) {
+                const tabId = tablink.dataset.tab;
+                const tabUploadEvent = new CustomEvent('tabUpload', {detail:{tabId:tabId}});
+                document.dispatchEvent(tabUploadEvent);
+            }
+
             //console.log(tabId);
             //document.getElementById(tabId).classList.add('active')
+            
         });
     });
+    //uploadGallery();
 }
 
 // function activeTab(currentTabId) {
@@ -71,7 +83,7 @@ function btnTab() {
 //     // });
 // }
 function activeTab(currentTabId) {
-    console.log(currentTabId)
+    //console.log(currentTabId)
     const currentTablinkActive = document.querySelector('.tablink.active');
     const currentTabcontentActive = document.querySelector('.tabcontent.active');
     const newTablink = document.querySelector(`.tablink[data-tab="${currentTabId}"]`);

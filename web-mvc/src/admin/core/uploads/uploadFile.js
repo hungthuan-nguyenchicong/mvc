@@ -4,6 +4,7 @@ import { renderUploadFile } from "./renderUploadFile";
 import './uploadFile.scss';
 import { uploadFrontend } from "./uploadFrontend";
 import { uploadLogic } from "./uploadLogic";
+import { uploadGallery } from "./uploadGallery";
 function uploadFile() {
     //const container = document.querySelector('.content');
     // document.addEventListener('upload', ()=> {
@@ -11,6 +12,7 @@ function uploadFile() {
     // });
     uploadBtn();
     //uploadLogic();
+    uploadGallery();
 }
 
 function index() {
@@ -48,9 +50,13 @@ function uploadBtn() {
             e.preventDefault();
             index();
             // upload front end
+            
             uploadFrontend();
+            //uploadGallery();
             // xu ly sau khi tao form da render
             uploadLogic();
+            // up load galerry
+            //uploadGallery();
             //console.log(btn); // Sẽ trả về một chuỗi rỗng ("") hoặc null tùy trình duyệt
             // const uploadElement = new CustomEvent('upload');
             // document.dispatchEvent(uploadElement);
