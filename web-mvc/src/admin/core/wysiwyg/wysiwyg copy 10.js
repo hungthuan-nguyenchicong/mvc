@@ -38,7 +38,7 @@ function renderWysiwyg() {
     <div id="content" contenteditable="true" style="min-height: 200px">
       <p><br></p>
     </div>
-    <textarea id="hiddenContent" name="content" style="display: block;"></textarea>
+    <textarea id="hiddenContent" name="content" style="display: none;"></textarea>
   `;
 }
 
