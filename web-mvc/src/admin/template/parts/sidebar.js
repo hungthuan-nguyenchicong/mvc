@@ -12,6 +12,8 @@ function adminSidebar() {
             <li><a href="/admin/?p=posts&action=create">Post Create</a></li>
             <li><a href="/admin/?p=posts&action=show&id=1">Post Show id = 1</a></li>
             <li><a href="/admin/?p=posts&action=edit&id=1">Post Edit id = 1</a></li>
+            <hr>
+            <li><a href="/admin/?p=testWysiwyg&action=index">Test Wysiwyg</a></li>
 
         </ul>
     </aside>

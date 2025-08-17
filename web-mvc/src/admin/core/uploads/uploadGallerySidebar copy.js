@@ -58,37 +58,33 @@ function renderSidebar(image) {
             <input type="text" name="alt" value="${image.alt}">
             <button id="useImageBtn">Sử dụng ảnh</button>
         </div>
-        <textarea name="" id="postContent"></textarea>
         `
         gallerySidebar.innerHTML = html;
         // Gọi hàm để xử lý sự kiện click của nút sau khi đã render
-        setupUseImageButton(image.url, image.alt);
+        setupUseImageButton(image.url);
     }
 }
 
-function setupUseImageButton(imageUrl, imageAlt) {
+function setupUseImageButton(imageUrl) {
     const useImageBtn = document.getElementById('useImageBtn');
     const postTextarea = document.getElementById('postContent');
-    // them tag img
-    const imageTag = /* html */ `
-    <img src="${imageUrl}" alt="${imageAlt}">
-    `;
+
     if (useImageBtn && postTextarea) {
         useImageBtn.addEventListener('click', () => {
-            insertLinkIntoTextarea(postTextarea, imageTag);
+            insertLinkIntoTextarea(postTextarea, imageUrl);
         });
     }
 }
 
-function insertLinkIntoTextarea(textarea, image) {
+function insertLinkIntoTextarea(textarea, link) {
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const value = textarea.value;
 
-    const newValue = value.substring(0, start) + image + value.substring(end);
+    const newValue = value.substring(0, start) + link + value.substring(end);
     textarea.value = newValue;
 
-    textarea.selectionStart = textarea.selectionEnd = start + image.length;
+    textarea.selectionStart = textarea.selectionEnd = start + link.length;
     textarea.focus();
 }
 export { uploadGallerySidebar }

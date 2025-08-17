@@ -4,7 +4,7 @@ function dashboard() {
     const container = document.querySelector('.content');
     function index() {
         const htmlContent = render();
-        container.innerHTML = htmlContent
+        container.innerHTML = htmlContent;
     }
     function render() {
     return /* html */ `
