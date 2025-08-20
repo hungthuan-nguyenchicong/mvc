@@ -17,7 +17,7 @@ function uploadFile() {
 
 function index() {
     // Tìm form upload pop-up đã có trên trang
-    const uploadOverlay = document.querySelector('.uploadOverlay');
+  const  uploadOverlay = document.querySelector('.uploadOverlay');
     if (!uploadOverlay) {
         // tạo form
         //const htmlContent = renderUploadFile();
@@ -26,56 +26,44 @@ function index() {
         //uploadElement.innerHTML = htmlContent;
         uploadElement.innerHTML = renderUploadFile();
         document.body.appendChild(uploadElement);
-
+    
         // hien thi form
         const overlay = document.querySelector('.uploadOverlay');
         if (overlay) {
             overlay.classList.add('active');
             const closeBtn = overlay.querySelector('.close-btn');
-            closeBtn.addEventListener('click', () => {
+            closeBtn.addEventListener('click', ()=>{
                 overlay.classList.remove('active');
             })
         }
     } else {
         uploadOverlay.classList.add('active');
     }
-
+    
 }
-// function uploadBtn() {
-//     // Sử dụng bộ chọn '[upload]' để chỉ lấy các nút có thuộc tính 'upload'
-//     const uploadButtons = document.querySelectorAll('button[upload]');
-
-//     uploadButtons.forEach(btn => {
-//         btn.addEventListener('click', (e)=>{
-//             e.preventDefault();
-//             index();
-//             // upload front end
-
-//             uploadFrontend();
-//             //uploadGallery();
-//             // xu ly sau khi tao form da render
-//             uploadLogic();
-//             // up load galerry
-//             //uploadGallery();
-//             //console.log(btn); // Sẽ trả về một chuỗi rỗng ("") hoặc null tùy trình duyệt
-//             // const uploadElement = new CustomEvent('upload');
-//             // document.dispatchEvent(uploadElement);
-//         })
-//     // Đoạn code này chỉ chạy với các nút có thuộc tính 'upload'
-//     });
-// }
 function uploadBtn() {
-    document.body.addEventListener('click', (e) => {
-        // Kiểm tra xem phần tử được click có khớp với bộ chọn hay không
-        if (e.target.matches('button[upload]')) {
+    // Sử dụng bộ chọn '[upload]' để chỉ lấy các nút có thuộc tính 'upload'
+    const uploadButtons = document.querySelectorAll('button[upload]');
+
+    uploadButtons.forEach(btn => {
+        btn.addEventListener('click', (e)=>{
             e.preventDefault();
             index();
-            // Logic xử lý tải ảnh ở đây
+            // upload front end
+            
             uploadFrontend();
+            //uploadGallery();
+            // xu ly sau khi tao form da render
             uploadLogic();
-        }
+            // up load galerry
+            //uploadGallery();
+            //console.log(btn); // Sẽ trả về một chuỗi rỗng ("") hoặc null tùy trình duyệt
+            // const uploadElement = new CustomEvent('upload');
+            // document.dispatchEvent(uploadElement);
+        })
+    // Đoạn code này chỉ chạy với các nút có thuộc tính 'upload'
     });
 }
 
 
-export { uploadFile }
+export {uploadFile}

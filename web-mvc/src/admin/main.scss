@@ -1,17 +1,31 @@
 // web-mvc/src/admin/main.scss
+// html {
+//     box-sizing: border-box;
+// }
+
+// *,
+// *::before,
+// *::after {
+//     box-sizing: border-box;
+// }
+
 body {
     width: 100%;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+
     main {
         display: flex;
+
         .sidebar {
             width: 20%;
         }
+
         .mainContent {
             width: 60%;
         }
+
         .rightSidebar {
             width: 20%;
         }

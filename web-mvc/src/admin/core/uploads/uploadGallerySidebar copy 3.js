@@ -2,11 +2,6 @@
 
 /**
  * Khởi tạo chức năng cho gallery sidebar.
-<figure>
-  <img src="pic_trulli.jpg" alt="Trulli" style="width:100%">
-  <figcaption>Fig.1 - Trulli, Puglia, Italy.</figcaption>
-</figure>
-
  */
 function uploadGallerySidebar() {
     clickImage();
@@ -82,32 +77,20 @@ function renderSidebar(image) {
  * @param {string} imageUrl - URL của ảnh.
  * @param {string} imageAlt - Thuộc tính alt của ảnh.
  */
-// function setupUseImageButton(imageUrl, imageAlt) {
-//     const useImageBtn = document.getElementById('useImageBtn');
-//     // Tìm phần tử contenteditable của trình soạn thảo
-//     const contentDiv = document.getElementById('content'); 
-    
-//     // Tạo thẻ <img>
-//     const imageTag = `<img src="${imageUrl}" alt="${imageAlt}">`;
-    
-//     if (useImageBtn && contentDiv) {
-//         useImageBtn.addEventListener('click', () => {
-//             insertHtmlAtCursor(contentDiv, imageTag);
-//         });
-//     } else {
-//         console.error('Không tìm thấy #useImageBtn hoặc #content.');
-//     }
-// }
-
 function setupUseImageButton(imageUrl, imageAlt) {
     const useImageBtn = document.getElementById('useImageBtn');
-    if (useImageBtn) {
+    // Tìm phần tử contenteditable của trình soạn thảo
+    const contentDiv = document.getElementById('content'); 
+    
+    // Tạo thẻ <img>
+    const imageTag = `<img src="${imageUrl}" alt="${imageAlt}">`;
+    
+    if (useImageBtn && contentDiv) {
         useImageBtn.addEventListener('click', () => {
-            const useImageEvent = new CustomEvent('useImage', {detail: {
-                imageUrl:imageUrl, imageAlt:imageAlt
-            }});
-            document.dispatchEvent(useImageEvent);
+            insertHtmlAtCursor(contentDiv, imageTag);
         });
+    } else {
+        console.error('Không tìm thấy #useImageBtn hoặc #content.');
     }
 }
 
@@ -117,34 +100,34 @@ function setupUseImageButton(imageUrl, imageAlt) {
  * @param {string} htmlToInsert - Chuỗi HTML cần chèn.
  * thường là một thẻ <div> hoặc <iframe>
  */
-// function insertHtmlAtCursor(element, htmlToInsert) {
-//     element.focus();
-//     const selection = window.getSelection();
-//     // Đảm bảo có một vùng chọn đang hoạt động
-//     if (selection && selection.rangeCount > 0) {
-//         const range = selection.getRangeAt(0);
-//         range.deleteContents(); // Xóa nội dung được chọn (nếu có)
+function insertHtmlAtCursor(element, htmlToInsert) {
+    element.focus();
+    const selection = window.getSelection();
+    // Đảm bảo có một vùng chọn đang hoạt động
+    if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        range.deleteContents(); // Xóa nội dung được chọn (nếu có)
 
-//         const tempDiv = document.createElement('div');
-//         tempDiv.innerHTML = htmlToInsert;
-//         const fragment = document.createDocumentFragment();
-//         let lastNode;
-//         while (tempDiv.firstChild) {
-//             lastNode = fragment.appendChild(tempDiv.firstChild);
-//         }
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlToInsert;
+        const fragment = document.createDocumentFragment();
+        let lastNode;
+        while (tempDiv.firstChild) {
+            lastNode = fragment.appendChild(tempDiv.firstChild);
+        }
 
-//         range.insertNode(fragment); // Chèn fragment vào vị trí con trỏ
+        range.insertNode(fragment); // Chèn fragment vào vị trí con trỏ
         
-//         // Di chuyển con trỏ về sau thẻ vừa chèn
-//         if (lastNode) {
-//             const newRange = document.createRange();
-//             newRange.setStartAfter(lastNode);
-//             newRange.collapse(true);
-//             selection.removeAllRanges();
-//             selection.addRange(newRange);
-//         }
-//     }
-// }
+        // Di chuyển con trỏ về sau thẻ vừa chèn
+        if (lastNode) {
+            const newRange = document.createRange();
+            newRange.setStartAfter(lastNode);
+            newRange.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(newRange);
+        }
+    }
+}
 
 // Bỏ hàm insertLinkIntoTextarea vì nó chỉ dùng cho textarea
 // và không còn phù hợp với trình soạn thảo contenteditable

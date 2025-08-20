@@ -15,7 +15,7 @@ import { linkHandler } from './core/linkHandler';
 
 // upload file
 import { uploadFile } from './core/uploads/uploadFile';
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener('DOMContentLoaded', () => {
     // flat message
     //adminFlatMessage();
     // add header
@@ -46,6 +46,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
     //const rightSidebarContent = rightSidebar();
     rightSidebarElement.innerHTML = rightSidebar();
     mainElement.appendChild(rightSidebarElement);
+
+    // upload file
+    //uploadFile();
     // click a link -> linkHandeler
     linkHandler();
     // adminRouterFrontend
