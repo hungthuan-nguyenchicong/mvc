@@ -39,19 +39,19 @@ function quillInit(editorElement) {
         placeholder: 'Post content',
     };
 
-    const Link = Quill.import('formats/link');
+    // const Link = Quill.import('formats/link');
 
-    class CustomLink extends Link {
-        static create(value) {
-            let node = super.create(value);
-            // Loại bỏ thuộc tính rel
-            node.removeAttribute('target');
-            return node;
-        }
-    }
+    // class CustomLink extends Link {
+    //     static create(value) {
+    //         let node = super.create(value);
+    //         // Loại bỏ thuộc tính rel
+    //         node.removeAttribute('target');
+    //         return node;
+    //     }
+    // }
 
-    // Đăng ký blot tùy chỉnh
-    Quill.register(CustomLink, true);
+    // // Đăng ký blot tùy chỉnh
+    // Quill.register(CustomLink, true);
 
     const quill = new Quill(editorElement, options);
     //quill.update();
@@ -103,6 +103,19 @@ function quillInit(editorElement) {
     //     }
     // }
     //});
+    const Link = Quill.import('formats/link');
+
+    class CustomLink extends Link {
+        static create(value) {
+            let node = super.create(value);
+            // Loại bỏ thuộc tính rel
+            node.removeAttribute('target');
+            return node;
+        }
+    }
+
+    // Đăng ký blot tùy chỉnh
+    Quill.register(CustomLink, true);
     editorElement.addEventListener('click', (e) => {
         if (e.target.tagName === 'A') {
             e.preventDefault();
