@@ -1,0 +1,15 @@
+// web-mvc/src/admin/core/quill/quill.scss
+
+#editor {
+    border: 1px solid #ccc;
+    min-height: 150px;
+}
+
+#counter {
+    min-height: 10px;
+    border: 1px solid #ccc;
+    border-width: 0px 1px 1px 1px;
+    color: #aaa;
+    padding: 5px 15px;
+    text-align: right;
+}

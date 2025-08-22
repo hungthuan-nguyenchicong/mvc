@@ -1,57 +1,118 @@
 // web-mvc/src/admin/core/quill/quill.js
-// bun add quill
-//import Quill from "quill";
-//import 'quill/dist/quill.snow.css';
-// <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-// <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-import { quillInit } from "./quillInit";
+import Quill from "quill";
+//import { handlerLink } from "./handlers/handlerLink";
+
 function quill(container) {
-    renderQuill(container);
-    //logicQuill();
-    //console.log(container)
+    const editor = quillRender(container);
+    quillInit(editor);
 }
 
-function renderQuill(container) {
-    const quillStyle = document.createElement('style');
-    quillStyle.href = 'https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css';
-    document.head.appendChild(quillStyle);
+function quillRender(container) {
+    const editor = document.createElement('div');
+    editor.id = 'editor';
+    editor.style.minHeight = '150px';
+    container.appendChild(editor);
+    return editor;
+}
+//let quillInstance = null;
+function quillInit(editorElement) {
+    const options = {
+        modules: {
+            toolbar: {
+                container: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'align': [] }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    ['clean'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+                    ['link'],
+                ],
+                // handlers: {
+                //     link: handlerLink,
+                // }
+            },
 
-    const quillScript = document.createElement('script');
-    quillScript.src = 'https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js';
-    //document.head.appendChild(quillScript);
-
-    // Gắn sự kiện onload vào thẻ script
-    quillScript.onload = () => {
-        // Chỉ gọi logicQuill() sau khi Quill.js đã được tải xong
-        //logicQuill();
-        quillInit();
+        },
+        tooltip: true,
+        theme: 'snow',
+        placeholder: 'Post content',
     };
 
-    // 4. Gắn sự kiện onload vào thẻ script
-    // Chỉ gọi logic để khởi tạo Quill sau khi script đã tải xong
-    // quillScript.onload = () => {
-    //     const quillInstance = new Quill('#editer', {
-    //         theme: 'snow',
-    //     });
-    //     console.log("Quill đã được khởi tạo thành công!");
-    // };
-    // 5. Thêm thẻ script vào <head> để bắt đầu tải
-    document.head.appendChild(quillScript);
+    const Link = Quill.import('formats/link');
 
-    
-    const editer = document.createElement('div');
-    editer.id = 'editor';
-    editer.style.minHeight = '200px';
+    class CustomLink extends Link {
+        static create(value) {
+            let node = super.create(value);
+            // Loại bỏ thuộc tính rel
+            node.removeAttribute('target');
+            return node;
+        }
+    }
 
-    //editer.appendChild(quillStyle);
-    //editer.appendChild(quillScript);
-    container.appendChild(editer);
+    // Đăng ký blot tùy chỉnh
+    Quill.register(CustomLink, true);
+
+    const quill = new Quill(editorElement, options);
+    //quill.update();
+    //var editor_content = quill.container.innerHTML // or quill.container.firstChild.innerHTML could also work
+    // // Lắng nghe sự kiện click trên toàn bộ trình soạn thảo
+    // quill.root.addEventListener('click', function(event) {
+    //     // Kiểm tra xem phần tử được click có phải là một thẻ <a>
+    //     // với class 'ql-action' hoặc 'ql-remove' không
+    //     if (event.target.tagName.toLowerCase() === 'a' && (event.target.classList.contains('ql-action') || event.target.classList.contains('ql-remove'))) {
+    //         // Chặn hành vi mặc định để ngăn tải lại trang
+    //         event.preventDefault();
+
+    //         // Tùy chỉnh hành vi của bạn tại đây
+    //         // Ví dụ: đối với ql-action, bạn có thể gọi một hàm để xử lý
+    //         // việc lưu hoặc cập nhật link
+
+    //         // Nếu bạn muốn Quill xử lý tiếp, bạn có thể gọi một phương thức của Quill
+    //         // (Tuy nhiên, trong trường hợp này, việc preventDefault() đã đủ để giải quyết vấn đề reload)
+    //     }
+    // });
+    // Use a single listener on the body or a higher-level container for robustness
+    // as the tooltip is outside of the quill.root element
+    // document.body.addEventListener('click', function(event) {
+    // const qlAction = event.target.closest('.ql-action');
+
+    // if (qlAction) {
+    //     const tooltip = qlAction.closest('.ql-tooltip');
+
+    //     if (tooltip) {
+    //         event.preventDefault();
+    //         event.stopPropagation();
+
+    //         const linkInput = tooltip.querySelector('input[type="text"]');
+
+    //         if (linkInput) {
+    //             // Lấy giá trị của input ngay tại thời điểm click
+    //             const inputValue = linkInput.value;
+    //             console.log('Giá trị hiện tại của input:', inputValue);
+
+    //             // Dùng giá trị này để cập nhật link
+    //             const newUrl = inputValue; 
+
+    //             const range = quill.getSelection();
+    //             if (range) {
+    //                 quill.formatText(range.index, range.length, 'link', newUrl);
+    //             }
+    //         }
+    //         tooltip.classList.remove('ql-editing');
+    //     }
+    // }
+    //});
+    editorElement.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const linkInput = editorElement.querySelector('input[type="text"]');
+
+            console.log(linkInput.value)
+        }
+    });
 }
 
-// function logicQuill() {
-//     const quill = new Quill('#editer', {
-//         theme: 'snow',
-//     });
-// }
-
-export {quill}
+export { quill };
