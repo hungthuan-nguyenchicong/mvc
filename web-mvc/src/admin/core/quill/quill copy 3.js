@@ -1,13 +1,10 @@
 // web-mvc/src/admin/core/quill/quill.js
 import Quill from "quill";
 //import { handlerLink } from "./handlers/handlerLink";
-import "./custom/CustomLink";
-//import "./custom/CustomImage";
-import { handlerImage } from "./custom/CustomImage";
+
 function quill(container) {
     const editor = quillRender(container);
     quillInit(editor);
-    //new CustomLink(editorElement);
 }
 
 function quillRender(container) {
@@ -29,14 +26,11 @@ function quillInit(editorElement) {
                     [{ 'color': [] }, { 'background': [] }],
                     ['clean'],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
-                    ['link', 'image'],
+                    ['link'],
                 ],
                 // handlers: {
                 //     link: handlerLink,
                 // }
-                handlers: {
-                    image: handlerImage,
-                }
             },
 
         },
@@ -58,7 +52,7 @@ function quillInit(editorElement) {
 
     // // Đăng ký blot tùy chỉnh
     // Quill.register(CustomLink, true);
-    //new CustomLink(editorElement);
+
     const quill = new Quill(editorElement, options);
     //quill.update();
     //var editor_content = quill.container.innerHTML // or quill.container.firstChild.innerHTML could also work
@@ -109,23 +103,27 @@ function quillInit(editorElement) {
     //     }
     // }
     //});
-    // const Link = Quill.import('formats/link');
+    const Link = Quill.import('formats/link');
 
-    // class CustomLink extends Link {
-    //     static create(value) {
-    //         let node = super.create(value);
-    //         // Loại bỏ thuộc tính rel
-    //         node.removeAttribute('target');
-    //         return node;
-    //     }
-    // }
+    class CustomLink extends Link {
+        static create(value) {
+            let node = super.create(value);
+            // Loại bỏ thuộc tính rel
+            node.removeAttribute('target');
+            return node;
+        }
+    }
 
-    // // Đăng ký blot tùy chỉnh
-    // Quill.register(CustomLink, true);
+    // Đăng ký blot tùy chỉnh
+    Quill.register(CustomLink, true);
     editorElement.addEventListener('click', (e) => {
         if (e.target.tagName === 'A') {
             e.preventDefault();
             e.stopPropagation();
+
+            const linkInput = editorElement.querySelector('input[type="text"]');
+
+            console.log(linkInput.value)
         }
     });
 }

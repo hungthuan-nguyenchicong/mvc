@@ -2,8 +2,6 @@
 import Quill from "quill";
 //import { handlerLink } from "./handlers/handlerLink";
 import "./custom/CustomLink";
-//import "./custom/CustomImage";
-import { handlerImage } from "./custom/CustomImage";
 function quill(container) {
     const editor = quillRender(container);
     quillInit(editor);
@@ -29,14 +27,11 @@ function quillInit(editorElement) {
                     [{ 'color': [] }, { 'background': [] }],
                     ['clean'],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
-                    ['link', 'image'],
+                    ['link'],
                 ],
                 // handlers: {
                 //     link: handlerLink,
                 // }
-                handlers: {
-                    image: handlerImage,
-                }
             },
 
         },

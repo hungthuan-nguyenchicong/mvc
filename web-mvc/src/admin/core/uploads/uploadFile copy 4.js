@@ -14,8 +14,6 @@ function uploadFile() {
     uploadBtn();
     //uploadLogic();
     uploadGallery();
-    // quillImage
-    quillImage();
 }
 
 function index() {
@@ -77,14 +75,6 @@ function uploadBtn() {
             uploadFrontend();
             uploadLogic();
         }
-    });
-}
-
-function quillImage() {
-    document.body.addEventListener('quillImage', () => {
-        index();
-        uploadFrontend();
-        uploadLogic();
     });
 }
 
