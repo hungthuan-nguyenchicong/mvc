@@ -107,6 +107,8 @@ function setupUseImageButton(imageUrl, imageAlt) {
                 imageUrl:imageUrl, imageAlt:imageAlt
             }});
             document.dispatchEvent(useImageEvent);
+            // close upload
+            document.querySelector('.uploadOverlay').classList.remove('active');
         });
     }
 }

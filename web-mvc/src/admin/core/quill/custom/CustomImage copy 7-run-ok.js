@@ -136,25 +136,8 @@ function clickUseImage(quillInstance) {
     document.addEventListener('useImage', (e) => {
         const { imageUrl, imageAlt = '', imageCaption = '' } = e.detail;
         const range = quillInstance.getSelection(true);
-        //console.log(range.index);
-        // https://quilljs.com/docs/api#inserttext
-        // if (range.index > 0) {
-        //     //quillInstance.insertText(0, 'Hello');
-        //     //console.log(range.getText());
-        //     //quillInstance.setContents([{ insert: '\n' }]);
-        //     console.log(quillInstance.getContents().ops[0].insert);
-        //     //const pContent = quillInstance.getContents();
-        //     const pContent = quillInstance.getContents().ops[0].insert;
 
-        //     quillInstance.setContents([{insert: `${pContent}`}]);
-        // }
         if (range) {
-            // nết p có nội dung
-            // if (range.index > 0) {
-            //     const pContent = quillInstance.getContents().ops[0].insert;
-            //     quillInstance.setContents([{insert: `${pContent}`}]);
-            //     //quillInstance.setSelection(1);
-            // }
             // Insert the custom image blot at the current cursor position.
             // A block embed is represented by a length of 1 in Quill's model.
             quillInstance.insertEmbed(
@@ -175,13 +158,7 @@ function clickUseImage(quillInstance) {
 
         }
         //console.log
-        if (range.index > 0) {
-            console.log(range.index);
-            //quillInstance.insertText(range.index + 1, '\n', Quill.sources.USER);
-            quillInstance.setSelection(range.index + 2);
-        } else {
-            quillInstance.setSelection(range.index + 1);
-        }
+        quillInstance.setSelection(range.index + 1);
 
     });
 }

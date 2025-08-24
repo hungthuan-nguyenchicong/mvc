@@ -3,8 +3,8 @@ import Quill from "quill";
 //import { handlerLink } from "./handlers/handlerLink";
 import "./custom/CustomLink";
 //import "./custom/CustomImage";
-import { handlerImage, clickUseImage } from "./custom/CustomImage";
-//import { setupQuillImageManager } from "./custom/quillImageManager";
+import { handlerImage } from "./custom/CustomImage";
+import { setupQuillImageManager } from "./custom/quillImageManager";
 function quill(container) {
     const editor = quillRender(container);
     quillInit(editor);
@@ -39,7 +39,7 @@ function quillInit(editorElement) {
                 //     image: handlerImage,
                 // }
                 handlers: {
-                    'image': handlerImage // Quan trọng: bind Quill instance vào handler
+                    //'image': handlerImage // Quan trọng: bind Quill instance vào handler
                     //'image': handlerImage.bind(quill)
                 }
             },
@@ -65,10 +65,6 @@ function quillInit(editorElement) {
     // Quill.register(CustomLink, true);
     //new CustomLink(editorElement);
     const quill = new Quill(editorElement, options);
-
-    // click upload
-    clickUseImage(quill);
-    
     //quill.update();
     //var editor_content = quill.container.innerHTML // or quill.container.firstChild.innerHTML could also work
     // // Lắng nghe sự kiện click trên toàn bộ trình soạn thảo
@@ -131,9 +127,8 @@ function quillInit(editorElement) {
 
     // 3. Now that the `quill` instance exists, you can safely use it.
     // Set up the toolbar handler
-    //quill.getModule('toolbar').addHandler('image', handlerImage.bind(quill));
-    //handlerImage(quill);
-    //quill.getModule('toolbar').addHandler('image', handlerImage);
+    quill.getModule('toolbar').addHandler('image', handlerImage.bind(quill));
+    
     // // Đăng ký blot tùy chỉnh
     // Quill.register(CustomLink, true);
     editorElement.addEventListener('click', (e) => {
@@ -143,7 +138,7 @@ function quillInit(editorElement) {
         }
     });
 
-    //setupQuillImageManager(quill)
+    setupQuillImageManager(quill)
 }
 // 6. Call the initialization function when the document is ready
 //document.addEventListener('DOMContentLoaded', quillInit);

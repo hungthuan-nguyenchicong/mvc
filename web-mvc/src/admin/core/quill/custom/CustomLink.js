@@ -1,3 +1,4 @@
+// web-mvc/src/admin/core/quill/custom/CustomLink.js
 import Quill from "quill";
 const Link = Quill.import('formats/link');
 
