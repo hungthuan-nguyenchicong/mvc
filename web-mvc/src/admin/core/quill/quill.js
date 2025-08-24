@@ -68,7 +68,7 @@ function quillInit(editorElement) {
 
     // click upload
     clickUseImage(quill);
-    
+
     //quill.update();
     //var editor_content = quill.container.innerHTML // or quill.container.firstChild.innerHTML could also work
     // // Lắng nghe sự kiện click trên toàn bộ trình soạn thảo
@@ -144,6 +144,13 @@ function quillInit(editorElement) {
     });
 
     //setupQuillImageManager(quill)
+    // Lắng nghe sự kiện 'text-change' từ Quill
+    // quill.on('text-change', () => {
+    //     // Cập nhật giá trị của textarea mỗi khi nội dung thay đổi
+    //     // Sử dụng quill.root.innerHTML để lấy nội dung HTML
+    //     //hiddenTextarea.value = quill.root.innerHTML;
+    //     console.log(quill.root.innerHTML);
+    // });
 }
 // 6. Call the initialization function when the document is ready
 //document.addEventListener('DOMContentLoaded', quillInit);

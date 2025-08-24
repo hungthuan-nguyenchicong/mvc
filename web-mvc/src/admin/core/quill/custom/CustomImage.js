@@ -176,7 +176,7 @@ function clickUseImage(quillInstance) {
         }
         //console.log
         if (range.index > 0) {
-            console.log(range.index);
+            //console.log(range.index);
             //quillInstance.insertText(range.index + 1, '\n', Quill.sources.USER);
             quillInstance.setSelection(range.index + 2);
         } else {
