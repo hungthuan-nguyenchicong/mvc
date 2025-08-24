@@ -5,26 +5,16 @@ import "./custom/CustomLink";
 //import "./custom/CustomImage";
 import { handlerImage, clickUseImage } from "./custom/CustomImage";
 //import { setupQuillImageManager } from "./custom/quillImageManager";
-// function quill(container) {
-//     const editor = quillRender(container);
-//     quillInit(editor);
-//     //new CustomLink(editorElement);
-// }
-
-function quill() {
-    const quillEditor = document.getElementById('quillEditor');
-    if (quillEditor) {
-        quillEditor.style.minHeight = '300px';
-        quillEditor.style.height = 'fit-content';
-        quillInit(quillEditor);
-        //document.querySelector('.ql-container').style.height = 'fit-content';
-    }
+function quill(container) {
+    const editor = quillRender(container);
+    quillInit(editor);
+    //new CustomLink(editorElement);
 }
 
 function quillRender(container) {
     const editor = document.createElement('div');
     editor.id = 'editor';
-    editor.style.minHeight = '100px';
+    editor.style.minHeight = '150px';
     container.appendChild(editor);
     return editor;
 }

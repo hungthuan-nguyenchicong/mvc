@@ -15,7 +15,10 @@ function adminSidebar() {
             <hr>
             <li><a href="/admin/?p=testWysiwyg&action=index">Test Wysiwyg</a></li>
             <li><a href="/admin/?p=testquillWysiwyg&action=index">Test Quill Wysiwyg</a></li>
-
+            <hr>
+            <li><a href="/admin/?p=products&action=index">Product Index</a></li>
+            <li><a href="/admin/?p=products&action=create">Product Create</a></li>
+            
         </ul>
     </aside>
     `;

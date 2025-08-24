@@ -6,12 +6,15 @@ import { notFound } from "./template/pages/notFound";
 import { testWysiwyg } from "./template/pages/testWysiwyg";
 // test quill.js
 import { testquillWysiwyg } from "./template/pages/testquillWysiwyg";
+// product
+import { products } from "./template/pages/products";
 const routes = {
     'dashboard': dashboard,
     'posts': posts,
     'notFound': notFound,
     'testWysiwyg': testWysiwyg,
     'testquillWysiwyg': testquillWysiwyg,
+    'products': products,
 }
 
 export {routes}
