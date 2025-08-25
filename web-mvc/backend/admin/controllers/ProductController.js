@@ -9,8 +9,21 @@ class ProductController {
         if (this.req.method === "POST") {
             try {
                 const formData = await this.req.formData();
-                console.log(formData);
-                return Response.json({data:formData}, {status:201});
+                //console.log(formData);
+                const title = formData.get('title');
+                const slug = formData.get('slug');
+                const featured = formData.get('featured');
+                const description = formData.get('description');
+                const price = formData.get('price');
+
+                const newProduct = {
+                    title: title,
+                    slug: slug,
+                    featured: featured,
+                    description: description,
+                    price: price,
+                }
+                return Response.json({product:newProduct}, {status:201});
             } catch (e) {
                 console.error(e);
                 return Response.json({error:e}, {status:500});

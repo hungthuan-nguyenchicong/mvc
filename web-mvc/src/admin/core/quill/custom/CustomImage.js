@@ -1,7 +1,8 @@
 // web-mvc/src/admin/core/quill/custom/CustomImage.js
 
 import Quill from "quill";
-import { quill } from "../quill";
+//import { quill } from "../quill";
+//import { initializeQuill } from "../initializeQuill";
 const BlockEmbed = Quill.import('blots/block/embed');
 
 class CustomImage extends BlockEmbed {
