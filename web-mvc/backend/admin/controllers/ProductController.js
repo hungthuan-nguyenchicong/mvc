@@ -1,8 +1,9 @@
 // web-mvc/backend/admin/controllers/ProductController.js
-
+import { ProductModel } from "../models/ProductModel";
 class ProductController {
     constructor(req) {
         this.req = req
+        this.productModel = new ProductModel();
     }
 
     async create() {
@@ -23,7 +24,8 @@ class ProductController {
                     description: description,
                     price: price,
                 }
-                return Response.json({product:newProduct}, {status:201});
+                await this.productModel.create(newProduct);
+                return Response.json({success:201}, {status:201});
             } catch (e) {
                 console.error(e);
                 return Response.json({error:e}, {status:500});

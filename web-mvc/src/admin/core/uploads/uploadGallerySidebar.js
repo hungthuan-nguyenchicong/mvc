@@ -68,12 +68,14 @@ function renderSidebar(image) {
             <div class="image-info">
                 <input type="text" name="alt" value="${image.alt}">
                 <button id="useImageBtn">Sử dụng ảnh</button>
+                <button id="useFeaturedBtn">Featured Image</button>
             </div>
         `;
         // Thay đổi HTML của gallerySidebar
         gallerySidebar.innerHTML = html;
         // Gọi hàm để xử lý sự kiện click của nút sau khi đã render
         setupUseImageButton(image.url, image.alt);
+        setupUseImageFeaturedButton(image.url, image.alt);
     }
 }
 
@@ -110,6 +112,21 @@ function setupUseImageButton(imageUrl, imageAlt) {
             // close upload
             document.querySelector('.uploadOverlay').classList.remove('active');
         });
+    }
+}
+
+function setupUseImageFeaturedButton(imageUrl, imageAlt) {
+    const useFeaturedBtn = document.getElementById('useFeaturedBtn');
+    if (useFeaturedBtn) {
+        useFeaturedBtn.addEventListener('click', () => {
+            const useFeaturedEvent = new CustomEvent('useFeatured', {detail: {
+                imageUrl:imageUrl, imageAlt:imageAlt
+            }});
+            document.dispatchEvent(useFeaturedEvent);
+            // close upload
+            document.querySelector('.uploadOverlay').classList.remove('active');
+
+        })
     }
 }
 

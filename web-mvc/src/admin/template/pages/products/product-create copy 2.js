@@ -16,49 +16,17 @@ function render(container) {
             <label>Title: 
                 <br><input type="text" name="title">
             </label><br>
-            <label>Price:
-                <br><input type="text" name="price">
-            </label>
-            
+            <label>Slug:
+                <br><input type="text" name="slug" readonly>
+            </label><br>
             <br><div id="quillEditor"></div>
         </div>
         <div class="formSidebar">
-            <button type="submit">Save</button><br>
-            <label>Slug:
-                <br><input type="text" name="slug" readonly>
-            </label><button type="button" id="editSlug">Sửa Slug</button><br>
-            <div class="featured">
-                <div class="featuredImg" style="min-height: 50px"></div>
-                <input type="hidden" name="featured">
-                <button type="button" id="featuredImgBnt">Featured Image</button>
-            </div>
+            <button type="submit">Save</button>
         </div>
     </form>
     `;
     container.innerHTML = html;
-}
-
-function featuredImg(form) {
-    //console.log(form)
-    const featuredBtn = form.querySelector('#featuredImgBnt');
-    const featuresImage = form.querySelector('.featuredImg');
-    const featuredInput = form.querySelector('input[name="featured"]');
-    featuredBtn.addEventListener('click', () => {
-        //console.log(1)
-        const featuredElement = new CustomEvent('featuredImg');
-        document.body.dispatchEvent(featuredElement);
-    });
-
-    document.addEventListener('useFeatured', (e) => {
-        //console.log(1)
-        const img = document.createElement('img');
-        const {imageUrl, imageAlt} = e.detail;
-        //console.log(imageUrl)
-        img.src = imageUrl;
-        img.alt = imageAlt;
-        featuresImage.appendChild(img);
-        featuredInput.value = imageUrl;
-    });
 }
 
 function slug(form) {
@@ -66,7 +34,6 @@ function slug(form) {
     const titleInput = form.querySelector('input[name="title"]');
     const slugInput = form.querySelector('input[name="slug"]');
     //console.log(slug)
-    const editSlug = document.getElementById('editSlug');
 
     // Thêm sự kiện 'input' để xử lý mỗi khi có ký tự mới được gõ
     titleInput.addEventListener('input', () => {
@@ -96,12 +63,11 @@ function slug(form) {
 
 function handleFormSubmit() {
     const form = document.getElementById('create');
-    slug(form);
-    featuredImg(form);
-    form.addEventListener('submit', (e) => {
+    slug(form)
+    form.addEventListener('click', (e) => {
         e.preventDefault();
         requestServer(form);
-        //featuredImg(form);
+
     });
 }
 
@@ -114,7 +80,7 @@ async function requestServer(form) {
 
         // Thêm nội dung của Quill vào formData để gửi lên server
         formData.append('description', quillContentHtml);
-        //console.log(quillContentHtml);
+        console.log(quillContentHtml);
 
         const response = await fetch('/admin/api/?ProductController@create', {
             method: "POST",

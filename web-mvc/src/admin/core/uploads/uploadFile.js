@@ -16,6 +16,8 @@ function uploadFile() {
     uploadGallery();
     // quillImage
     quillImage();
+    // featured image create form
+    featuredImg();
 }
 
 function index() {
@@ -82,6 +84,16 @@ function uploadBtn() {
 
 function quillImage() {
     document.body.addEventListener('quillImage', () => {
+        index();
+        uploadFrontend();
+        uploadLogic();
+    });
+}
+
+function featuredImg() {
+    document.body.addEventListener('featuredImg', () => {
+        //const {type} = e.detail;
+        //console.log(type);
         index();
         uploadFrontend();
         uploadLogic();
